@@ -8,6 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import HomePage from '~/components/home/HomePage';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -59,14 +60,8 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Homepage() {
-  const data = useLoaderData<typeof loader>();
-  return (
-    <div className="home">
-      {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
-    </div>
-  );
+
+ return <HomePage />;
 }
 
 function FeaturedCollection({
@@ -168,3 +163,4 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     }
   }
 ` as const;
+
