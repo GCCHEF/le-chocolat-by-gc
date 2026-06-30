@@ -1,23 +1,35 @@
-export default function HomePage() {
+import {useState, type ReactNode} from 'react';
+import LoadingIntro from './LoadingIntro';
+import MatiereGradientTransition from './MatiereGradientTransition';
+import ShaderSection from './ShaderSection';
+import './homeExperience.css';
+
+export default function HomePage({children}: {children: ReactNode}) {
+  const [isIntroActive, setIsIntroActive] = useState(true);
+  const [isHomepageVisible, setIsHomepageVisible] = useState(false);
+
   return (
     <main
-      style={{
-        width: "100%",
-        height: "100vh",
-        overflow: "hidden",
-        background: "#f4f1ec",
-      }}
+      className={`home-experience ${
+        isIntroActive ? 'home-experience--intro-active' : ''
+      }`}
     >
-      <img
-        src="/matiere-hero.png"
-        alt="Matière"
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
+      {isIntroActive ? (
+        <LoadingIntro
+          onRevealStart={() => setIsHomepageVisible(true)}
+          onComplete={() => setIsIntroActive(false)}
+        />
+      ) : null}
+      <div
+        className={`home-experience__content ${
+          isHomepageVisible ? 'home-experience__content--visible' : ''
+        }`}
+        aria-hidden={!isHomepageVisible}
+      >
+        <MatiereGradientTransition />
+        <ShaderSection />
+        {children}
+      </div>
     </main>
   );
 }

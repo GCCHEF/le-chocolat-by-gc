@@ -9,10 +9,15 @@ import type {
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import HomePage from '~/components/home/HomePage';
+import homeExperienceStyles from '~/components/home/homeExperience.css?url';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
+
+export const links: Route.LinksFunction = () => [
+  {rel: 'stylesheet', href: homeExperienceStyles},
+];
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -60,8 +65,17 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Homepage() {
+  const data = useLoaderData<typeof loader>();
 
- return <HomePage />;
+  return (
+    <HomePage>
+      <div className="home">
+        {!data.isShopLinked && <MockShopNotice />}
+        <FeaturedCollection collection={data.featuredCollection} />
+        <RecommendedProducts products={data.recommendedProducts} />
+      </div>
+    </HomePage>
+  );
 }
 
 function FeaturedCollection({
@@ -163,4 +177,3 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     }
   }
 ` as const;
-
