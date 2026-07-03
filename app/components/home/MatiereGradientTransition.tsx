@@ -1,4 +1,5 @@
 import {useEffect, useRef} from 'react';
+import ShaderEntry from './ShaderEntry';
 
 function clamp(value: number) {
   return Math.min(Math.max(value, 0), 1);
@@ -26,6 +27,7 @@ export default function MatiereGradientTransition() {
       const rect = section.getBoundingClientRect();
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
+      const shaderProgress = clamp((rawProgress - 0.08) / 0.72);
       const matiereProgress = clamp(rawProgress / 0.565);
       const matiereMovementProgress =
         rawProgress > 0 ? clamp((rawProgress + 0.035) / 0.565) : 0;
@@ -33,13 +35,14 @@ export default function MatiereGradientTransition() {
       const matiereEase = easeInOutCubic(matiereMovementProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
       const titleShift = matiereEase * Math.max(240, window.innerHeight * 0.34);
-      const subtitleShift = chocolatEase * Math.max(310, window.innerHeight * 0.4);
+      const subtitleShift = chocolatEase * Math.max(192, window.innerHeight * 0.248);
       const titleOpacity = 1 - clamp((matiereProgress - 0.24) / 0.52);
       const subtitleOpacity =
         clamp(chocolatProgress / 0.18) *
-        (1 - clamp((chocolatProgress - 0.9) / 0.1));
+        (1 - clamp((chocolatEase - 0.3) / 0.2));
 
       section.style.setProperty('--matiere-title-shift', `${titleShift}px`);
+      section.style.setProperty('--shader-entry-progress', String(shaderProgress));
       section.style.setProperty(
         '--matiere-subtitle-shift',
         `${subtitleShift}px`,
@@ -73,6 +76,9 @@ export default function MatiereGradientTransition() {
       className="matiere-master-scene"
       aria-label="Matiere transition"
     >
+      <div className="shader-gradient-layer" aria-hidden="true">
+        <ShaderEntry />
+      </div>
       <div className="text-overlay-layer">
         <div className="matiere-title">
           <h1>MATIÈRE</h1>

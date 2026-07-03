@@ -29,6 +29,7 @@
 }
 
 .matiere-master-scene {
+  --shader-entry-progress: 0;
   --matiere-subtitle-opacity: 0;
   --matiere-subtitle-shift: 0px;
   --matiere-title-opacity: 1;
@@ -38,6 +39,24 @@
   padding: 0;
   position: relative;
   z-index: 2;
+}
+
+.shader-gradient-layer {
+  height: calc(100vh - var(--header-height, 64px));
+  left: 0;
+  margin-bottom: calc((100vh - var(--header-height, 64px)) * -1);
+  overflow: hidden;
+  pointer-events: none;
+  position: sticky;
+  top: var(--header-height, 64px);
+  width: 100%;
+  z-index: 20;
+}
+
+.shader-gradient-layer .shader-entry {
+  background: transparent;
+  margin: 0;
+  transform: translateY(calc(100vh - (var(--shader-entry-progress) * 160vh)));
 }
 
 .text-overlay-layer {
