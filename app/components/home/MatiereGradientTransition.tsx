@@ -27,7 +27,7 @@ export default function MatiereGradientTransition() {
       const rect = section.getBoundingClientRect();
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
-      const shaderProgress = clamp((rawProgress - 0.08) / 0.72);
+      const shaderProgress = clamp((rawProgress - 0.064) / 0.72);
       const matiereProgress = clamp(rawProgress / 0.565);
       const matiereMovementProgress =
         rawProgress > 0 ? clamp((rawProgress + 0.035) / 0.565) : 0;
