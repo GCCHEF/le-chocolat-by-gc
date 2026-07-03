@@ -28,21 +28,34 @@
   opacity: 1;
 }
 
-.matiere-scene {
-  --gradient-cover-offset: 100%;
+.matiere-master-scene {
+  --matiere-subtitle-opacity: 0;
+  --matiere-subtitle-shift: 0px;
+  --matiere-title-opacity: 1;
+  --matiere-title-shift: 0px;
   background: #ffffff;
-  height: 220vh;
+  min-height: 202vh;
   padding: 0;
   position: relative;
+  z-index: 2;
 }
 
-.matiere-sticky {
-  background: #ffffff;
-  height: calc(100vh - var(--header-height, 64px));
+.shader-gradient-layer {
+  padding-top: calc(100vh - var(--header-height, 64px));
+  position: relative;
+  z-index: 1;
+}
+
+.text-overlay-layer {
+  background: transparent;
+  height: 100vh;
+  left: 0;
   overflow: hidden;
+  pointer-events: none;
   position: sticky;
-  top: var(--header-height, 64px);
+  top: 0;
   width: 100%;
+  z-index: 50;
 }
 
 .matiere-title {
@@ -51,50 +64,48 @@
   padding: 2rem;
   position: absolute;
   text-align: center;
-  top: 50%;
+  top: calc(50% + var(--header-height, 64px) / 2);
   transform: translate(-50%, -50%);
   width: min(100%, 90rem);
   z-index: 2;
 }
 
 .matiere-title h1 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family:
+    Canela,
+    'Ivar Display',
+    'Saol Display',
+    'Editorial New',
+    'Cormorant Garamond',
+    'Iowan Old Style',
+    'Palatino Linotype',
+    Palatino,
+    'Book Antiqua',
+    Georgia,
+    serif;
+  font-kerning: normal;
   font-size: clamp(4.5rem, 15vw, 13rem);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0;
   line-height: 0.86;
-  margin: 0;
+  margin: 1.35rem 0 0;
+  opacity: var(--matiere-title-opacity);
+  position: relative;
+  transform: translateY(var(--matiere-title-shift));
+  will-change: opacity, transform;
+  z-index: 2;
 }
 
-.matiere-title p {
+.chocolat-title {
   font-size: clamp(0.72rem, 1.25vw, 0.95rem);
   letter-spacing: 0.24em;
   line-height: 1.4;
-  margin: 1.35rem 0 0;
-}
-
-.gradient-cover {
-  background: linear-gradient(
-    to top,
-    #000000 0%,
-    #000000 42%,
-    rgba(0, 0, 0, 0.98) 50%,
-    rgba(0, 0, 0, 0.92) 58%,
-    rgba(0, 0, 0, 0.78) 67%,
-    rgba(0, 0, 0, 0.56) 76%,
-    rgba(0, 0, 0, 0.32) 86%,
-    rgba(0, 0, 0, 0.12) 94%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  height: 140%;
-  left: 0;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  transform: translateY(var(--gradient-cover-offset));
-  width: 100%;
-  will-change: transform;
-  z-index: 3;
+  margin: 0;
+  opacity: var(--matiere-subtitle-opacity);
+  position: relative;
+  transform: translateY(var(--matiere-subtitle-shift));
+  will-change: opacity, transform;
+  z-index: 1;
 }
 
 .beam-scroll-scene {
@@ -525,23 +536,73 @@
   }
 }
 
+.shader-entry {
+  background: #ffffff;
+  margin: -44vh 0 0;
+  position: relative;
+  transform: translateY(calc(var(--shader-entry-lift, 0) * -1vh));
+  width: 100%;
+  will-change: transform;
+  z-index: 1;
+}
+
+.shader-entry-gradient {
+  background:
+    radial-gradient(
+      ellipse at 54% 92%,
+      rgba(38, 38, 38, 0.14) 0%,
+      rgba(10, 10, 10, 0.08) 34%,
+      rgba(0, 0, 0, 0) 68%
+    ),
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #fdfdfd 4%,
+      #fafafa 8%,
+      #f4f4f4 13%,
+      #ececec 18%,
+      #e1e1e1 24%,
+      #d2d2d2 31%,
+      #bfbfbf 38%,
+      #a6a6a6 46%,
+      #878787 54%,
+      #666666 62%,
+      #464646 70%,
+      #292929 79%,
+      #121212 89%,
+      #000000 100%
+    );
+  height: 60vh;
+  margin: 0;
+  pointer-events: none;
+  width: 100%;
+}
+
+.shader-live {
+  background: #000000;
+  margin-top: -1px;
+  position: relative;
+}
+
 .shader-section {
   background: #000000;
   cursor: crosshair;
-  height: 100svh;
-  margin-top: -30vh;
+  height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   padding: 0;
   position: relative;
   touch-action: none;
+  width: 100vw;
   z-index: 0;
 }
 
 .shader-section__canvas-wrap,
 .shader-section__canvas {
   display: block;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
 }
 
 .featured-categories {

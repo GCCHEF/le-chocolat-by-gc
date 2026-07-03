@@ -1,7 +1,6 @@
 import {useState, type ReactNode} from 'react';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
-import ShaderSection from './ShaderSection';
 import './homeExperience.css';
 
 export default function HomePage({children}: {children: ReactNode}) {
@@ -27,7 +26,6 @@ export default function HomePage({children}: {children: ReactNode}) {
         aria-hidden={!isHomepageVisible}
       >
         <MatiereGradientTransition />
-        <ShaderSection />
         {children}
       </div>
     </main>
