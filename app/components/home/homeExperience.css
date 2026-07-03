@@ -34,26 +34,20 @@
   --matiere-title-opacity: 1;
   --matiere-title-shift: 0px;
   background: #ffffff;
-  min-height: 202vh;
+  min-height: 300vh;
   padding: 0;
   position: relative;
   z-index: 2;
 }
 
-.shader-gradient-layer {
-  padding-top: calc(100vh - var(--header-height, 64px));
-  position: relative;
-  z-index: 1;
-}
-
 .text-overlay-layer {
   background: transparent;
-  height: 100vh;
+  height: calc(100vh - var(--header-height, 64px));
   left: 0;
   overflow: hidden;
   pointer-events: none;
   position: sticky;
-  top: 0;
+  top: var(--header-height, 64px);
   width: 100%;
   z-index: 50;
 }
@@ -64,7 +58,7 @@
   padding: 2rem;
   position: absolute;
   text-align: center;
-  top: calc(50% + var(--header-height, 64px) / 2);
+  top: 50%;
   transform: translate(-50%, -50%);
   width: min(100%, 90rem);
   z-index: 2;
@@ -75,8 +69,6 @@
     Canela,
     'Ivar Display',
     'Saol Display',
-    'Editorial New',
-    'Cormorant Garamond',
     'Iowan Old Style',
     'Palatino Linotype',
     Palatino,
@@ -85,10 +77,10 @@
     serif;
   font-kerning: normal;
   font-size: clamp(4.5rem, 15vw, 13rem);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0;
   line-height: 0.86;
-  margin: 1.35rem 0 0;
+  margin: 0;
   opacity: var(--matiere-title-opacity);
   position: relative;
   transform: translateY(var(--matiere-title-shift));
@@ -97,14 +89,20 @@
 }
 
 .chocolat-title {
+  color: #000000;
   font-size: clamp(0.72rem, 1.25vw, 0.95rem);
+  font-weight: 650;
+  left: 50%;
   letter-spacing: 0.24em;
   line-height: 1.4;
   margin: 0;
   opacity: var(--matiere-subtitle-opacity);
-  position: relative;
-  transform: translateY(var(--matiere-subtitle-shift));
+  position: absolute;
+  text-align: center;
+  top: calc(42% + var(--header-height, 64px) / 2);
+  transform: translate(-50%, calc(-50% + var(--matiere-subtitle-shift)));
   will-change: opacity, transform;
+  width: min(100%, 42rem);
   z-index: 1;
 }
 

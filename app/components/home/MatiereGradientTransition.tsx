@@ -1,5 +1,4 @@
 import {useEffect, useRef} from 'react';
-import ShaderEntry from './ShaderEntry';
 
 function clamp(value: number) {
   return Math.min(Math.max(value, 0), 1);
@@ -27,17 +26,18 @@ export default function MatiereGradientTransition() {
       const rect = section.getBoundingClientRect();
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
-      const shaderProgress = clamp(rawProgress);
-      const matiereProgress = clamp((rawProgress - 0.45) / 0.5);
-      const chocolatProgress = clamp((rawProgress - 0.72) / 0.35);
-      const matiereEase = easeInOutCubic(matiereProgress);
+      const matiereProgress = clamp(rawProgress / 0.565);
+      const matiereMovementProgress =
+        rawProgress > 0 ? clamp((rawProgress + 0.035) / 0.565) : 0;
+      const chocolatProgress = clamp((rawProgress - 0.32) / 0.4);
+      const matiereEase = easeInOutCubic(matiereMovementProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
-      const titleShift = matiereEase * 80;
-      const subtitleShift = chocolatEase * 160;
-      const titleOpacity = 1 - clamp((matiereProgress - 0.34) / 0.62);
+      const titleShift = matiereEase * Math.max(240, window.innerHeight * 0.34);
+      const subtitleShift = chocolatEase * Math.max(310, window.innerHeight * 0.4);
+      const titleOpacity = 1 - clamp((matiereProgress - 0.24) / 0.52);
       const subtitleOpacity =
-        clamp(chocolatProgress / 0.34) *
-        (1 - clamp((chocolatProgress - 0.86) / 0.14));
+        clamp(chocolatProgress / 0.18) *
+        (1 - clamp((chocolatProgress - 0.9) / 0.1));
 
       section.style.setProperty('--matiere-title-shift', `${titleShift}px`);
       section.style.setProperty(
@@ -48,10 +48,6 @@ export default function MatiereGradientTransition() {
       section.style.setProperty(
         '--matiere-subtitle-opacity',
         String(subtitleOpacity),
-      );
-      document.documentElement.style.setProperty(
-        '--shader-entry-lift',
-        String(shaderProgress * 12),
       );
     };
 
@@ -68,7 +64,6 @@ export default function MatiereGradientTransition() {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
-      document.documentElement.style.removeProperty('--shader-entry-lift');
     };
   }, []);
 
@@ -80,12 +75,9 @@ export default function MatiereGradientTransition() {
     >
       <div className="text-overlay-layer">
         <div className="matiere-title">
-          <p className="chocolat-title">LE CHOCOLAT BY GC</p>
           <h1>MATIÈRE</h1>
         </div>
-      </div>
-      <div className="shader-gradient-layer">
-        <ShaderEntry />
+        <p className="chocolat-title">LE CHOCOLAT BY GC</p>
       </div>
     </section>
   );
