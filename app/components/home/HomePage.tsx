@@ -1,11 +1,47 @@
-import {useState, type ReactNode} from 'react';
+import {useEffect, useState, type ReactNode} from 'react';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
 import './homeExperience.css';
 
+const TITLE_REVEAL_DURATION_MS = 1550;
+
 export default function HomePage({children}: {children: ReactNode}) {
   const [isIntroActive, setIsIntroActive] = useState(true);
   const [isHomepageVisible, setIsHomepageVisible] = useState(false);
+  const [isTitleRevealActive, setIsTitleRevealActive] = useState(false);
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isTitleRevealActive) return;
+
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const lockScroll = () => window.scrollTo(0, 0);
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+      lockScroll();
+    };
+    const revealTimer = window.setTimeout(() => {
+      setIsTitleVisible(true);
+      setIsTitleRevealActive(false);
+    }, TITLE_REVEAL_DURATION_MS);
+
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+    window.addEventListener('scroll', lockScroll, {passive: true});
+    window.addEventListener('wheel', preventScroll, {passive: false});
+    window.addEventListener('touchmove', preventScroll, {passive: false});
+
+    return () => {
+      window.clearTimeout(revealTimer);
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      window.removeEventListener('scroll', lockScroll);
+      window.removeEventListener('wheel', preventScroll);
+      window.removeEventListener('touchmove', preventScroll);
+    };
+  }, [isTitleRevealActive]);
 
   return (
     <main
@@ -16,7 +52,10 @@ export default function HomePage({children}: {children: ReactNode}) {
       {isIntroActive ? (
         <LoadingIntro
           onRevealStart={() => setIsHomepageVisible(true)}
-          onComplete={() => setIsIntroActive(false)}
+          onComplete={() => {
+            setIsIntroActive(false);
+            setIsTitleRevealActive(true);
+          }}
         />
       ) : null}
       <div
@@ -25,7 +64,10 @@ export default function HomePage({children}: {children: ReactNode}) {
         }`}
         aria-hidden={!isHomepageVisible}
       >
-        <MatiereGradientTransition />
+        <MatiereGradientTransition
+          isTitleRevealActive={isTitleRevealActive}
+          isTitleVisible={isTitleVisible}
+        />
         {children}
       </div>
     </main>

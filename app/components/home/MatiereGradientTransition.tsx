@@ -13,7 +13,13 @@ function easeInOutCubic(value: number) {
     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 }
 
-export default function MatiereGradientTransition() {
+export default function MatiereGradientTransition({
+  isTitleRevealActive = false,
+  isTitleVisible = true,
+}: {
+  isTitleRevealActive?: boolean;
+  isTitleVisible?: boolean;
+}) {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -35,8 +41,14 @@ export default function MatiereGradientTransition() {
       const matiereEase = easeInOutCubic(matiereMovementProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
       const titleShift = matiereEase * Math.max(240, window.innerHeight * 0.34);
+      const collectionShift = matiereEase * Math.max(72, window.innerHeight * 0.102);
       const subtitleShift = chocolatEase * Math.max(192, window.innerHeight * 0.248);
       const titleOpacity = 1 - clamp((matiereProgress - 0.24) / 0.52);
+      const collectionOpacity =
+        isTitleVisible && !isTitleRevealActive
+          ? clamp(matiereProgress / 0.045) *
+            (1 - clamp((matiereProgress - 0.11) / 0.09))
+          : 0;
       const subtitleOpacity =
         clamp(chocolatProgress / 0.18) *
         (1 - clamp((chocolatEase - 0.3) / 0.2));
@@ -47,7 +59,15 @@ export default function MatiereGradientTransition() {
         '--matiere-subtitle-shift',
         `${subtitleShift}px`,
       );
+      section.style.setProperty(
+        '--matiere-collection-shift',
+        `${collectionShift}px`,
+      );
       section.style.setProperty('--matiere-title-opacity', String(titleOpacity));
+      section.style.setProperty(
+        '--matiere-collection-opacity',
+        String(collectionOpacity),
+      );
       section.style.setProperty(
         '--matiere-subtitle-opacity',
         String(subtitleOpacity),
@@ -68,12 +88,20 @@ export default function MatiereGradientTransition() {
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
     };
-  }, []);
+  }, [isTitleRevealActive, isTitleVisible]);
+
+  const sceneClassName = [
+    'matiere-master-scene',
+    isTitleRevealActive ? 'matiere-master-scene--title-reveal' : '',
+    isTitleVisible ? '' : 'matiere-master-scene--title-pending',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <section
       ref={sectionRef}
-      className="matiere-master-scene"
+      className={sceneClassName}
       aria-label="Matiere transition"
     >
       <div className="shader-gradient-layer" aria-hidden="true">
@@ -81,8 +109,11 @@ export default function MatiereGradientTransition() {
       </div>
       <div className="text-overlay-layer">
         <div className="matiere-title">
-          <h1>MATIÈRE</h1>
+          <h1>
+            MATI<span className="matiere-title__accent">È</span>RE
+          </h1>
         </div>
+        <p className="matiere-collection-label">COLLECTION 001 / 2026</p>
         <p className="chocolat-title">LE CHOCOLAT BY GC</p>
       </div>
     </section>
