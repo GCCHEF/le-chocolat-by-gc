@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import ShaderEntry from './ShaderEntry';
 
 function clamp(value: number) {
@@ -21,22 +21,6 @@ export default function MatiereGradientTransition({
   isTitleVisible?: boolean;
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const [isCollectionIntroVisible, setIsCollectionIntroVisible] =
-    useState(false);
-
-  useEffect(() => {
-    setIsCollectionIntroVisible(false);
-
-    if (!isTitleVisible || isTitleRevealActive) return;
-
-    const collectionTimer = window.setTimeout(() => {
-      setIsCollectionIntroVisible(true);
-    }, 1500);
-
-    return () => {
-      window.clearTimeout(collectionTimer);
-    };
-  }, [isTitleRevealActive, isTitleVisible]);
 
   useEffect(() => {
     let animationFrame = 0;
@@ -50,38 +34,37 @@ export default function MatiereGradientTransition({
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
       const shaderProgress = clamp((rawProgress - 0.064) / 0.72);
-      const matiereProgress = clamp(rawProgress / 0.565);
-      const matiereMovementProgress =
-        rawProgress > 0 ? clamp((rawProgress + 0.035) / 0.565) : 0;
+      const numberProgress = clamp(rawProgress / 0.6);
+      const wordProgress = clamp((rawProgress - 0.035) / 0.61);
       const chocolatProgress = clamp((rawProgress - 0.32) / 0.4);
-      const matiereEase = easeInOutCubic(matiereMovementProgress);
+      const numberEase = easeInOutCubic(numberProgress);
+      const wordEase = easeInOutCubic(wordProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
-      const titleShift = matiereEase * Math.max(240, window.innerHeight * 0.34);
-      const collectionShift = matiereEase * Math.max(108, window.innerHeight * 0.153);
+      const numberShift = numberEase * Math.max(260, window.innerHeight * 0.36);
+      const titleShift = wordEase * Math.max(205, window.innerHeight * 0.29);
       const subtitleShift = 0;
-      const titleOpacity = 1 - clamp((matiereProgress - 0.24) / 0.52);
-      const collectionOpacity =
-        isCollectionIntroVisible && isTitleVisible && !isTitleRevealActive
-          ? 1 - clamp((matiereProgress - 0.11) / 0.09)
-          : 0;
+      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.36);
+      const numberOpacity = 1 - clamp((rawProgress - 0.14) / 0.32);
+      const lineOpacity = 1 - clamp((rawProgress - 0.08) / 0.26);
       const subtitleOpacity =
         clamp(chocolatProgress / 0.18) *
         (1 - clamp((chocolatEase - 0.55) / 0.2));
 
       section.style.setProperty('--matiere-title-shift', `${titleShift}px`);
+      section.style.setProperty('--matiere-number-shift', `${numberShift}px`);
       section.style.setProperty('--shader-entry-progress', String(shaderProgress));
       section.style.setProperty(
         '--matiere-subtitle-shift',
         `${subtitleShift}px`,
       );
       section.style.setProperty(
-        '--matiere-collection-shift',
-        `${collectionShift}px`,
+        '--matiere-line-opacity',
+        String(lineOpacity),
       );
       section.style.setProperty('--matiere-title-opacity', String(titleOpacity));
       section.style.setProperty(
-        '--matiere-collection-opacity',
-        String(collectionOpacity),
+        '--matiere-number-opacity',
+        String(numberOpacity),
       );
       section.style.setProperty(
         '--matiere-subtitle-opacity',
@@ -103,7 +86,7 @@ export default function MatiereGradientTransition({
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
     };
-  }, [isCollectionIntroVisible, isTitleRevealActive, isTitleVisible]);
+  }, [isTitleRevealActive, isTitleVisible]);
 
   const sceneClassName = [
     'matiere-master-scene',
@@ -123,12 +106,18 @@ export default function MatiereGradientTransition({
         <ShaderEntry />
       </div>
       <div className="text-overlay-layer">
+        <div className="matiere-composition-line" aria-hidden="true" />
+        <p className="matiere-number">001</p>
         <div className="matiere-title">
           <h1>
             MATI<span className="matiere-title__accent">È</span>RE
           </h1>
+          <p className="matiere-definition">
+            (latin materia) — The physical substance from which something is
+            made; material considered for its texture, character, and expressive
+            qualities.
+          </p>
         </div>
-        <p className="matiere-collection-label">COLLECTION 001 / 2026</p>
         <p className="chocolat-title">MANUFACTURED IN CAPE TOWN</p>
       </div>
     </section>
