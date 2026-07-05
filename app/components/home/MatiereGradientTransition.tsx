@@ -41,11 +41,25 @@ export default function MatiereGradientTransition({
       const wordEase = easeInOutCubic(wordProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
       const numberShift = numberEase * Math.max(260, window.innerHeight * 0.36);
-      const titleShift = wordEase * Math.max(205, window.innerHeight * 0.29);
+      const titleShift = wordEase * Math.max(255, window.innerHeight * 0.36);
       const subtitleShift = 0;
-      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.36);
-      const numberOpacity = 1 - clamp((rawProgress - 0.14) / 0.32);
+      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.18);
+      const definitionOpacity = 1 - clamp((rawProgress - 0.1) / 0.18);
+      const numberOpacity = 1 - clamp((rawProgress - 0.1) / 0.2);
       const lineOpacity = 1 - clamp((rawProgress - 0.08) / 0.26);
+      const cornerMatterOpacity =
+        clamp(rawProgress / 0.2) *
+        (1 - clamp((rawProgress - 0.16) / 0.14));
+      const cornerCellAOpacity = easeInOutCubic(clamp(rawProgress / 0.11));
+      const cornerCellBOpacity = easeInOutCubic(
+        clamp((rawProgress - 0.028) / 0.17),
+      );
+      const cornerCellCOpacity = easeInOutCubic(
+        clamp((rawProgress - 0.074) / 0.12),
+      );
+      const cornerCellDOpacity = easeInOutCubic(
+        clamp((rawProgress - 0.118) / 0.19),
+      );
       const subtitleOpacity =
         clamp(chocolatProgress / 0.18) *
         (1 - clamp((chocolatEase - 0.55) / 0.2));
@@ -61,7 +75,31 @@ export default function MatiereGradientTransition({
         '--matiere-line-opacity',
         String(lineOpacity),
       );
+      section.style.setProperty(
+        '--matiere-corner-matter-opacity',
+        String(cornerMatterOpacity),
+      );
+      section.style.setProperty(
+        '--matiere-corner-cell-a-opacity',
+        String(cornerCellAOpacity),
+      );
+      section.style.setProperty(
+        '--matiere-corner-cell-b-opacity',
+        String(cornerCellBOpacity),
+      );
+      section.style.setProperty(
+        '--matiere-corner-cell-c-opacity',
+        String(cornerCellCOpacity),
+      );
+      section.style.setProperty(
+        '--matiere-corner-cell-d-opacity',
+        String(cornerCellDOpacity),
+      );
       section.style.setProperty('--matiere-title-opacity', String(titleOpacity));
+      section.style.setProperty(
+        '--matiere-definition-opacity',
+        String(definitionOpacity),
+      );
       section.style.setProperty(
         '--matiere-number-opacity',
         String(numberOpacity),
@@ -106,6 +144,36 @@ export default function MatiereGradientTransition({
         <ShaderEntry />
       </div>
       <div className="text-overlay-layer">
+        <div className="matiere-corner-matter" aria-hidden="true">
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--one" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--two" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--three" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--four" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--five" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--six" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--seven" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--eight" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--nine" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--ten" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--eleven" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twelve" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--thirteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--fourteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--fifteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--sixteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--seventeen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--eighteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--nineteen" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty" />
+        </div>
+        <span
+          className="matiere-corner-satellite matiere-corner-satellite--one"
+          aria-hidden="true"
+        />
+        <span
+          className="matiere-corner-satellite matiere-corner-satellite--two"
+          aria-hidden="true"
+        />
         <div className="matiere-composition-line" aria-hidden="true" />
         <p className="matiere-number">001</p>
         <div className="matiere-title">
