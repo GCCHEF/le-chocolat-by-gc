@@ -3,7 +3,7 @@ import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
 import './homeExperience.css';
 
-const TITLE_REVEAL_DURATION_MS = 1550;
+const TITLE_REVEAL_DURATION_MS = 1250;
 
 export default function HomePage({children}: {children: ReactNode}) {
   const [isIntroActive, setIsIntroActive] = useState(true);

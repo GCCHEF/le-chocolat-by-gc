@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import ShaderEntry from './ShaderEntry';
 
 function clamp(value: number) {
@@ -21,6 +21,22 @@ export default function MatiereGradientTransition({
   isTitleVisible?: boolean;
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const [isCollectionIntroVisible, setIsCollectionIntroVisible] =
+    useState(false);
+
+  useEffect(() => {
+    setIsCollectionIntroVisible(false);
+
+    if (!isTitleVisible || isTitleRevealActive) return;
+
+    const collectionTimer = window.setTimeout(() => {
+      setIsCollectionIntroVisible(true);
+    }, 1500);
+
+    return () => {
+      window.clearTimeout(collectionTimer);
+    };
+  }, [isTitleRevealActive, isTitleVisible]);
 
   useEffect(() => {
     let animationFrame = 0;
@@ -41,17 +57,16 @@ export default function MatiereGradientTransition({
       const matiereEase = easeInOutCubic(matiereMovementProgress);
       const chocolatEase = easeInOutCubic(chocolatProgress);
       const titleShift = matiereEase * Math.max(240, window.innerHeight * 0.34);
-      const collectionShift = matiereEase * Math.max(72, window.innerHeight * 0.102);
-      const subtitleShift = chocolatEase * Math.max(192, window.innerHeight * 0.248);
+      const collectionShift = matiereEase * Math.max(108, window.innerHeight * 0.153);
+      const subtitleShift = 0;
       const titleOpacity = 1 - clamp((matiereProgress - 0.24) / 0.52);
       const collectionOpacity =
-        isTitleVisible && !isTitleRevealActive
-          ? clamp(matiereProgress / 0.045) *
-            (1 - clamp((matiereProgress - 0.11) / 0.09))
+        isCollectionIntroVisible && isTitleVisible && !isTitleRevealActive
+          ? 1 - clamp((matiereProgress - 0.11) / 0.09)
           : 0;
       const subtitleOpacity =
         clamp(chocolatProgress / 0.18) *
-        (1 - clamp((chocolatEase - 0.3) / 0.2));
+        (1 - clamp((chocolatEase - 0.55) / 0.2));
 
       section.style.setProperty('--matiere-title-shift', `${titleShift}px`);
       section.style.setProperty('--shader-entry-progress', String(shaderProgress));
@@ -88,7 +103,7 @@ export default function MatiereGradientTransition({
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
     };
-  }, [isTitleRevealActive, isTitleVisible]);
+  }, [isCollectionIntroVisible, isTitleRevealActive, isTitleVisible]);
 
   const sceneClassName = [
     'matiere-master-scene',
@@ -114,7 +129,7 @@ export default function MatiereGradientTransition({
           </h1>
         </div>
         <p className="matiere-collection-label">COLLECTION 001 / 2026</p>
-        <p className="chocolat-title">LE CHOCOLAT BY GC</p>
+        <p className="chocolat-title">MANUFACTURED IN CAPE TOWN</p>
       </div>
     </section>
   );

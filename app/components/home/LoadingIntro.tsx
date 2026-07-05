@@ -2,10 +2,10 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 
 const INTRO_DURATION_MS = 2250;
 const HOLD_DURATION_MS = 500;
-const SCROLL_UNLOCK_DELAY_MS = 1400;
+const SCROLL_UNLOCK_DELAY_MS = 500;
 const INTRO_ANIMATION_DURATION_MS = 2700;
 const WHITE_HOLD_DURATION_MS = 150;
-const OVERLAY_FADE_DURATION_MS = 900;
+const OVERLAY_FADE_DURATION_MS = 600;
 
 type IntroState =
   | 'loading'
