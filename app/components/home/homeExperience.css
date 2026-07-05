@@ -201,14 +201,14 @@
 }
 
 .matiere-corner-satellite--two {
-  height: clamp(5.95rem, 8.37vw, 9.2rem);
+  height: clamp(8.03rem, 11.3vw, 12.42rem);
   opacity: calc(
     var(--matiere-corner-matter-opacity) *
       var(--matiere-corner-cell-d-opacity) * 0.58
   );
   right: 4%;
   top: 66%;
-  width: clamp(5.95rem, 8.37vw, 9.2rem);
+  width: clamp(8.03rem, 11.3vw, 12.42rem);
 }
 
 .matiere-corner-matter__cell--one {
@@ -483,6 +483,10 @@
   text-transform: none;
   transform: translateY(var(--matiere-title-shift));
   will-change: opacity, transform;
+}
+
+.matiere-definition__latin {
+  font-style: italic;
 }
 
 .matiere-title__accent {

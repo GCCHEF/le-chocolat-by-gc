@@ -34,7 +34,7 @@ export default function MatiereGradientTransition({
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
       const shaderProgress = clamp((rawProgress - 0.064) / 0.72);
-      const numberProgress = clamp(rawProgress / 0.6);
+      const numberProgress = clamp(rawProgress / 0.42);
       const wordProgress = clamp((rawProgress - 0.035) / 0.61);
       const chocolatProgress = clamp((rawProgress - 0.32) / 0.4);
       const numberEase = easeInOutCubic(numberProgress);
@@ -43,7 +43,7 @@ export default function MatiereGradientTransition({
       const numberShift = numberEase * Math.max(260, window.innerHeight * 0.36);
       const titleShift = wordEase * Math.max(255, window.innerHeight * 0.36);
       const subtitleShift = 0;
-      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.18);
+      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.14);
       const definitionOpacity = 1 - clamp((rawProgress - 0.1) / 0.18);
       const numberOpacity = 1 - clamp((rawProgress - 0.1) / 0.2);
       const lineOpacity = 1 - clamp((rawProgress - 0.08) / 0.26);
@@ -181,9 +181,9 @@ export default function MatiereGradientTransition({
             MATI<span className="matiere-title__accent">È</span>RE
           </h1>
           <p className="matiere-definition">
-            (latin materia) — The physical substance from which something is
-            made; material considered for its texture, character, and expressive
-            qualities.
+            (<span className="matiere-definition__latin">latin materia</span>)
+            — The physical substance from which something is made; material
+            considered for its texture, character, and expressive qualities.
           </p>
         </div>
         <p className="chocolat-title">MANUFACTURED IN CAPE TOWN</p>
