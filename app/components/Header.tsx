@@ -19,23 +19,25 @@ type Viewport = 'desktop' | 'mobile';
 
 export function Header({
   header,
-  isLoggedIn,
   cart,
-  publicStoreDomain,
 }: HeaderProps) {
-  const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+      <div className="header__side header__side--left">
+        <HeaderMenuMobileToggle />
+      </div>
+      <NavLink
+        className="header__logo"
+        prefetch="intent"
+        to="/"
+        end
+      >
+        <img
+          src="/le-chocolat-wordmark.png"
+          alt="Le Chocolat Haute Manufacture"
+        />
       </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <HeaderCtas cart={cart} />
     </header>
   );
 }
@@ -95,21 +97,9 @@ export function HeaderMenu({
   );
 }
 
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+function HeaderCtas({cart}: Pick<HeaderProps, 'cart'>) {
   return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
+    <nav className="header-ctas header__side header__side--right" role="navigation">
       <CartToggle cart={cart} />
     </nav>
   );
@@ -121,17 +111,9 @@ function HeaderMenuMobileToggle() {
     <button
       className="header-menu-mobile-toggle reset"
       onClick={() => open('mobile')}
+      type="button"
     >
-      <h3>☰</h3>
-    </button>
-  );
-}
-
-function SearchToggle() {
-  const {open} = useAside();
-  return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+      <span>Menu</span>
     </button>
   );
 }
@@ -154,7 +136,26 @@ function CartBadge({count}: {count: number | null}) {
         } as CartViewPayload);
       }}
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <span className="header-cart-icon" aria-hidden="true">
+        <svg
+          className="header-cart-icon__svg"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            className="header-cart-icon__stroke"
+            d="M6.2 9.1h11.6v10.1H6.2V9.1Z"
+          />
+          <path
+            className="header-cart-icon__stroke"
+            d="M9.1 9.1V7.3a2.9 2.9 0 0 1 5.8 0v1.8"
+          />
+        </svg>
+        {count ? <span className="header-cart-count">{count}</span> : null}
+      </span>
+      <span className="visually-hidden">
+        Cart / Checkout{count ? `, ${count} item${count === 1 ? '' : 's'}` : ''}
+      </span>
     </a>
   );
 }

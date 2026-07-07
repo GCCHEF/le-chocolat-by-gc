@@ -165,6 +165,18 @@ export default function MatiereGradientTransition({
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--eighteen" />
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--nineteen" />
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-one" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-two" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-three" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-four" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-five" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-six" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-seven" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-eight" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--twenty-nine" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--thirty" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--thirty-one" />
+          <span className="matiere-corner-matter__cell matiere-corner-matter__cell--thirty-two" />
         </div>
         <span
           className="matiere-corner-satellite matiere-corner-satellite--one"
