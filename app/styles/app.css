@@ -241,9 +241,9 @@ button.reset:hover:not(:has(> *)) {
   color: #000;
   cursor: pointer;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
-  font-size: clamp(0.54rem, 0.68vw, 0.62rem);
-  font-weight: 500;
-  letter-spacing: 0.18em;
+  font-size: clamp(0.46rem, 0.58vw, 0.54rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
   line-height: 1;
   padding: 0;
   text-transform: uppercase;
@@ -301,9 +301,10 @@ button.reset:hover:not(:has(> *)) {
 
 .header__logo img {
   display: block;
-  height: clamp(1.52rem, 2.32vw, 2.22rem);
-  max-width: min(44vw, 14rem);
+  height: clamp(1.9rem, 2.9vw, 2.775rem);
+  max-width: min(55vw, 17.5rem);
   object-fit: contain;
+  transform: translateX(-3.1%);
   width: auto;
 }
 
@@ -373,6 +374,7 @@ button.reset:hover:not(:has(> *)) {
   right: -0.38rem;
   top: -0.34rem;
 }
+
 
 .visually-hidden {
   border: 0;

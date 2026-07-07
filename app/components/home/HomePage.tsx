@@ -1,4 +1,5 @@
 import {useEffect, useState, type ReactNode} from 'react';
+import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
 import './homeExperience.css';
@@ -68,6 +69,7 @@ export default function HomePage({children}: {children: ReactNode}) {
           isTitleRevealActive={isTitleRevealActive}
           isTitleVisible={isTitleVisible}
         />
+        <FeaturedWork />
         {children}
       </div>
     </main>

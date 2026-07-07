@@ -143,7 +143,7 @@ export default function MatiereGradientTransition({
       <div className="shader-gradient-layer" aria-hidden="true">
         <ShaderEntry />
       </div>
-      <div className="text-overlay-layer">
+      <div className="matiere-droplet-overlay">
         <div className="matiere-corner-matter" aria-hidden="true">
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--one" />
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--two" />
@@ -186,6 +186,8 @@ export default function MatiereGradientTransition({
           className="matiere-corner-satellite matiere-corner-satellite--two"
           aria-hidden="true"
         />
+      </div>
+      <div className="text-overlay-layer">
         <div className="matiere-composition-line" aria-hidden="true" />
         <p className="matiere-number">001</p>
         <div className="matiere-title">
