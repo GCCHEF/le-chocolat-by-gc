@@ -33,7 +33,7 @@ export default function MatiereGradientTransition({
       const rect = section.getBoundingClientRect();
       const scrollableDistance = Math.max(1, rect.height - window.innerHeight);
       const rawProgress = clamp(-rect.top / scrollableDistance);
-      const shaderProgress = clamp((rawProgress - 0.064) / 0.72);
+      const shaderProgress = clamp((rawProgress - 0.064) / 0.936);
       const numberProgress = clamp(rawProgress / 0.42);
       const wordProgress = clamp((rawProgress - 0.035) / 0.61);
       const chocolatProgress = clamp((rawProgress - 0.32) / 0.4);

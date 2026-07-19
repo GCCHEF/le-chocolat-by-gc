@@ -59,19 +59,18 @@ export default function HomePage({children}: {children: ReactNode}) {
           }}
         />
       ) : null}
-      <div
-        className={`home-experience__content ${
-          isHomepageVisible ? 'home-experience__content--visible' : ''
-        }`}
-        aria-hidden={!isHomepageVisible}
-      >
-        <MatiereGradientTransition
-          isTitleRevealActive={isTitleRevealActive}
-          isTitleVisible={isTitleVisible}
-        />
-        <FeaturedWork />
-        {children}
-      </div>
+      {isHomepageVisible ? (
+        <div
+          className="home-experience__content home-experience__content--visible"
+        >
+          <MatiereGradientTransition
+            isTitleRevealActive={isTitleRevealActive}
+            isTitleVisible={isTitleVisible}
+          />
+          <FeaturedWork />
+          {children}
+        </div>
+      ) : null}
     </main>
   );
 }

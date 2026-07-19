@@ -129,6 +129,126 @@ aside main {
   margin: 1rem;
 }
 
+.overlay--mobile aside header {
+  border: 0;
+  display: block;
+  height: auto;
+  padding: 0;
+}
+
+.overlay--mobile {
+  background: transparent;
+  overflow: hidden;
+}
+
+.overlay--mobile::before,
+.overlay--mobile::after {
+  background: rgba(247, 247, 243, 0.5);
+  backdrop-filter: blur(24px) saturate(1.08);
+  -webkit-backdrop-filter: blur(24px) saturate(1.08);
+  content: '';
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  transition: transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.overlay--mobile::before {
+  bottom: 50%;
+  top: 0;
+  transform: translateY(-105%);
+}
+
+.overlay--mobile::after {
+  bottom: 0;
+  top: 50%;
+  transform: translateY(105%);
+}
+
+.overlay--mobile.expanded::before {
+  transform: translateY(0);
+}
+
+.overlay--mobile.expanded::after {
+  transform: translateY(0);
+}
+
+.overlay--mobile aside {
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  min-height: 100vh;
+  right: auto;
+  top: 0;
+  transform: none;
+  width: 100vw;
+  z-index: 1;
+}
+
+.overlay--mobile aside h3 {
+  display: none;
+}
+
+.overlay--mobile aside .close {
+  background: transparent;
+  border: 0;
+  color: #120e0b;
+  cursor: pointer;
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: clamp(2.6rem, 4.4vw, 4.8rem);
+  font-weight: 700;
+  line-height: 0.72;
+  opacity: 0;
+  padding: 0;
+  position: fixed;
+  right: clamp(4.5rem, 7.5vw, 8.5rem);
+  text-decoration: none;
+  top: clamp(16rem, 38vh, 27rem);
+  transform: none;
+  transition:
+    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1) 110ms,
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  width: auto;
+  z-index: 3;
+}
+
+.overlay--mobile.expanded aside .close {
+  opacity: 1;
+}
+
+.overlay--mobile.expanded aside .close:hover,
+.overlay--mobile.expanded aside .close:focus-visible {
+  transform: scale(0.92);
+}
+
+.overlay--mobile .close-outside {
+  height: 100%;
+  left: 0;
+  width: 100%;
+}
+
+.overlay--mobile aside main {
+  margin: 0;
+  opacity: 0;
+  position: relative;
+  transform: translateY(0.8rem);
+  transition:
+    opacity 560ms cubic-bezier(0.16, 1, 0.3, 1) 180ms,
+    transform 760ms cubic-bezier(0.16, 1, 0.3, 1) 180ms;
+  z-index: 2;
+}
+
+.overlay--mobile.expanded aside main {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 aside p {
   margin: 0 0 0.25rem;
 }
@@ -165,7 +285,7 @@ aside li {
   transition: opacity 400ms ease-in-out;
   transition: opacity 400ms;
   visibility: hidden;
-  z-index: 10;
+  z-index: 9000;
 }
 
 .overlay .close-outside {
@@ -198,6 +318,68 @@ aside li {
 /* reveal aside */
 .overlay.expanded aside {
   transform: translateX(calc(var(--aside-width) * -1));
+}
+
+.overlay--mobile.expanded aside {
+  transform: none;
+}
+
+.overlay--cart {
+  background: transparent;
+}
+
+.overlay--cart .close-outside {
+  width: 100%;
+}
+
+.overlay--cart aside {
+  background: #050505;
+  box-shadow: -28px 0 80px rgba(0, 0, 0, 0.28);
+  color: #f7f3ec;
+  display: flex;
+  flex-direction: column;
+  max-width: 100vw;
+  overflow: hidden;
+  right: 0;
+  transform: translateY(-105%);
+  transition: transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+  width: min(32rem, 100vw);
+}
+
+.overlay--cart.expanded aside {
+  transform: translateY(0);
+}
+
+.overlay--cart aside header {
+  border-bottom: 1px solid rgba(247, 243, 236, 0.16);
+  color: #f7f3ec;
+  height: 5.25rem;
+  padding: 0 clamp(1.1rem, 3vw, 1.8rem);
+}
+
+.overlay--cart aside header h3 {
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.overlay--cart aside header .close {
+  color: #f7f3ec;
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.82;
+  width: auto;
+}
+
+.overlay--cart aside main {
+  flex: 1;
+  margin: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 button.reset {
@@ -251,8 +433,73 @@ button.reset:hover:not(:has(> *)) {
 
 .header-menu-mobile {
   display: flex;
-  flex-direction: column;
-  grid-gap: 1rem;
+  align-items: center;
+  flex-direction: row;
+  gap: clamp(2rem, 8vw, 9rem);
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  width: min(86vw, 80rem);
+}
+
+.header-menu-mobile .header-menu-item {
+  color: #000;
+  display: inline-flex;
+  justify-content: center;
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: clamp(1.35rem, 4vw, 4.1rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 0.9;
+  flex: 1 1 0;
+  overflow-wrap: normal;
+  text-decoration: none;
+  transition: transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.header-menu-mobile .header-menu-item__mask {
+  clip-path: inset(-0.18em 100% -0.18em 0);
+  display: inline-block;
+  filter: blur(8px);
+  margin-right: -0.18em;
+  opacity: 0;
+  overflow: hidden;
+  padding-right: 0.18em;
+  transform: translateX(-0.32em);
+  transition:
+    clip-path 1180ms cubic-bezier(0.16, 1, 0.3, 1) 110ms,
+    filter 1040ms cubic-bezier(0.16, 1, 0.3, 1) 110ms,
+    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1) 110ms,
+    transform 1180ms cubic-bezier(0.16, 1, 0.3, 1) 110ms;
+}
+
+.header-menu-mobile .header-menu-item__line {
+  display: inline-block;
+  transform: translateX(-0.18em);
+  transition: transform 1180ms cubic-bezier(0.16, 1, 0.3, 1) 110ms;
+}
+
+.header-menu-mobile .header-menu-item:hover,
+.header-menu-mobile .header-menu-item:focus-visible {
+  transform: translateX(clamp(0.45rem, 1.4vw, 1.2rem));
+}
+
+.overlay--mobile.expanded .header-menu-mobile .header-menu-item__mask {
+  clip-path: inset(-0.18em -0.18em -0.18em 0);
+  filter: blur(0);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.overlay--mobile.expanded .header-menu-mobile .header-menu-item__line {
+  transform: translateX(0);
+}
+
+.overlay--mobile.expanded .header-menu-mobile .header-menu-item:hover,
+.overlay--mobile.expanded .header-menu-mobile .header-menu-item:focus-visible {
+  transform: translateX(clamp(0.45rem, 1.4vw, 1.2rem));
 }
 
 .header-menu-desktop {
@@ -424,22 +671,76 @@ button.reset:hover:not(:has(> *)) {
   width: auto;
 }
 
+.overlay--cart .cart-main {
+  max-height: none;
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+}
+
 .cart-main.with-discount {
   max-height: calc(100vh - var(--cart-aside-summary-height-with-discount));
+}
+
+.overlay--cart .cart-main.with-discount {
+  max-height: none;
 }
 
 .cart-line {
   padding: 0.75rem 0;
 }
 
+.overlay--cart .cart-line {
+  border-bottom: 1px solid rgba(247, 243, 236, 0.12);
+  padding: 1.2rem 0;
+}
+
 .cart-line-inner {
   display: flex;
+}
+
+.overlay--cart .cart-line-inner {
+  gap: 1rem;
 }
 
 .cart-line img {
   height: 100%;
   display: block;
   margin-right: 0.75rem;
+}
+
+.overlay--cart .cart-line img {
+  border-radius: 0;
+  height: 5.2rem;
+  margin-right: 0;
+  object-fit: cover;
+  width: 5.2rem;
+}
+
+.overlay--cart .cart-line a {
+  color: #f7f3ec;
+  text-decoration: none;
+}
+
+.overlay--cart .cart-line strong {
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+.overlay--cart .cart-line small,
+.overlay--cart .cart-line-quantity {
+  color: rgba(247, 243, 236, 0.58);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.overlay--cart .cart-line button {
+  background: transparent;
+  border: 0;
+  color: #f7f3ec;
+  cursor: pointer;
+  font: inherit;
+  padding: 0 0.15rem;
 }
 
 .cart-summary-page {
@@ -453,6 +754,45 @@ button.reset:hover:not(:has(> *)) {
   padding-top: 0.75rem;
   position: absolute;
   width: calc(var(--aside-width) - 40px);
+}
+
+.overlay--cart .cart-summary-aside {
+  background: #050505;
+  border-top: 1px solid rgba(247, 243, 236, 0.18);
+  bottom: auto;
+  color: #f7f3ec;
+  margin-top: 1.5rem;
+  padding: 1.2rem 0 0;
+  position: sticky;
+  width: auto;
+}
+
+.overlay--cart .cart-summary-aside h4 {
+  display: none;
+}
+
+.overlay--cart .cart-summary-aside a {
+  align-items: center;
+  border: 1px solid rgba(247, 243, 236, 0.34);
+  color: #f7f3ec;
+  display: flex;
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: 0.78rem;
+  justify-content: center;
+  letter-spacing: 0.16em;
+  margin-top: 1.2rem;
+  min-height: 3.15rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background 260ms ease,
+    color 260ms ease;
+}
+
+.overlay--cart .cart-summary-aside a:hover,
+.overlay--cart .cart-summary-aside a:focus-visible {
+  background: #f7f3ec;
+  color: #050505;
 }
 
 .cart-line-quantity {
@@ -473,6 +813,19 @@ button.reset:hover:not(:has(> *)) {
 .cart-subtotal {
   align-items: center;
   display: flex;
+}
+
+.overlay--cart .cart-subtotal {
+  justify-content: space-between;
+}
+
+.overlay--cart .cart-subtotal dt,
+.overlay--cart .cart-subtotal dd {
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
 }
 /*
 * --------------------------------------------------

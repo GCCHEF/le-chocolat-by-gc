@@ -58,17 +58,6 @@ export function HeaderMenu({
 
   return (
     <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
-        </NavLink>
-      )}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -79,6 +68,18 @@ export function HeaderMenu({
           item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
+
+        if (url === '/' || item.title.toLowerCase() === 'home') return null;
+
+        const normalizedTitle = item.title
+          .toLowerCase()
+          .replace(/[-\s]+/g, ' ')
+          .trim();
+        const menuTitle =
+          normalizedTitle.includes('commerce') || url.includes('collections')
+            ? 'E shop'
+            : item.title;
+
         return (
           <NavLink
             className="header-menu-item"
@@ -89,7 +90,9 @@ export function HeaderMenu({
             style={activeLinkStyle}
             to={url}
           >
-            {item.title}
+            <span className="header-menu-item__mask">
+              <span className="header-menu-item__line">{menuTitle}</span>
+            </span>
           </NavLink>
         );
       })}

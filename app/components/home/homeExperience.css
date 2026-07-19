@@ -1283,7 +1283,7 @@
 
 .featured-work__label,
 .featured-work-card__meta,
-.featured-work-detail__summary p {
+.featured-work-detail__eyebrow {
   font-family: 'Neue Haas Grotesk Display', sans-serif;
   font-weight: 400;
   letter-spacing: 0.2em;
@@ -1303,7 +1303,7 @@
 }
 
 .featured-work-card__meta,
-.featured-work-detail__summary p {
+.featured-work-detail__eyebrow {
   font-size: clamp(0.58rem, 0.74vw, 0.72rem);
 }
 
@@ -1532,7 +1532,8 @@
 }
 
 .featured-work--visible .featured-work__label .featured-work-reveal__mask,
-.featured-work-card--revealed .featured-work-reveal__mask {
+.featured-work-card--revealed .featured-work-reveal__mask,
+.featured-work-detail--visible .featured-work-reveal__mask {
   clip-path: inset(0);
   filter: blur(0);
   opacity: 1;
@@ -1540,7 +1541,8 @@
 }
 
 .featured-work--visible .featured-work__label .featured-work-reveal__line,
-.featured-work-card--revealed .featured-work-reveal__line {
+.featured-work-card--revealed .featured-work-reveal__line,
+.featured-work-detail--visible .featured-work-reveal__line {
   transform: translateX(0);
 }
 
@@ -1555,12 +1557,26 @@
 }
 
 .featured-work-detail {
+  --featured-detail-progress: 0;
+  --featured-summary-opacity: 1;
+  --featured-summary-x: 0px;
   background: #120e0b;
   color: #f2eee7;
   inset: 0;
   overflow: hidden;
   position: fixed;
+  scrollbar-width: none;
   z-index: 4500;
+}
+
+.featured-work-detail::-webkit-scrollbar {
+  display: none;
+}
+
+.featured-work-detail__viewport {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 .featured-work-detail__hero {
@@ -1623,8 +1639,11 @@
 }
 
 .featured-work-detail__summary {
-  animation: featuredWorkDetailContent 850ms cubic-bezier(0.16, 1, 0.3, 1)
-    420ms both;
+  opacity: var(--featured-summary-opacity);
+  transform: translate3d(var(--featured-summary-x), 0, 0);
+  transition:
+    opacity 160ms linear,
+    transform 160ms linear;
   left: clamp(1.5rem, 5vw, 4rem);
   max-width: min(30rem, 36vw);
   position: absolute;
@@ -1632,7 +1651,8 @@
   z-index: 3;
 }
 
-.featured-work-detail__summary h2 {
+.featured-work-detail__title {
+  display: block;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
   font-size: clamp(3rem, 8vw, 7.5rem);
   font-weight: 400;
@@ -1641,7 +1661,9 @@
   margin: 1rem 0 1.4rem;
 }
 
-.featured-work-detail__summary span {
+.featured-work-detail__description {
+  animation: featuredWorkDetailDescriptionIn 1050ms cubic-bezier(0.16, 1, 0.3, 1)
+    620ms both;
   display: block;
   font-size: clamp(0.9rem, 1.1vw, 1.08rem);
   line-height: 1.45;
@@ -1650,19 +1672,40 @@
 }
 
 .featured-work-detail__track {
-  animation: featuredWorkDetailContent 900ms cubic-bezier(0.16, 1, 0.3, 1)
+  animation: featuredWorkDetailTrackIn 900ms cubic-bezier(0.16, 1, 0.3, 1)
     520ms both;
+  align-items: center;
+  box-sizing: border-box;
   display: flex;
   gap: clamp(1rem, 2vw, 2rem);
   height: 100vh;
-  margin-left: min(46vw, 39rem);
-  overflow-x: auto;
+  inset: 0;
+  overflow-x: hidden;
   overflow-y: hidden;
-  padding: 18vh clamp(5rem, 12vw, 12rem) 14vh 0;
-  scroll-snap-type: x mandatory;
+  overscroll-behavior: contain;
+  padding: 0 clamp(12rem, 22vw, 24rem) 0 min(39vw, 31rem);
+  position: absolute;
+  scroll-behavior: auto;
   scrollbar-width: none;
-  position: relative;
+  transition: none;
+  width: 100vw;
   z-index: 2;
+}
+
+.featured-work-detail__track::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes featuredWorkDetailTrackIn {
+  0% {
+    filter: blur(10px);
+    opacity: 0;
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 1;
+  }
 }
 
 @keyframes featuredWorkDetailContent {
@@ -1679,14 +1722,25 @@
   }
 }
 
-.featured-work-detail__track::-webkit-scrollbar {
-  display: none;
+@keyframes featuredWorkDetailDescriptionIn {
+  0% {
+    filter: blur(8px);
+    opacity: 0;
+    transform: translateX(-0.5rem);
+  }
+
+  100% {
+    filter: blur(0);
+    opacity: 0.74;
+    transform: translateX(0);
+  }
 }
 
 .featured-work-detail__panel {
-  flex: 0 0 min(72vw, 52rem);
+  flex: 0 0 clamp(19rem, 34vw, 32rem);
+  height: min(68vh, 42rem);
+  min-height: 0;
   position: relative;
-  scroll-snap-align: center;
 }
 
 .featured-work-detail__image {
@@ -1696,14 +1750,30 @@
   position: relative;
 }
 
-.featured-work-detail__panel p {
-  bottom: 1.2rem;
-  color: rgba(242, 238, 231, 0.62);
+.featured-work-detail__panel-copy {
+  bottom: clamp(1.8rem, 4vh, 3rem);
+  color: rgba(242, 238, 231, 0.72);
+  left: clamp(1.5rem, 3vw, 2.8rem);
+  position: absolute;
+  right: clamp(1.5rem, 3vw, 2.8rem);
+  z-index: 2;
+}
+
+.featured-work-detail__panel-copy p {
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   margin: 0;
-  position: absolute;
-  right: 1.3rem;
+  text-transform: uppercase;
+}
+
+.featured-work-detail__panel-copy h3 {
+  color: rgba(242, 238, 231, 0.92);
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+  margin: 0.3rem 0 0;
 }
 
 .featured-categories {
@@ -1796,12 +1866,12 @@
   }
 
   .featured-work-detail__track {
-    margin-left: 1rem;
-    padding: 42vh 3rem 10vh 0;
+    padding: 0 4rem 0 1rem;
   }
 
   .featured-work-detail__panel {
     flex-basis: 82vw;
+    height: 58vh;
   }
 
   .featured-categories__card {

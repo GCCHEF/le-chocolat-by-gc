@@ -37,6 +37,13 @@ const WORK_ITEMS = [
   },
 ];
 
+function getDetailPanels(title: string) {
+  return [1, 2, 3].map((index) => ({
+    index,
+    title: `${title} ${index}`,
+  }));
+}
+
 function AnimatedText({
   className,
   offset = 0,
@@ -62,9 +69,14 @@ function AnimatedText({
 export default function FeaturedWork() {
   const introRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
+  const detailRef = useRef<HTMLElement | null>(null);
   const detailTrackRef = useRef<HTMLDivElement | null>(null);
+  const detailProgressRef = useRef(0);
+  const detailTargetScrollRef = useRef(0);
+  const detailTouchYRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [activeWorkId, setActiveWorkId] = useState<string | null>(null);
+  const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [detailOrigin, setDetailOrigin] = useState({
     height: 1,
     scaleX: 1,
@@ -92,6 +104,7 @@ export default function FeaturedWork() {
     }
 
     setActiveWorkId(workId);
+    setIsDetailVisible(false);
   };
 
   useEffect(() => {
@@ -170,6 +183,19 @@ export default function FeaturedWork() {
   useEffect(() => {
     if (!activeWorkId) return;
 
+    const revealFrame = window.requestAnimationFrame(() => {
+      setIsDetailVisible(true);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(revealFrame);
+      setIsDetailVisible(false);
+    };
+  }, [activeWorkId]);
+
+  useEffect(() => {
+    if (!activeWorkId) return;
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -181,19 +207,112 @@ export default function FeaturedWork() {
   useEffect(() => {
     if (!activeWorkId) return;
 
+    const detail = detailRef.current;
     const track = detailTrackRef.current;
-    if (!track) return;
+    if (!detail || !track) return;
 
-    const handleWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      event.preventDefault();
-      track.scrollLeft += event.deltaY;
+    let animationFrame = 0;
+
+    const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
+
+    const getMaxScroll = () =>
+      Math.max(0, track.scrollWidth - track.clientWidth);
+
+    const applyScroll = (scrollLeft: number) => {
+      const maxScroll = getMaxScroll();
+      const progress = maxScroll > 0 ? clamp(scrollLeft / maxScroll) : 0;
+
+      detail.style.setProperty(
+        '--featured-detail-progress',
+        String(progress),
+      );
+      detail.style.setProperty(
+        '--featured-summary-opacity',
+        String(1 - Math.min(progress / 0.32, 1)),
+      );
+      detail.style.setProperty(
+        '--featured-summary-x',
+        `${-progress * 64}px`,
+      );
     };
 
-    track.addEventListener('wheel', handleWheel, {passive: false});
+    const animateTrack = () => {
+      const nextScroll =
+        track.scrollLeft +
+        (detailTargetScrollRef.current - track.scrollLeft) * 0.18;
+      track.scrollLeft = nextScroll;
+      detailProgressRef.current = nextScroll;
+      applyScroll(nextScroll);
+
+      if (Math.abs(detailTargetScrollRef.current - nextScroll) > 0.5) {
+        animationFrame = window.requestAnimationFrame(animateTrack);
+        return;
+      }
+
+      track.scrollLeft = detailTargetScrollRef.current;
+      detailProgressRef.current = detailTargetScrollRef.current;
+      applyScroll(detailTargetScrollRef.current);
+      animationFrame = 0;
+    };
+
+    const requestAnimation = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(animateTrack);
+    };
+
+    const moveProgress = (delta: number) => {
+      const maxScroll = getMaxScroll();
+      detailTargetScrollRef.current = Math.min(
+        Math.max(detailTargetScrollRef.current + delta, 0),
+        maxScroll,
+      );
+      requestAnimation();
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const delta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY;
+      moveProgress(delta);
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      detailTouchYRef.current = event.touches[0]?.clientY ?? 0;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const nextY = event.touches[0]?.clientY ?? detailTouchYRef.current;
+      const delta = detailTouchYRef.current - nextY;
+      detailTouchYRef.current = nextY;
+      event.preventDefault();
+      moveProgress(delta * 2.2);
+    };
+
+    const handleResize = () => {
+      detailTargetScrollRef.current = Math.min(
+        detailTargetScrollRef.current,
+        getMaxScroll(),
+      );
+      applyScroll(track.scrollLeft);
+    };
+
+    track.scrollLeft = 0;
+    detailProgressRef.current = 0;
+    detailTargetScrollRef.current = 0;
+    applyScroll(0);
+    window.addEventListener('wheel', handleWheel, {passive: false});
+    window.addEventListener('touchstart', handleTouchStart, {passive: false});
+    window.addEventListener('touchmove', handleTouchMove, {passive: false});
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      track.removeEventListener('wheel', handleWheel);
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('resize', handleResize);
     };
   }, [activeWorkId]);
 
@@ -238,7 +357,10 @@ export default function FeaturedWork() {
 
       {activeWork ? (
         <section
-          className="featured-work-detail"
+          ref={detailRef}
+          className={`featured-work-detail ${
+            isDetailVisible ? 'featured-work-detail--visible' : ''
+          }`}
           aria-label={`${activeWork.title} detail`}
           style={
             {
@@ -251,33 +373,47 @@ export default function FeaturedWork() {
             } as CSSProperties
           }
         >
-          <div className="featured-work-detail__hero" aria-hidden="true">
-            <div
-              className={`featured-work-detail__hero-image ${activeWork.palette}`}
-            />
-          </div>
-          <button
-            className="featured-work-detail__close"
-            onClick={() => setActiveWorkId(null)}
-            type="button"
-          >
-            Close
-          </button>
-          <div className="featured-work-detail__summary">
-            <p>{activeWork.eyebrow}</p>
-            <h2>{activeWork.title}</h2>
-            <span>{activeWork.description}</span>
-          </div>
-          <div className="featured-work-detail__track" ref={detailTrackRef}>
-            {[0, 1, 2, 3].map((panel) => (
-              <article
-                className={`featured-work-detail__panel ${activeWork.palette}`}
-                key={`${activeWork.id}-${panel}`}
-              >
-                <div className="featured-work-detail__image" />
-                <p>{String(panel + 1).padStart(2, '0')}</p>
-              </article>
-            ))}
+          <div className="featured-work-detail__viewport">
+            <div className="featured-work-detail__hero" aria-hidden="true">
+              <div
+                className={`featured-work-detail__hero-image ${activeWork.palette}`}
+              />
+            </div>
+            <button
+              className="featured-work-detail__close"
+              onClick={() => setActiveWorkId(null)}
+              type="button"
+            >
+              Close
+            </button>
+            <div className="featured-work-detail__summary">
+              <AnimatedText
+                className="featured-work-detail__eyebrow"
+                text={activeWork.eyebrow}
+              />
+              <AnimatedText
+                className="featured-work-detail__title"
+                offset={5}
+                text={activeWork.title}
+              />
+              <span className="featured-work-detail__description">
+                {activeWork.description}
+              </span>
+            </div>
+            <div className="featured-work-detail__track" ref={detailTrackRef}>
+              {getDetailPanels(activeWork.title).map((panel) => (
+                <article
+                  className={`featured-work-detail__panel ${activeWork.palette}`}
+                  key={`${activeWork.id}-${panel.index}`}
+                >
+                  <div className="featured-work-detail__image" />
+                  <div className="featured-work-detail__panel-copy">
+                    <p>{String(panel.index).padStart(2, '0')}</p>
+                    <h3>{panel.title}</h3>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}
