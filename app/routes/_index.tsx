@@ -5,6 +5,7 @@ import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
+  TextureProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
@@ -34,14 +35,22 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}] = await Promise.all([
+  const [{collections}, textureProductsResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
+    context.storefront.query(TEXTURE_PRODUCTS_QUERY, {
+      cache: context.storefront.CacheNone(),
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
     featuredCollection: collections.nodes[0],
+    textureProducts: [
+      textureProductsResponse.cu1,
+      textureProductsResponse.cu2,
+      textureProductsResponse.cu3,
+    ].filter((product) => product != null),
   };
 }
 
@@ -68,7 +77,7 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <HomePage>
+    <HomePage products={data.textureProducts}>
       <div className="home">
         {!data.isShopLinked && <MockShopNotice />}
         <FeaturedCollection collection={data.featuredCollection} />
@@ -113,7 +122,7 @@ function RecommendedProducts({
           {(response) => (
             <div className="recommended-products-grid">
               {response
-                ? response.products.nodes.map((product) => (
+                ? response.products.nodes.slice(0, 4).map((product) => (
                     <ProductItem key={product.id} product={product} />
                   ))
                 : null}
@@ -174,6 +183,46 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       nodes {
         ...RecommendedProduct
       }
+    }
+  }
+` as const;
+
+const TEXTURE_PRODUCTS_QUERY = `#graphql
+  query TextureProducts($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    cu1: product(handle: "cu1") {
+      ...TextureProduct
+    }
+    cu2: product(handle: "cu2") {
+      ...TextureProduct
+    }
+    cu3: product(handle: "cu3") {
+      ...TextureProduct
+    }
+  }
+  fragment TextureProduct on Product {
+    id
+    title
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    selectedOrFirstAvailableVariant(
+      selectedOptions: []
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
+      id
+      availableForSale
     }
   }
 ` as const;

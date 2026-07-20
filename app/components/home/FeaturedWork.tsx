@@ -5,6 +5,17 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react';
+import {Image, Money} from '@shopify/hydrogen';
+import type {TextureProductsQuery} from 'storefrontapi.generated';
+import {AddToCartButton} from '~/components/AddToCartButton';
+import {useAside} from '~/components/Aside';
+
+type TextureProduct =
+  NonNullable<
+    | TextureProductsQuery['cu1']
+    | TextureProductsQuery['cu2']
+    | TextureProductsQuery['cu3']
+  >;
 
 const WORK_ITEMS = [
   {
@@ -66,7 +77,43 @@ function AnimatedText({
   );
 }
 
-export default function FeaturedWork() {
+function TextureProductPanel({product}: {product: TextureProduct}) {
+  const {open} = useAside();
+  const variant = product.selectedOrFirstAvailableVariant;
+
+  return (
+    <article className="featured-work-detail__panel featured-work-detail__panel--product-slot">
+      <div className="featured-work-detail__image featured-work-detail__product-image">
+        {product.featuredImage ? (
+          <Image
+            data={product.featuredImage}
+            sizes="(max-width: 720px) 88vw, 43vw"
+          />
+        ) : null}
+      </div>
+      <div className="featured-work-detail__product-copy">
+        <h3>{product.title}</h3>
+        <Money data={product.priceRange.minVariantPrice} />
+        <AddToCartButton
+          disabled={!variant?.availableForSale}
+          lines={
+            variant ? [{merchandiseId: variant.id, quantity: 1}] : []
+          }
+          onClick={() => open('cart')}
+        >
+          {variant?.availableForSale ? 'Add to basket' : 'Sold out'}
+        </AddToCartButton>
+      </div>
+    </article>
+  );
+}
+
+export default function FeaturedWork({
+  products,
+}: {
+  products: TextureProduct[];
+}) {
+  const textureProducts = Array.isArray(products) ? products : [];
   const introRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
   const detailRef = useRef<HTMLElement | null>(null);
@@ -401,18 +448,32 @@ export default function FeaturedWork() {
               </span>
             </div>
             <div className="featured-work-detail__track" ref={detailTrackRef}>
-              {getDetailPanels(activeWork.title).map((panel) => (
-                <article
-                  className={`featured-work-detail__panel ${activeWork.palette}`}
-                  key={`${activeWork.id}-${panel.index}`}
-                >
-                  <div className="featured-work-detail__image" />
-                  <div className="featured-work-detail__panel-copy">
-                    <p>{String(panel.index).padStart(2, '0')}</p>
-                    <h3>{panel.title}</h3>
-                  </div>
-                </article>
-              ))}
+              {activeWork.id === 'matiere-origin'
+                ? [0, 1, 2].map((index) => {
+                    const product = textureProducts[index];
+
+                    return product ? (
+                      <TextureProductPanel
+                        key={product.id}
+                        product={product}
+                      />
+                    ) : (
+                      <article
+                        className="featured-work-detail__panel featured-work-detail__panel--product-slot"
+                        key={`texture-slot-${index}`}
+                      >
+                        <div className="featured-work-detail__image" />
+                      </article>
+                    );
+                  })
+                : getDetailPanels(activeWork.title).map((panel) => (
+                    <article
+                      className={`featured-work-detail__panel featured-work-detail__panel--product-slot ${activeWork.palette}`}
+                      key={`${activeWork.id}-${panel.index}`}
+                    >
+                      <div className="featured-work-detail__image" />
+                    </article>
+                  ))}
             </div>
           </div>
         </section>

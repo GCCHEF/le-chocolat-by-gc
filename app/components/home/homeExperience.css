@@ -1743,6 +1743,55 @@
   position: relative;
 }
 
+.featured-work-detail__panel--product-slot {
+  flex-basis: clamp(25rem, 43vw, 44rem);
+  height: auto;
+}
+
+.featured-work-detail__panel--product-slot .featured-work-detail__image {
+  height: min(70vh, 48rem);
+}
+
+.featured-work-detail__product-image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.featured-work-detail__product-copy {
+  align-items: baseline;
+  color: rgba(242, 238, 231, 0.92);
+  display: grid;
+  gap: 0.45rem 1rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding-top: clamp(0.9rem, 1.6vw, 1.4rem);
+}
+
+.featured-work-detail__product-copy h3 {
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: clamp(1.35rem, 2.2vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.featured-work-detail__product-copy button {
+  background: transparent;
+  border: 1px solid rgba(242, 238, 231, 0.5);
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+}
+
 .featured-work-detail__image {
   border-radius: clamp(0.9rem, 1.4vw, 1.2rem);
   height: 100%;
@@ -1872,6 +1921,23 @@
   .featured-work-detail__panel {
     flex-basis: 82vw;
     height: 58vh;
+  }
+
+  .featured-work-detail__panel--product-slot {
+    flex-basis: 88vw;
+    height: auto;
+  }
+
+  .featured-work-detail__panel--product-slot .featured-work-detail__image {
+    height: 64vh;
+  }
+
+  .featured-work-detail__product-copy {
+    grid-template-columns: auto 1fr;
+  }
+
+  .featured-work-detail__product-copy > :last-child {
+    grid-column: 2;
   }
 
   .featured-categories__card {

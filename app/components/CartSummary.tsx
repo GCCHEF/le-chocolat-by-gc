@@ -36,9 +36,12 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
 function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
   if (!checkoutUrl) return null;
 
+  const headlessCheckoutUrl = new URL(checkoutUrl);
+  headlessCheckoutUrl.searchParams.set('channel', 'headless-storefronts');
+
   return (
     <div>
-      <a href={checkoutUrl} target="_self">
+      <a href={headlessCheckoutUrl.toString()} target="_self">
         <p>Continue to Checkout &rarr;</p>
       </a>
       <br />

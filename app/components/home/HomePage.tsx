@@ -1,4 +1,5 @@
 import {useEffect, useState, type ReactNode} from 'react';
+import type {TextureProductsQuery} from 'storefrontapi.generated';
 import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
@@ -6,7 +7,19 @@ import './homeExperience.css';
 
 const TITLE_REVEAL_DURATION_MS = 3300;
 
-export default function HomePage({children}: {children: ReactNode}) {
+export default function HomePage({
+  children,
+  products,
+}: {
+  children: ReactNode;
+  products: Array<
+    NonNullable<
+      | TextureProductsQuery['cu1']
+      | TextureProductsQuery['cu2']
+      | TextureProductsQuery['cu3']
+    >
+  >;
+}) {
   const [isIntroActive, setIsIntroActive] = useState(true);
   const [isHomepageVisible, setIsHomepageVisible] = useState(false);
   const [isTitleRevealActive, setIsTitleRevealActive] = useState(false);
@@ -67,7 +80,7 @@ export default function HomePage({children}: {children: ReactNode}) {
             isTitleRevealActive={isTitleRevealActive}
             isTitleVisible={isTitleVisible}
           />
-          <FeaturedWork />
+          <FeaturedWork products={products} />
           {children}
         </div>
       ) : null}
