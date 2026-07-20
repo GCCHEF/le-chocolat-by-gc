@@ -1,11 +1,12 @@
-import {useEffect, useState, type ReactNode} from 'react';
+import {useEffect, useLayoutEffect, useState, type ReactNode} from 'react';
+import {useLocation} from 'react-router';
 import type {TextureProductsQuery} from 'storefrontapi.generated';
 import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
 import './homeExperience.css';
 
-const TITLE_REVEAL_DURATION_MS = 3300;
+const TITLE_REVEAL_DURATION_MS = 3650;
 
 export default function HomePage({
   children,
@@ -20,16 +21,59 @@ export default function HomePage({
     >
   >;
 }) {
-  const [isIntroActive, setIsIntroActive] = useState(true);
-  const [isHomepageVisible, setIsHomepageVisible] = useState(false);
+  const location = useLocation();
+  const isCreationDestination = location.hash === '#creation';
+  const [isIntroActive, setIsIntroActive] = useState(!isCreationDestination);
+  const [isHomepageVisible, setIsHomepageVisible] = useState(
+    isCreationDestination,
+  );
   const [isTitleRevealActive, setIsTitleRevealActive] = useState(false);
-  const [isTitleVisible, setIsTitleVisible] = useState(false);
+  const [isTitleVisible, setIsTitleVisible] = useState(isCreationDestination);
+  const [didBypassIntroOnRefresh, setDidBypassIntroOnRefresh] = useState(false);
+
+  useLayoutEffect(() => {
+    const navigationEntry = window.performance.getEntriesByType(
+      'navigation',
+    )[0] as PerformanceNavigationTiming | undefined;
+
+    if (navigationEntry?.type !== 'reload') return;
+
+    setIsIntroActive(false);
+    setIsHomepageVisible(true);
+    setIsTitleRevealActive(false);
+    setIsTitleVisible(true);
+    setDidBypassIntroOnRefresh(true);
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${location.pathname}${location.search}`,
+    );
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
+    if (
+      !isCreationDestination ||
+      !isHomepageVisible ||
+      didBypassIntroOnRefresh
+    ) {
+      return;
+    }
+
+    const scrollFrame = window.requestAnimationFrame(() => {
+      document.getElementById('creation')?.scrollIntoView({block: 'start'});
+    });
+
+    return () => window.cancelAnimationFrame(scrollFrame);
+  }, [
+    didBypassIntroOnRefresh,
+    isCreationDestination,
+    isHomepageVisible,
+  ]);
+
+  useLayoutEffect(() => {
     if (!isTitleRevealActive) return;
 
-    const previousDocumentOverflow = document.documentElement.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
     const lockScroll = () => window.scrollTo(0, 0);
     const preventScroll = (event: Event) => {
       event.preventDefault();
@@ -49,8 +93,9 @@ export default function HomePage({
 
     return () => {
       window.clearTimeout(revealTimer);
-      document.documentElement.style.overflow = previousDocumentOverflow;
-      document.body.style.overflow = previousBodyOverflow;
+      window.scrollTo(0, 0);
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
       window.removeEventListener('scroll', lockScroll);
       window.removeEventListener('wheel', preventScroll);
       window.removeEventListener('touchmove', preventScroll);

@@ -77,8 +77,13 @@ export function HeaderMenu({
           .trim();
         const menuTitle =
           normalizedTitle.includes('commerce') || url.includes('collections')
-            ? 'E shop'
+            ? 'E-Shop'
             : item.title;
+        const menuUrl =
+          normalizedTitle.includes('commerce') || url.includes('collections')
+            ? '/#creation'
+            : url;
+        const isCreationLink = menuUrl === '/#creation';
 
         return (
           <NavLink
@@ -87,8 +92,8 @@ export function HeaderMenu({
             key={item.id}
             onClick={close}
             prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
+            style={isCreationLink ? creationLinkStyle : activeLinkStyle}
+            to={menuUrl}
           >
             <span className="header-menu-item__mask">
               <span className="header-menu-item__line">{menuTitle}</span>
@@ -231,5 +236,12 @@ function activeLinkStyle({
   return {
     fontWeight: isActive ? 'bold' : undefined,
     color: isPending ? 'grey' : 'black',
+  };
+}
+
+function creationLinkStyle({isPending}: {isPending: boolean}) {
+  return {
+    color: isPending ? 'grey' : 'black',
+    fontWeight: 400,
   };
 }

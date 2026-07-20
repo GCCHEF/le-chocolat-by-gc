@@ -4,13 +4,14 @@ const INTRO_DURATION_MS = 2250;
 const HOLD_DURATION_MS = 500;
 const SCROLL_UNLOCK_DELAY_MS = 500;
 const INTRO_ANIMATION_DURATION_MS = 2700;
-const WHITE_HOLD_DURATION_MS = 150;
-const OVERLAY_FADE_DURATION_MS = 600;
+const WHITE_HOLD_DURATION_MS = 30;
+const OVERLAY_FADE_DURATION_MS = 220;
 
 type IntroState =
   | 'loading'
   | 'readyToScroll'
   | 'introAnimating'
+  | 'whiteHold'
   | 'introExiting'
   | 'introComplete';
 
@@ -145,6 +146,7 @@ export default function LoadingIntro({
         promptOpacity: 0,
         washProgress: 1,
       });
+      setIntroState('whiteHold');
       overlayTimerRef.current = window.setTimeout(() => {
         onRevealStart();
         setIntroState('introExiting');
@@ -277,6 +279,10 @@ export default function LoadingIntro({
       ref={sectionRef}
       className={`beam-scroll-scene loading-intro ${
         introState === 'introExiting' ? 'loading-intro--exiting' : ''
+      } ${
+        introState === 'whiteHold' || introState === 'introExiting'
+          ? 'loading-intro--white'
+          : ''
       }`}
       aria-label="Loading introduction"
       style={

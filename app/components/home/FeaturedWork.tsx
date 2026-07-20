@@ -5,7 +5,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import {Image} from '@shopify/hydrogen';
 import type {TextureProductsQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
@@ -20,9 +20,10 @@ type TextureProduct =
 const WORK_ITEMS = [
   {
     id: 'matiere-origin',
-    eyebrow: 'Matiere / Origin',
+    eyebrow: 'Matiere / Texture',
     title: 'Texture',
-    description: 'Single-origin cacao, interpreted through texture and shadow.',
+    description:
+      'Almond and hazelnut praliné with single-origin 64% Madagascar chocolate, toasted almonds and coated in dark chocolate.',
     palette: 'featured-work-card--origin',
   },
   {
@@ -77,12 +78,47 @@ function AnimatedText({
   );
 }
 
+function CubesTitle() {
+  return (
+    <span
+      className="featured-work-detail__title featured-work-detail__title--cubes featured-work-reveal"
+      aria-label="Cubes"
+      style={{'--featured-text-delay': `${5 * 42}ms`} as CSSProperties}
+    >
+      <span className="featured-work-reveal__mask">
+        <span className="featured-work-reveal__line">
+          <span className="featured-work-detail__title-cubes-prefix">CU</span>
+          <span className="featured-work-detail__title-cubes-suffix">
+            <span className="featured-work-detail__title-cubes-paren">(</span>
+            bes
+            <span className="featured-work-detail__title-cubes-paren">)</span>
+          </span>
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function formatCubeTitle(title: string) {
+  const match = title.match(/^CU\s*0*(\d+)$/i);
+  if (!match) return title;
+
+  return `CU${match[1].padStart(3, '0')}`;
+}
+
 function TextureProductPanel({product}: {product: TextureProduct}) {
   const {open} = useAside();
   const variant = product.selectedOrFirstAvailableVariant;
+  const formattedTitle = formatCubeTitle(product.title);
 
   return (
-    <article className="featured-work-detail__panel featured-work-detail__panel--product-slot">
+    <article
+      className={`featured-work-detail__panel featured-work-detail__panel--product-slot ${
+        formattedTitle === 'CU003'
+          ? 'featured-work-detail__panel--cu003'
+          : ''
+      }`}
+    >
       <div className="featured-work-detail__image featured-work-detail__product-image">
         {product.featuredImage ? (
           <Image
@@ -92,12 +128,22 @@ function TextureProductPanel({product}: {product: TextureProduct}) {
         ) : null}
       </div>
       <div className="featured-work-detail__product-copy">
-        <h3>{product.title}</h3>
-        <Money data={product.priceRange.minVariantPrice} />
+        <h3>{formattedTitle}</h3>
+        <span className="featured-work-detail__product-price">
+          R {Number(product.priceRange.minVariantPrice.amount).toFixed(2)}
+        </span>
         <AddToCartButton
           disabled={!variant?.availableForSale}
           lines={
-            variant ? [{merchandiseId: variant.id, quantity: 1}] : []
+            variant
+              ? [
+                  {
+                    merchandiseId: variant.id,
+                    quantity: 1,
+                    selectedVariant: variant,
+                  },
+                ]
+              : []
           }
           onClick={() => open('cart')}
         >
@@ -124,6 +170,8 @@ export default function FeaturedWork({
   const [isVisible, setIsVisible] = useState(false);
   const [activeWorkId, setActiveWorkId] = useState<string | null>(null);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
+  const [isMoreInformationVisible, setIsMoreInformationVisible] =
+    useState(false);
   const [detailOrigin, setDetailOrigin] = useState({
     height: 1,
     scaleX: 1,
@@ -230,6 +278,7 @@ export default function FeaturedWork({
   useEffect(() => {
     if (!activeWorkId) return;
 
+    setIsMoreInformationVisible(false);
     const revealFrame = window.requestAnimationFrame(() => {
       setIsDetailVisible(true);
     });
@@ -245,9 +294,11 @@ export default function FeaturedWork({
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('featured-work-detail-open');
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.classList.remove('featured-work-detail-open');
     };
   }, [activeWorkId]);
 
@@ -369,7 +420,7 @@ export default function FeaturedWork({
         className={`featured-work ${isVisible ? 'featured-work--visible' : ''}`}
         aria-label="Featured work"
       >
-        <div className="featured-work__intro" ref={introRef}>
+        <div className="featured-work__intro" id="creation" ref={introRef}>
           <AnimatedText className="featured-work__label" text="Creation" />
         </div>
         <div className="featured-work__grid" ref={gridRef}>
@@ -438,14 +489,48 @@ export default function FeaturedWork({
                 className="featured-work-detail__eyebrow"
                 text={activeWork.eyebrow}
               />
-              <AnimatedText
-                className="featured-work-detail__title"
-                offset={5}
-                text={activeWork.title}
-              />
+              {activeWork.id === 'matiere-origin' ? (
+                <CubesTitle />
+              ) : (
+                <AnimatedText
+                  className="featured-work-detail__title"
+                  offset={5}
+                  text={activeWork.title}
+                />
+              )}
               <span className="featured-work-detail__description">
                 {activeWork.description}
               </span>
+              {activeWork.id === 'matiere-origin' ? (
+                <>
+                  <button
+                    className="featured-work-detail__more-information"
+                    aria-expanded={isMoreInformationVisible}
+                    onClick={() =>
+                      setIsMoreInformationVisible((isVisible) => !isVisible)
+                    }
+                    type="button"
+                  >
+                    <span aria-hidden="true">
+                      {isMoreInformationVisible ? '−' : '+'}
+                    </span>
+                    <span>More information</span>
+                  </button>
+                  <span
+                    className={`featured-work-detail__more-information-copy ${
+                      isMoreInformationVisible
+                        ? 'featured-work-detail__more-information-copy--visible'
+                        : ''
+                    }`}
+                  >
+                    <span>Available in 16 / 32 / 48 pieces</span>
+                    <span className="featured-work-detail__allergens">
+                      Allergens: Contains hazelnuts, almonds and soy. May contain
+                      traces of milk and other tree nuts.
+                    </span>
+                  </span>
+                </>
+              ) : null}
             </div>
             <div className="featured-work-detail__track" ref={detailTrackRef}>
               {activeWork.id === 'matiere-origin'

@@ -223,6 +223,26 @@ const TEXTURE_PRODUCTS_QUERY = `#graphql
     ) {
       id
       availableForSale
+      image {
+        id
+        url
+        altText
+        width
+        height
+      }
+      price {
+        amount
+        currencyCode
+      }
+      product {
+        title
+        handle
+      }
+      selectedOptions {
+        name
+        value
+      }
+      title
     }
   }
 ` as const;
