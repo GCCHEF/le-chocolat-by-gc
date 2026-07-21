@@ -3,6 +3,7 @@ import {
   type ReactNode,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -76,13 +77,91 @@ const AsideContext = createContext<AsideContextValue | null>(null);
 
 Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
   const [type, setType] = useState<AsideType>('closed');
+  const menuOriginRef = useRef({scrollY: 0, url: ''});
+  const lastPageScrollRef = useRef(0);
+  const menuBodyStylesRef = useRef({
+    position: '',
+    top: '',
+    width: '',
+  });
+
+  const open = (mode: AsideType) => {
+    if (mode === 'mobile' && type !== 'mobile') {
+      const scrollY = Math.max(
+        lastPageScrollRef.current,
+        window.scrollY,
+        document.documentElement.scrollTop,
+        document.body.scrollTop,
+      );
+      menuOriginRef.current = {
+        scrollY,
+        url: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+      };
+      menuBodyStylesRef.current = {
+        position: document.body.style.position,
+        top: document.body.style.top,
+        width: document.body.style.width,
+      };
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    }
+    setType(mode);
+  };
+
+  useEffect(() => {
+    if (type !== 'closed') return;
+
+    const rememberPageScroll = () => {
+      const scrollY = Math.max(
+        window.scrollY,
+        document.documentElement.scrollTop,
+        document.body.scrollTop,
+      );
+      if (scrollY > 0 || lastPageScrollRef.current === 0) {
+        lastPageScrollRef.current = scrollY;
+      }
+    };
+
+    rememberPageScroll();
+    window.addEventListener('scroll', rememberPageScroll, {passive: true});
+    return () => window.removeEventListener('scroll', rememberPageScroll);
+  }, [type]);
+
+  const close = () => {
+    const origin = menuOriginRef.current;
+    const previousBodyStyles = menuBodyStylesRef.current;
+
+    if (type === 'mobile') {
+      document.body.style.position = previousBodyStyles.position;
+      document.body.style.top = previousBodyStyles.top;
+      document.body.style.width = previousBodyStyles.width;
+      window.scrollTo(0, origin.scrollY);
+    }
+    setType('closed');
+
+    const restoreMenuPosition = () => {
+      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (currentUrl === origin.url) {
+        window.scrollTo(0, origin.scrollY);
+      }
+    };
+
+    if (type === 'mobile') {
+      window.requestAnimationFrame(restoreMenuPosition);
+      window.setTimeout(restoreMenuPosition, 80);
+      window.setTimeout(restoreMenuPosition, 320);
+      window.setTimeout(restoreMenuPosition, 820);
+      window.setTimeout(restoreMenuPosition, 1300);
+    }
+  };
 
   return (
     <AsideContext.Provider
       value={{
         type,
-        open: setType,
-        close: () => setType('closed'),
+        open,
+        close,
       }}
     >
       {children}

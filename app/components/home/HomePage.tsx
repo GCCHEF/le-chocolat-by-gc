@@ -1,6 +1,6 @@
 import {useEffect, useLayoutEffect, useState, type ReactNode} from 'react';
 import {useLocation} from 'react-router';
-import type {TextureProductsQuery} from 'storefrontapi.generated';
+import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
@@ -9,26 +9,37 @@ import './homeExperience.css';
 const TITLE_REVEAL_DURATION_MS = 3650;
 
 export default function HomePage({
+  categoryProducts,
   children,
-  products,
+  textureProducts,
 }: {
+  categoryProducts: Record<
+    string,
+    Array<NonNullable<CategoryProductsQuery[keyof CategoryProductsQuery]>>
+  >;
   children: ReactNode;
-  products: Array<
+  textureProducts: Array<
     NonNullable<
-      | TextureProductsQuery['cu1']
-      | TextureProductsQuery['cu2']
-      | TextureProductsQuery['cu3']
+      | CategoryProductsQuery['cu1']
+      | CategoryProductsQuery['cu2']
+      | CategoryProductsQuery['cu3']
     >
   >;
 }) {
   const location = useLocation();
+  const routeState = location.state as {bypassIntro?: boolean} | null;
   const isCreationDestination = location.hash === '#creation';
-  const [isIntroActive, setIsIntroActive] = useState(!isCreationDestination);
+  const shouldBypassIntro = routeState?.bypassIntro === true;
+  const [isIntroActive, setIsIntroActive] = useState(
+    !isCreationDestination && !shouldBypassIntro,
+  );
   const [isHomepageVisible, setIsHomepageVisible] = useState(
-    isCreationDestination,
+    isCreationDestination || shouldBypassIntro,
   );
   const [isTitleRevealActive, setIsTitleRevealActive] = useState(false);
-  const [isTitleVisible, setIsTitleVisible] = useState(isCreationDestination);
+  const [isTitleVisible, setIsTitleVisible] = useState(
+    isCreationDestination || shouldBypassIntro,
+  );
   const [didBypassIntroOnRefresh, setDidBypassIntroOnRefresh] = useState(false);
 
   useLayoutEffect(() => {
@@ -125,7 +136,10 @@ export default function HomePage({
             isTitleRevealActive={isTitleRevealActive}
             isTitleVisible={isTitleVisible}
           />
-          <FeaturedWork products={products} />
+          <FeaturedWork
+            categoryProducts={categoryProducts}
+            textureProducts={textureProducts}
+          />
           {children}
         </div>
       ) : null}

@@ -25,9 +25,8 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
         </dd>
       </dl>
       <p className="cart-collection-notice">
-        Collection from the manufacture only.
-        <br />
-        Orders are generally ready for collection the next day.
+        Orders are available for collection only. Orders are usually ready for
+        collection the following day.
       </p>
       <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} />
     </div>

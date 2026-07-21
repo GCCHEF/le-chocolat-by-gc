@@ -5,7 +5,7 @@ import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
-  TextureProductsQuery,
+  CategoryProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
@@ -35,9 +35,9 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}, textureProductsResponse] = await Promise.all([
+  const [{collections}, categoryProductsResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    context.storefront.query(TEXTURE_PRODUCTS_QUERY, {
+    context.storefront.query(CATEGORY_PRODUCTS_QUERY, {
       cache: context.storefront.CacheNone(),
     }),
     // Add other queries here, so that they are loaded in parallel
@@ -47,10 +47,27 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
     featuredCollection: collections.nodes[0],
     textureProducts: [
-      textureProductsResponse.cu1,
-      textureProductsResponse.cu2,
-      textureProductsResponse.cu3,
+      categoryProductsResponse.cu1,
+      categoryProductsResponse.cu2,
+      categoryProductsResponse.cu3,
     ].filter((product) => product != null),
+    categoryProducts: {
+      'bonbon-archive': [
+        categoryProductsResponse.as01,
+        categoryProductsResponse.as02,
+        categoryProductsResponse.as03,
+      ].filter((product) => product != null),
+      'noir-72': [
+        categoryProductsResponse.or01,
+        categoryProductsResponse.co01,
+        categoryProductsResponse.co02,
+      ].filter((product) => product != null),
+      'atelier-cape-town': [
+        categoryProductsResponse.pr01,
+        categoryProductsResponse.pr02,
+        categoryProductsResponse.pr03,
+      ].filter((product) => product != null),
+    },
   };
 }
 
@@ -77,7 +94,10 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <HomePage products={data.textureProducts}>
+    <HomePage
+      categoryProducts={data.categoryProducts}
+      textureProducts={data.textureProducts}
+    >
       <div className="home">
         {!data.isShopLinked && <MockShopNotice />}
         <FeaturedCollection collection={data.featuredCollection} />
@@ -187,20 +207,47 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
 ` as const;
 
-const TEXTURE_PRODUCTS_QUERY = `#graphql
-  query TextureProducts($country: CountryCode, $language: LanguageCode)
+const CATEGORY_PRODUCTS_QUERY = `#graphql
+  query CategoryProducts($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
     cu1: product(handle: "cu1") {
-      ...TextureProduct
+      ...CategoryProduct
     }
     cu2: product(handle: "cu2") {
-      ...TextureProduct
+      ...CategoryProduct
     }
     cu3: product(handle: "cu3") {
-      ...TextureProduct
+      ...CategoryProduct
+    }
+    as01: product(handle: "a-i") {
+      ...CategoryProduct
+    }
+    as02: product(handle: "a2") {
+      ...CategoryProduct
+    }
+    as03: product(handle: "a3") {
+      ...CategoryProduct
+    }
+    or01: product(handle: "sg-1") {
+      ...CategoryProduct
+    }
+    co01: product(handle: "co1") {
+      ...CategoryProduct
+    }
+    co02: product(handle: "co2") {
+      ...CategoryProduct
+    }
+    pr01: product(handle: "pr1") {
+      ...CategoryProduct
+    }
+    pr02: product(handle: "pr2") {
+      ...CategoryProduct
+    }
+    pr03: product(handle: "pr3") {
+      ...CategoryProduct
     }
   }
-  fragment TextureProduct on Product {
+  fragment CategoryProduct on Product {
     id
     title
     featuredImage {

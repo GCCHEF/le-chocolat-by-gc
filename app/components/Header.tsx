@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, type CSSProperties} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -84,6 +84,56 @@ export function HeaderMenu({
             ? '/#creation'
             : url;
         const isCreationLink = menuUrl === '/#creation';
+        const isContactLink =
+          normalizedTitle === 'contact' || menuUrl === '/pages/contact';
+
+        if (isContactLink) {
+          const contactChoices = [
+            {label: 'Collection address', to: '/pages/collection-address'},
+            {label: 'Enquiry', to: '/pages/contact'},
+            {label: 'Social media', to: '/pages/social-media'},
+          ];
+
+          return (
+            <div className="header-menu-contact" key={item.id}>
+              <div className="header-menu-contact__anchor">
+                <button
+                  aria-haspopup="true"
+                  className="header-menu-item header-menu-contact__trigger reset"
+                  type="button"
+                >
+                  <span className="header-menu-item__mask">
+                    <span className="header-menu-item__line">{menuTitle}</span>
+                  </span>
+                </button>
+                <div className="header-menu-contact__choices">
+                  {contactChoices.map((choice, index) => (
+                    <NavLink
+                      className="header-menu-contact__choice"
+                      key={choice.label}
+                      onClick={
+                        choice.to === '/pages/contact' ? undefined : close
+                      }
+                      prefetch="intent"
+                      style={
+                        {
+                          '--contact-choice-index': index,
+                        } as CSSProperties
+                      }
+                      to={choice.to}
+                    >
+                      <span className="header-menu-contact__choice-mask">
+                        <span className="header-menu-contact__choice-line">
+                          {choice.label}
+                        </span>
+                      </span>
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
 
         return (
           <NavLink
@@ -227,14 +277,13 @@ const FALLBACK_HEADER_MENU = {
 };
 
 function activeLinkStyle({
-  isActive,
   isPending,
 }: {
   isActive: boolean;
   isPending: boolean;
 }) {
   return {
-    fontWeight: isActive ? 'bold' : undefined,
+    fontWeight: 400,
     color: isPending ? 'grey' : 'black',
   };
 }

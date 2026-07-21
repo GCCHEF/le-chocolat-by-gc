@@ -1445,6 +1445,14 @@ body.featured-work-detail-open .header,
   opacity: 0.55;
 }
 
+.featured-work-card__image--photo::before {
+  display: none;
+}
+
+.featured-work-card__image--photo::after {
+  opacity: 0.12;
+}
+
 .featured-work-card__image-core {
   background:
     radial-gradient(
@@ -1506,6 +1514,11 @@ body.featured-work-detail-open .header,
   line-height: 0.95;
   transform: translateX(0);
   transition: transform 950ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-work-card__title .featured-work-reveal__mask {
+  margin-bottom: -0.14em;
+  padding-bottom: 0.14em;
 }
 
 .featured-work-card__meta {
@@ -1700,6 +1713,12 @@ body.featured-work-detail-open .header,
 }
 
 .featured-work-detail__title--cubes
+  .featured-work-detail__title-cubes-suffix,
+.featured-work-detail__title--assortment
+  .featured-work-detail__title-cubes-suffix,
+.featured-work-detail__title--nuances
+  .featured-work-detail__title-cubes-suffix,
+.featured-work-detail__title--praline
   .featured-work-detail__title-cubes-suffix {
   font-size: 0.55em;
   letter-spacing: -0.025em;
