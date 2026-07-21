@@ -39,14 +39,14 @@ export default function CollectionAddressPage() {
           </address>
           <nav aria-label="Directions" className="collection-address-page__links">
             <a
-              href="https://www.google.com/maps/dir/?api=1&destination=The%20Cruise%20Terminal%2C%20Victoria%20%26%20Alfred%20Waterfront%2C%20Cape%20Town%2C%208001"
+              href="https://www.google.com/maps/dir/?api=1&destination=-33.91051%2C18.42596&travelmode=driving"
               rel="noreferrer"
               target="_blank"
             >
               Google Maps <span aria-hidden="true">↗</span>
             </a>
             <a
-              href="https://maps.apple.com/?daddr=The%20Cruise%20Terminal%2C%20Victoria%20%26%20Alfred%20Waterfront%2C%20Cape%20Town%2C%208001"
+              href="https://maps.apple.com/?daddr=-33.91051%2C18.42596&dirflg=d"
               rel="noreferrer"
               target="_blank"
             >
