@@ -33,7 +33,9 @@ export function PageLayout({
   publicStoreDomain,
 }: PageLayoutProps) {
   const location = useLocation();
-  const isContactPage = location.pathname === '/pages/contact';
+  const isContactPage =
+    location.pathname === '/pages/contact' ||
+    location.pathname === '/pages/collection-address';
 
   return (
     <Aside.Provider>

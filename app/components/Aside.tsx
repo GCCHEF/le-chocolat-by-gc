@@ -131,28 +131,28 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
   const close = () => {
     const origin = menuOriginRef.current;
     const previousBodyStyles = menuBodyStylesRef.current;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const shouldRestoreMenuPosition = currentUrl === origin.url;
 
     if (type === 'mobile') {
       document.body.style.position = previousBodyStyles.position;
       document.body.style.top = previousBodyStyles.top;
       document.body.style.width = previousBodyStyles.width;
-      window.scrollTo(0, origin.scrollY);
+      if (shouldRestoreMenuPosition) {
+        window.scrollTo(0, origin.scrollY);
+      }
     }
     setType('closed');
 
     const restoreMenuPosition = () => {
-      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-      if (currentUrl === origin.url) {
+      const latestUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (latestUrl === origin.url) {
         window.scrollTo(0, origin.scrollY);
       }
     };
 
     if (type === 'mobile') {
       window.requestAnimationFrame(restoreMenuPosition);
-      window.setTimeout(restoreMenuPosition, 80);
-      window.setTimeout(restoreMenuPosition, 320);
-      window.setTimeout(restoreMenuPosition, 820);
-      window.setTimeout(restoreMenuPosition, 1300);
     }
   };
 

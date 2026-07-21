@@ -66,6 +66,18 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
     throw new Error('Missing page handle');
   }
 
+  if (params.handle === 'contact') {
+    return {
+      page: {
+        body: '',
+        handle: 'contact',
+        id: 'contact',
+        seo: null,
+        title: 'Contact',
+      },
+    };
+  }
+
   const [{page}] = await Promise.all([
     context.storefront.query(PAGE_QUERY, {
       variables: {

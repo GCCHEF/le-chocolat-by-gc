@@ -112,9 +112,12 @@ export function HeaderMenu({
                       className="header-menu-contact__choice"
                       key={choice.label}
                       onClick={
-                        choice.to === '/pages/contact' ? undefined : close
+                        choice.to === '/pages/contact' ||
+                        choice.to === '/pages/collection-address'
+                          ? undefined
+                          : close
                       }
-                      prefetch="intent"
+                      prefetch="render"
                       style={
                         {
                           '--contact-choice-index': index,
@@ -276,21 +279,16 @@ const FALLBACK_HEADER_MENU = {
   ],
 };
 
-function activeLinkStyle({
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
+function activeLinkStyle() {
   return {
     fontWeight: 400,
-    color: isPending ? 'grey' : 'black',
+    color: 'black',
   };
 }
 
-function creationLinkStyle({isPending}: {isPending: boolean}) {
+function creationLinkStyle() {
   return {
-    color: isPending ? 'grey' : 'black',
+    color: 'black',
     fontWeight: 400,
   };
 }
