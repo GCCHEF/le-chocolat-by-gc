@@ -1,4 +1,4 @@
-import {Suspense, type CSSProperties} from 'react';
+import {Suspense} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -43,10 +43,7 @@ export function Header({
 }
 
 export function HeaderMenu({
-  menu,
-  primaryDomainUrl,
   viewport,
-  publicStoreDomain,
 }: {
   menu: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
@@ -54,102 +51,27 @@ export function HeaderMenu({
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
   const className = `header-menu-${viewport}`;
-  const {close} = useAside();
+  const menuItems = [
+    {title: 'E-Shop', to: '/#creation'},
+    {title: 'Collection Address', to: '/pages/collection-address'},
+    {title: 'Contact', to: '/pages/contact'},
+  ];
 
   return (
     <nav className={className} role="navigation">
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-
-        if (url === '/' || item.title.toLowerCase() === 'home') return null;
-
-        const normalizedTitle = item.title
-          .toLowerCase()
-          .replace(/[-\s]+/g, ' ')
-          .trim();
-        const menuTitle =
-          normalizedTitle.includes('commerce') || url.includes('collections')
-            ? 'E-Shop'
-            : item.title;
-        const menuUrl =
-          normalizedTitle.includes('commerce') || url.includes('collections')
-            ? '/#creation'
-            : url;
-        const isCreationLink = menuUrl === '/#creation';
-        const isContactLink =
-          normalizedTitle === 'contact' || menuUrl === '/pages/contact';
-
-        if (isContactLink) {
-          const contactChoices = [
-            {label: 'Collection address', to: '/pages/collection-address'},
-            {label: 'Enquiry', to: '/pages/contact'},
-            {label: 'Social media', to: '/pages/social-media'},
-          ];
-
-          return (
-            <div className="header-menu-contact" key={item.id}>
-              <div className="header-menu-contact__anchor">
-                <button
-                  aria-haspopup="true"
-                  className="header-menu-item header-menu-contact__trigger reset"
-                  type="button"
-                >
-                  <span className="header-menu-item__mask">
-                    <span className="header-menu-item__line">{menuTitle}</span>
-                  </span>
-                </button>
-                <div className="header-menu-contact__choices">
-                  {contactChoices.map((choice, index) => (
-                    <NavLink
-                      className="header-menu-contact__choice"
-                      key={choice.label}
-                      onClick={
-                        choice.to === '/pages/contact' ||
-                        choice.to === '/pages/collection-address'
-                          ? undefined
-                          : close
-                      }
-                      prefetch="render"
-                      style={
-                        {
-                          '--contact-choice-index': index,
-                        } as CSSProperties
-                      }
-                      to={choice.to}
-                    >
-                      <span className="header-menu-contact__choice-mask">
-                        <span className="header-menu-contact__choice-line">
-                          {choice.label}
-                        </span>
-                      </span>
-                    </NavLink>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
+      {menuItems.map((item) => {
+        const isCreationLink = item.to === '/#creation';
         return (
           <NavLink
             className="header-menu-item"
             end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
+            key={item.title}
+            prefetch={isCreationLink ? 'intent' : 'render'}
             style={isCreationLink ? creationLinkStyle : activeLinkStyle}
-            to={menuUrl}
+            to={item.to}
           >
             <span className="header-menu-item__mask">
-              <span className="header-menu-item__line">{menuTitle}</span>
+              <span className="header-menu-item__line">{item.title}</span>
             </span>
           </NavLink>
         );
@@ -236,48 +158,6 @@ function CartBanner() {
   const cart = useOptimisticCart(originalCart);
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
-
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
-};
 
 function activeLinkStyle() {
   return {

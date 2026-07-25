@@ -78,7 +78,6 @@ const AsideContext = createContext<AsideContextValue | null>(null);
 Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
   const [type, setType] = useState<AsideType>('closed');
   const menuOriginRef = useRef({scrollY: 0, url: ''});
-  const lastPageScrollRef = useRef(0);
   const menuBodyStylesRef = useRef({
     position: '',
     top: '',
@@ -88,7 +87,6 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
   const open = (mode: AsideType) => {
     if (mode === 'mobile' && type !== 'mobile') {
       const scrollY = Math.max(
-        lastPageScrollRef.current,
         window.scrollY,
         document.documentElement.scrollTop,
         document.body.scrollTop,
@@ -108,25 +106,6 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
     }
     setType(mode);
   };
-
-  useEffect(() => {
-    if (type !== 'closed') return;
-
-    const rememberPageScroll = () => {
-      const scrollY = Math.max(
-        window.scrollY,
-        document.documentElement.scrollTop,
-        document.body.scrollTop,
-      );
-      if (scrollY > 0 || lastPageScrollRef.current === 0) {
-        lastPageScrollRef.current = scrollY;
-      }
-    };
-
-    rememberPageScroll();
-    window.addEventListener('scroll', rememberPageScroll, {passive: true});
-    return () => window.removeEventListener('scroll', rememberPageScroll);
-  }, [type]);
 
   const close = () => {
     const origin = menuOriginRef.current;

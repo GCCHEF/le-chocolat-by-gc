@@ -1,4 +1,4 @@
-import {Await, Link, useLocation, useNavigate} from 'react-router';
+import {Await, Link, useLocation} from 'react-router';
 import {Suspense, useEffect, useId, useLayoutEffect, useRef} from 'react';
 import type {
   CartApiQueryFragment,
@@ -67,36 +67,47 @@ export function PageLayout({
 function MenuNavigationCloser() {
   const location = useLocation();
   const {close, type} = useAside();
-  const previousLocationKeyRef = useRef(location.key);
-  const routeState = location.state as {openMenu?: boolean} | null;
+  const currentUrl = `${location.pathname}${location.search}${location.hash}`;
+  const previousUrlRef = useRef(currentUrl);
 
   useEffect(() => {
-    const didNavigate = previousLocationKeyRef.current !== location.key;
-    previousLocationKeyRef.current = location.key;
+    const didNavigate = previousUrlRef.current !== currentUrl;
+    previousUrlRef.current = currentUrl;
 
-    if (didNavigate && type === 'mobile' && !routeState?.openMenu) {
+    if (didNavigate && type === 'mobile') {
       close();
     }
-  }, [close, location.key, routeState?.openMenu, type]);
+  }, [close, currentUrl, type]);
 
   return null;
 }
 
 function MenuRouteOpener() {
   const location = useLocation();
-  const navigate = useNavigate();
   const {open} = useAside();
-  const routeState = location.state as {openMenu?: boolean} | null;
+  const routeState = location.state as {
+    bypassIntro?: boolean;
+    openMenu?: boolean;
+  } | null;
 
   useLayoutEffect(() => {
     if (!routeState?.openMenu) return;
 
     document.documentElement.classList.add('menu-route-return');
     open('mobile');
-    void navigate(`${location.pathname}${location.search}${location.hash}`, {
-      replace: true,
-      state: null,
-    });
+
+    const currentHistoryState = window.history.state as Record<
+      string,
+      unknown
+    > | null;
+    window.history.replaceState(
+      {
+        ...currentHistoryState,
+        usr: routeState.bypassIntro ? {bypassIntro: true} : null,
+      },
+      '',
+      `${location.pathname}${location.search}${location.hash}`,
+    );
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
@@ -107,8 +118,8 @@ function MenuRouteOpener() {
     location.hash,
     location.pathname,
     location.search,
-    navigate,
     open,
+    routeState?.bypassIntro,
     routeState?.openMenu,
   ]);
 

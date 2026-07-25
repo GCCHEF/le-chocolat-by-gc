@@ -39,6 +39,7 @@ export default function CollectionAddressPage() {
           </address>
           <nav aria-label="Directions" className="collection-address-page__links">
             <a
+              aria-label="Directions to Le Chocolat at Makers Landing on Google Maps"
               href="https://www.google.com/maps/dir/?api=1&destination=-33.91051%2C18.42596&travelmode=driving"
               rel="noreferrer"
               target="_blank"
@@ -46,7 +47,8 @@ export default function CollectionAddressPage() {
               Google Maps <span aria-hidden="true">↗</span>
             </a>
             <a
-              href="https://maps.apple.com/?daddr=-33.91051%2C18.42596&dirflg=d"
+              aria-label="Directions to Le Chocolat at Makers Landing on Apple Maps"
+              href="https://maps.apple.com/?daddr=Makers%20Landing%2C%20Cruise%20Terminal%2C%20V%26A%20Waterfront%2C%20Cape%20Town%2C%208001&dirflg=d"
               rel="noreferrer"
               target="_blank"
             >
