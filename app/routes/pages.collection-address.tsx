@@ -34,8 +34,8 @@ export default function CollectionAddressPage() {
         </div>
         <div className="collection-address-page__location">
           <address>
-            The Cruise Terminal, Victoria &amp; Alfred Waterfront, Cape Town,
-            8001
+            Shop G09, Makers Landing, The Cruise Terminal, V&amp;A Waterfront,
+            Cape Town, 8001
           </address>
           <nav aria-label="Directions" className="collection-address-page__links">
             <a
@@ -61,7 +61,7 @@ export default function CollectionAddressPage() {
       <figure className="collection-address-page__map">
         <img
           alt="Map showing the Le Chocolat collection location in Cape Town"
-          src="/images/collection-address-map.png"
+          src="/images/collection-address-map-v3.png"
         />
       </figure>
     </section>
