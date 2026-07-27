@@ -264,10 +264,14 @@ function ContactPage() {
                 const storedScrollY = Number(
                   window.sessionStorage.getItem('le-chocolat-menu-scroll-y'),
                 );
+                const storedOriginUrl =
+                  window.sessionStorage.getItem(
+                    'le-chocolat-menu-origin-url',
+                  ) || '/';
                 document.documentElement.classList.add('menu-route-return');
                 openAt('mobile', {
                   scrollY: Number.isFinite(storedScrollY) ? storedScrollY : 0,
-                  url: '/',
+                  url: storedOriginUrl,
                 });
                 void navigate('/', {
                   state: {bypassIntro: true},

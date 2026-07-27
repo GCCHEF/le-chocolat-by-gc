@@ -75,6 +75,9 @@ function MenuNavigationCloser() {
     previousUrlRef.current = currentUrl;
 
     if (didNavigate && type === 'mobile') {
+      if (document.documentElement.classList.contains('menu-route-return')) {
+        return;
+      }
       close();
     }
   }, [close, currentUrl, type]);
