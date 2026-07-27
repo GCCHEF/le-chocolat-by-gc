@@ -221,7 +221,6 @@ function ContactPage() {
   const [selectedSubject, setSelectedSubject] =
     useState<(typeof CONTACT_SUBJECTS)[number]>(subjects[0]);
   const [isSubjectOpen, setIsSubjectOpen] = useState(false);
-  const [isSuccessClosing, setIsSuccessClosing] = useState(false);
   const availableSubjects = subjects.filter(
     (subject) => subject !== selectedSubject,
   );
@@ -351,9 +350,7 @@ function ContactPage() {
           <div
             aria-labelledby="contact-success-title"
             aria-modal="true"
-            className={`contact-success ${
-              isSuccessClosing ? 'contact-success--closing' : ''
-            }`}
+            className="contact-success"
             role="dialog"
           >
             <div className="contact-success__content">
@@ -368,12 +365,9 @@ function ContactPage() {
                 aria-label="Close confirmation and return to menu"
                 className="contact-success__close reset"
                 onClick={() => {
-                  setIsSuccessClosing(true);
-                  window.setTimeout(() => {
-                    void navigate('/', {
-                      state: {bypassIntro: true, openMenu: true},
-                    });
-                  }, 520);
+                  void navigate('/', {
+                    state: {bypassIntro: true, openMenu: true},
+                  });
                 }}
                 type="button"
               >

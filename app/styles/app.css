@@ -1517,9 +1517,11 @@ button.contact-success__close.reset:not(:has(> *)) {
   font-weight: 700;
   height: auto;
   line-height: 0.72;
-  margin-left: clamp(2.5rem, 5vw, 6rem);
+  margin: 0;
   padding: 0;
-  position: relative;
+  position: fixed;
+  right: clamp(4.5rem, 7.5vw, 8.5rem);
+  top: clamp(16rem, 38vh, 27rem);
   transform: none;
   transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1583,10 +1585,6 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 @media (max-width: 48rem) {
   .contact-success__content {
     width: 94vw;
-  }
-
-  button.contact-success__close.reset:not(:has(> *)) {
-    margin-left: clamp(1rem, 4vw, 2rem);
   }
 }
 
