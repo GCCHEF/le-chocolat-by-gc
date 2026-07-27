@@ -33,6 +33,17 @@ export function CartLineItem({
   const {close} = useAside();
   const lineItemChildren = childrenMap[id];
   const childrenLabelId = `cart-line-children-${id}`;
+  const confirmedPrice = line.cost?.totalAmount;
+  const variantPrice = merchandise.price;
+  const optimisticAmount = Number(variantPrice?.amount) * line.quantity;
+  const displayPrice =
+    confirmedPrice ??
+    (variantPrice && Number.isFinite(optimisticAmount)
+      ? {
+          ...variantPrice,
+          amount: optimisticAmount.toFixed(2),
+        }
+      : undefined);
 
   return (
     <li key={id} className="cart-line">
@@ -62,7 +73,7 @@ export function CartLineItem({
               <strong>{product.title}</strong>
             </p>
           </Link>
-          <ProductPrice price={line?.cost?.totalAmount} />
+          <ProductPrice price={displayPrice} />
           <ul>
             {selectedOptions.map((option) => (
               <li key={option.name}>
