@@ -1528,7 +1528,6 @@ button.contact-success__close.reset:not(:has(> *)) {
 
 button.contact-success__close.reset:not(:has(> *)):hover,
 button.contact-success__close.reset:not(:has(> *)):focus-visible {
-  text-decoration: none;
   transform: scale(0.92);
 }
 
