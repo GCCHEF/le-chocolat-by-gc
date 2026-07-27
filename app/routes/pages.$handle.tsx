@@ -1,4 +1,9 @@
-import {useLoaderData, useLocation, useNavigate} from 'react-router';
+import {
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from 'react-router';
 import {useState} from 'react';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
@@ -55,6 +60,90 @@ export async function loader(args: Route.LoaderArgs) {
   const criticalData = await loadCriticalData(args);
 
   return {...deferredData, ...criticalData};
+}
+
+type ContactActionData = {
+  error?: string;
+  success?: boolean;
+};
+
+const CONTACT_SUBJECTS = [
+  'General enquiry',
+  'Order enquiry',
+  'Bespoke order',
+  'Collaboration',
+] as const;
+
+export async function action({context, request}: Route.ActionArgs) {
+  const formData = await request.formData();
+  const name = String(formData.get('name') ?? '').trim();
+  const email = String(formData.get('email') ?? '').trim();
+  const phone = String(formData.get('phone') ?? '').trim();
+  const enquiry = String(formData.get('enquiry') ?? '').trim();
+  const message = String(formData.get('message') ?? '').trim();
+  const website = String(formData.get('website') ?? '').trim();
+
+  if (website) return Response.json({success: true} satisfies ContactActionData);
+
+  if (
+    !name ||
+    !email ||
+    !message ||
+    name.length > 120 ||
+    email.length > 254 ||
+    phone.length > 50 ||
+    message.length > 5000 ||
+    !/^\S+@\S+\.\S+$/.test(email) ||
+    !CONTACT_SUBJECTS.includes(
+      enquiry as (typeof CONTACT_SUBJECTS)[number],
+    )
+  ) {
+    return Response.json(
+      {error: 'Please check the form and try again.'} satisfies ContactActionData,
+      {status: 400},
+    );
+  }
+
+  const apiKey = context.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('RESEND_API_KEY is not configured');
+    return Response.json(
+      {error: 'Email is temporarily unavailable. Please try again later.'} satisfies ContactActionData,
+      {status: 503},
+    );
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Le Chocolat <info@lechocolat.co.za>',
+      reply_to: email,
+      subject: `[Website] ${enquiry} — ${name}`,
+      text: [
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Phone: ${phone || 'Not provided'}`,
+        `Subject: ${enquiry}`,
+        '',
+        message,
+      ].join('\n'),
+      to: ['info@lechocolat.co.za'],
+    }),
+  });
+
+  if (!response.ok) {
+    console.error('Resend rejected contact email', response.status);
+    return Response.json(
+      {error: 'Your enquiry could not be sent. Please try again.'} satisfies ContactActionData,
+      {status: 502},
+    );
+  }
+
+  return Response.json({success: true} satisfies ContactActionData);
 }
 
 /**
@@ -125,15 +214,12 @@ export default function Page() {
 }
 
 function ContactPage() {
+  const fetcher = useFetcher<ContactActionData>();
   const location = useLocation();
   const navigate = useNavigate();
-  const subjects = [
-    'General enquiry',
-    'Order enquiry',
-    'Bespoke order',
-    'Collaboration',
-  ];
-  const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
+  const subjects = CONTACT_SUBJECTS;
+  const [selectedSubject, setSelectedSubject] =
+    useState<(typeof CONTACT_SUBJECTS)[number]>(subjects[0]);
   const [isSubjectOpen, setIsSubjectOpen] = useState(false);
   const availableSubjects = subjects.filter(
     (subject) => subject !== selectedSubject,
@@ -182,7 +268,15 @@ function ContactPage() {
         </p>
       </div>
 
-      <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
+      <fetcher.Form className="contact-form" method="post">
+        <input
+          aria-hidden="true"
+          autoComplete="off"
+          name="website"
+          style={{display: 'none'}}
+          tabIndex={-1}
+          type="text"
+        />
         <div className="contact-form__field">
           <label htmlFor="contact-name">Name</label>
           <input id="contact-name" name="name" required type="text" />
@@ -252,10 +346,20 @@ function ContactPage() {
             rows={7}
           />
         </div>
-        <button className="contact-form__submit" disabled type="submit">
-          Send enquiry
+        {fetcher.data?.success ? (
+          <p role="status">Thank you. Your enquiry has been sent.</p>
+        ) : null}
+        {fetcher.data?.error ? (
+          <p role="alert">{fetcher.data.error}</p>
+        ) : null}
+        <button
+          className="contact-form__submit"
+          disabled={fetcher.state !== 'idle' || fetcher.data?.success}
+          type="submit"
+        >
+          {fetcher.state === 'submitting' ? 'Sending…' : 'Send enquiry'}
         </button>
-      </form>
+      </fetcher.Form>
     </section>
   );
 }
