@@ -136,15 +136,20 @@ function RecommendedProducts({
 }) {
   return (
     <div className="recommended-products">
-      <h2>Recommended Products</h2>
+      <h2>You may also like</h2>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
             <div className="recommended-products-grid">
               {response
-                ? response.products.nodes.slice(0, 4).map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
+                ? response.products.nodes
+                    .filter((product) =>
+                      /^(CU|AS|OR|CO|PR)\s*0*\d+$/i.test(product.title.trim()),
+                    )
+                    .slice(0, 4)
+                    .map((product) => (
+                      <ProductItem key={product.id} product={product} />
+                    ))
                 : null}
             </div>
           )}
@@ -199,7 +204,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 20, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }
