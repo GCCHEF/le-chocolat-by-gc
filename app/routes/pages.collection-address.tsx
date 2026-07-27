@@ -1,4 +1,5 @@
 import {useNavigate} from 'react-router';
+import {useState} from 'react';
 import type {Route} from './+types/pages.collection-address';
 
 export const meta: Route.MetaFunction = () => [
@@ -7,10 +8,13 @@ export const meta: Route.MetaFunction = () => [
 
 export default function CollectionAddressPage() {
   const navigate = useNavigate();
+  const [isPageExiting, setIsPageExiting] = useState(false);
 
   return (
     <section
-      className="collection-address-page"
+      className={`collection-address-page ${
+        isPageExiting ? 'collection-address-page--exiting' : ''
+      }`}
       aria-labelledby="collection-address-title"
     >
       <div className="collection-address-page__heading">
@@ -22,10 +26,14 @@ export default function CollectionAddressPage() {
           <button
             aria-label="Return to menu"
             className="collection-address-page__menu-return reset"
+            disabled={isPageExiting}
             onClick={() => {
-              void navigate('/', {
-                state: {bypassIntro: true, openMenu: true},
-              });
+              setIsPageExiting(true);
+              window.setTimeout(() => {
+                void navigate('/', {
+                  state: {bypassIntro: true, openMenu: true},
+                });
+              }, 720);
             }}
             type="button"
           >

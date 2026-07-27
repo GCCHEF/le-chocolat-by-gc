@@ -221,13 +221,16 @@ function ContactPage() {
   const [selectedSubject, setSelectedSubject] =
     useState<(typeof CONTACT_SUBJECTS)[number]>(subjects[0]);
   const [isSubjectOpen, setIsSubjectOpen] = useState(false);
+  const [isPageExiting, setIsPageExiting] = useState(false);
   const availableSubjects = subjects.filter(
     (subject) => subject !== selectedSubject,
   );
 
   return (
     <section
-      className="contact-page"
+      className={`contact-page ${
+        isPageExiting ? 'contact-page--exiting' : ''
+      }`}
       aria-labelledby="contact-title"
     >
       <div
@@ -252,10 +255,14 @@ function ContactPage() {
           <button
             aria-label="Return to menu"
             className="contact-page__menu-return reset"
+            disabled={isPageExiting}
             onClick={() => {
-              void navigate('/', {
-                state: {bypassIntro: true, openMenu: true},
-              });
+              setIsPageExiting(true);
+              window.setTimeout(() => {
+                void navigate('/', {
+                  state: {bypassIntro: true, openMenu: true},
+                });
+              }, 720);
             }}
             type="button"
           >

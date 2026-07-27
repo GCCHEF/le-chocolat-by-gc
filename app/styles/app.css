@@ -1952,6 +1952,59 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
   }
 }
 
+.contact-page--exiting {
+  pointer-events: none;
+}
+
+.contact-page--exiting h1,
+.contact-page--exiting .contact-page__intro > p:last-of-type,
+.contact-page--exiting .contact-form__field,
+.contact-page--exiting .contact-form__submit,
+.contact-page--exiting button.contact-page__menu-return {
+  animation: contactTextExit 480ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+.contact-page--exiting .contact-form__field:nth-child(1) {
+  animation-delay: 160ms;
+}
+
+.contact-page--exiting .contact-form__field:nth-child(2) {
+  animation-delay: 130ms;
+}
+
+.contact-page--exiting .contact-form__field:nth-child(3) {
+  animation-delay: 100ms;
+}
+
+.contact-page--exiting .contact-form__field:nth-child(4) {
+  animation-delay: 70ms;
+}
+
+.contact-page--exiting .contact-form__field:nth-child(5) {
+  animation-delay: 40ms;
+}
+
+.contact-page--exiting .contact-page__droplets {
+  animation: contactDropletsExit 700ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+@keyframes contactTextExit {
+  to {
+    clip-path: inset(0 0 0 100%);
+    filter: blur(8px);
+    opacity: 0;
+    transform: translate3d(0.24em, 0, 0);
+  }
+}
+
+@keyframes contactDropletsExit {
+  to {
+    filter: blur(18px);
+    opacity: 0;
+    transform: translate3d(-3rem, 2rem, 0) scale(0.94);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .contact-page h1,
   .contact-page__intro > p:last-of-type,
@@ -2215,6 +2268,47 @@ button.collection-address-page__menu-return:focus-visible {
     filter: blur(0);
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+.collection-address-page--exiting {
+  pointer-events: none;
+}
+
+.collection-address-page--exiting h1 > span,
+.collection-address-page--exiting .collection-address-page__location,
+.collection-address-page--exiting
+  button.collection-address-page__menu-return {
+  animation: collectionAddressExit 520ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+.collection-address-page--exiting h1 > span:nth-child(1) {
+  animation-delay: 90ms;
+}
+
+.collection-address-page--exiting h1 > span:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.collection-address-page--exiting .collection-address-page__map {
+  animation: collectionMapExit 700ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+@keyframes collectionAddressExit {
+  to {
+    clip-path: inset(0 0 0 100%);
+    filter: blur(8px);
+    opacity: 0;
+    transform: translateX(0.32em);
+  }
+}
+
+@keyframes collectionMapExit {
+  to {
+    clip-path: inset(0 0 0 100%);
+    filter: blur(10px);
+    opacity: 0;
+    transform: translate3d(2rem, 0, 0);
   }
 }
 
