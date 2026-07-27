@@ -87,13 +87,16 @@ function MenuRouteOpener() {
   const {open} = useAside();
   const routeState = location.state as {
     bypassIntro?: boolean;
+    instantMenu?: boolean;
     openMenu?: boolean;
   } | null;
 
   useLayoutEffect(() => {
     if (!routeState?.openMenu) return;
 
-    document.documentElement.classList.add('menu-route-return');
+    if (routeState.instantMenu) {
+      document.documentElement.classList.add('menu-route-return');
+    }
     open('mobile');
 
     const currentHistoryState = window.history.state as Record<
@@ -120,6 +123,7 @@ function MenuRouteOpener() {
     location.search,
     open,
     routeState?.bypassIntro,
+    routeState?.instantMenu,
     routeState?.openMenu,
   ]);
 

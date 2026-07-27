@@ -373,7 +373,11 @@ function ContactPage() {
                 className="contact-success__close reset"
                 onClick={() => {
                   void navigate('/', {
-                    state: {bypassIntro: true, openMenu: true},
+                    state: {
+                      bypassIntro: true,
+                      instantMenu: true,
+                      openMenu: true,
+                    },
                   });
                 }}
                 type="button"
