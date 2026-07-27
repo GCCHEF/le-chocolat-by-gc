@@ -359,11 +359,8 @@ function ContactPage() {
             <div className="contact-success__content">
               <h2 id="contact-success-title">
                 <span className="contact-success__line-mask">
-                  <span className="contact-success__line">Thank you,</span>
-                </span>
-                <span className="contact-success__line-mask">
                   <span className="contact-success__line">
-                    your enquiry has been sent.
+                    Thank you, your enquiry has been sent.
                   </span>
                 </span>
               </h2>
