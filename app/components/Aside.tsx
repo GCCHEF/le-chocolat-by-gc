@@ -11,6 +11,7 @@ type AsideType = 'search' | 'cart' | 'mobile' | 'closed';
 type AsideContextValue = {
   type: AsideType;
   open: (mode: AsideType) => void;
+  openAt: (mode: AsideType, origin: {scrollY: number; url: string}) => void;
   close: () => void;
 };
 
@@ -84,16 +85,23 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
     width: '',
   });
 
-  const open = (mode: AsideType) => {
+  const openAt = (
+    mode: AsideType,
+    requestedOrigin?: {scrollY: number; url: string},
+  ) => {
     if (mode === 'mobile' && type !== 'mobile') {
-      const scrollY = Math.max(
-        window.scrollY,
-        document.documentElement.scrollTop,
-        document.body.scrollTop,
-      );
+      const scrollY =
+        requestedOrigin?.scrollY ??
+        Math.max(
+          window.scrollY,
+          document.documentElement.scrollTop,
+          document.body.scrollTop,
+        );
       menuOriginRef.current = {
         scrollY,
-        url: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+        url:
+          requestedOrigin?.url ??
+          `${window.location.pathname}${window.location.search}${window.location.hash}`,
       };
       window.sessionStorage.setItem(
         'le-chocolat-menu-scroll-y',
@@ -110,6 +118,8 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
     }
     setType(mode);
   };
+
+  const open = (mode: AsideType) => openAt(mode);
 
   const close = () => {
     const origin = menuOriginRef.current;
@@ -144,6 +154,7 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
       value={{
         type,
         open,
+        openAt,
         close,
       }}
     >

@@ -1,6 +1,7 @@
 import {useNavigate} from 'react-router';
 import {useState} from 'react';
 import type {Route} from './+types/pages.collection-address';
+import {useAside} from '~/components/Aside';
 
 export const meta: Route.MetaFunction = () => [
   {title: 'Le Chocolat | Collection Address'},
@@ -8,6 +9,7 @@ export const meta: Route.MetaFunction = () => [
 
 export default function CollectionAddressPage() {
   const navigate = useNavigate();
+  const {openAt} = useAside();
   const [isPageExiting, setIsPageExiting] = useState(false);
 
   return (
@@ -30,8 +32,23 @@ export default function CollectionAddressPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
+                const storedScrollY = Number(
+                  window.sessionStorage.getItem('le-chocolat-menu-scroll-y'),
+                );
+                document.documentElement.classList.add('menu-route-return');
+                openAt('mobile', {
+                  scrollY: Number.isFinite(storedScrollY) ? storedScrollY : 0,
+                  url: '/',
+                });
                 void navigate('/', {
-                  state: {bypassIntro: true, openMenu: true},
+                  state: {bypassIntro: true},
+                });
+                window.requestAnimationFrame(() => {
+                  window.requestAnimationFrame(() => {
+                    document.documentElement.classList.remove(
+                      'menu-route-return',
+                    );
+                  });
                 });
               }, 700);
             }}
