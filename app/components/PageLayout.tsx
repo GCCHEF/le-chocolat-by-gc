@@ -87,16 +87,13 @@ function MenuRouteOpener() {
   const {open} = useAside();
   const routeState = location.state as {
     bypassIntro?: boolean;
-    instantMenu?: boolean;
     openMenu?: boolean;
   } | null;
 
   useLayoutEffect(() => {
     if (!routeState?.openMenu) return;
 
-    if (routeState.instantMenu) {
-      document.documentElement.classList.add('menu-route-return');
-    }
+    document.documentElement.classList.add('menu-route-return');
     open('mobile');
 
     const currentHistoryState = window.history.state as Record<
@@ -118,19 +115,12 @@ function MenuRouteOpener() {
       });
     });
 
-    window.setTimeout(
-      () => {
-        document.documentElement.classList.remove('menu-route-cover');
-      },
-      routeState.instantMenu ? 0 : 840,
-    );
   }, [
     location.hash,
     location.pathname,
     location.search,
     open,
     routeState?.bypassIntro,
-    routeState?.instantMenu,
     routeState?.openMenu,
   ]);
 

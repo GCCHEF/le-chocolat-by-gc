@@ -141,15 +141,6 @@ aside main {
   overflow: hidden;
 }
 
-html.menu-route-cover::after {
-  background: #fff;
-  content: '';
-  inset: 0;
-  pointer-events: none;
-  position: fixed;
-  z-index: 8999;
-}
-
 .overlay--mobile::before,
 .overlay--mobile::after {
   backface-visibility: hidden;
