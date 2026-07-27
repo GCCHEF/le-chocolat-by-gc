@@ -33,7 +33,7 @@ export default function CollectionAddressPage() {
                 void navigate('/', {
                   state: {bypassIntro: true, openMenu: true},
                 });
-              }, 520);
+              }, 200);
             }}
             type="button"
           >
