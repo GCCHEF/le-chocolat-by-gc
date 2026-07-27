@@ -177,6 +177,19 @@ aside main {
   transform: translate3d(0, 0, 0);
 }
 
+.menu-eshop-navigation .overlay--mobile::before,
+.menu-eshop-navigation .overlay--mobile::after {
+  transition-duration: 420ms;
+}
+
+.menu-eshop-navigation .overlay--mobile aside .close,
+.menu-eshop-navigation .overlay--mobile aside main,
+.menu-eshop-navigation .header-menu-mobile .header-menu-item__mask,
+.menu-eshop-navigation .header-menu-mobile .header-menu-item__line {
+  transition-duration: 260ms;
+  transition-delay: 0ms;
+}
+
 .menu-route-return .overlay--mobile,
 .menu-route-return .overlay--mobile::before,
 .menu-route-return .overlay--mobile::after,

@@ -52,6 +52,13 @@ export function HeaderMenu({
 }) {
   const {close} = useAside();
   const className = `header-menu-${viewport}`;
+  const closeForCreation = () => {
+    document.documentElement.classList.add('menu-eshop-navigation');
+    close();
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('menu-eshop-navigation');
+    }, 460);
+  };
   const menuItems = [
     {title: 'E-Shop', to: '/#creation'},
     {title: 'Collection Address', to: '/pages/collection-address'},
@@ -67,7 +74,7 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.title}
-            onClick={isCreationLink ? close : undefined}
+            onClick={isCreationLink ? closeForCreation : undefined}
             prefetch={isCreationLink ? 'intent' : 'render'}
             style={isCreationLink ? creationLinkStyle : activeLinkStyle}
             to={item.to}
