@@ -85,6 +85,7 @@ function MenuNavigationCloser() {
 function MenuRouteOpener() {
   const location = useLocation();
   const {open} = useAside();
+  const handledLocationKeyRef = useRef<string | null>(null);
   const routeState = location.state as {
     bypassIntro?: boolean;
     openMenu?: boolean;
@@ -92,6 +93,8 @@ function MenuRouteOpener() {
 
   useLayoutEffect(() => {
     if (!routeState?.openMenu) return;
+    if (handledLocationKeyRef.current === location.key) return;
+    handledLocationKeyRef.current = location.key;
 
     document.documentElement.classList.add('menu-route-return');
     const storedMenuScrollY = Number(
@@ -123,6 +126,7 @@ function MenuRouteOpener() {
 
   }, [
     location.hash,
+    location.key,
     location.pathname,
     location.search,
     open,
