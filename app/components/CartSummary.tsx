@@ -11,6 +11,29 @@ type CartSummaryProps = {
 export function CartSummary({cart, layout}: CartSummaryProps) {
   const className =
     layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+  const lines = cart?.lines?.nodes ?? [];
+  const hasOptimisticLine = lines.some((line) => line.isOptimistic);
+  const optimisticCurrency = lines.find(
+    (line) => line.cost?.totalAmount ?? line.merchandise.price,
+  )?.merchandise.price.currencyCode;
+  const optimisticAmount = lines.reduce((total, line) => {
+    const confirmedLineAmount = Number(line.cost?.totalAmount?.amount);
+    if (Number.isFinite(confirmedLineAmount)) {
+      return total + confirmedLineAmount;
+    }
+
+    const variantAmount = Number(line.merchandise.price?.amount);
+    return Number.isFinite(variantAmount)
+      ? total + variantAmount * line.quantity
+      : total;
+  }, 0);
+  const displaySubtotal =
+    hasOptimisticLine && optimisticCurrency
+      ? {
+          amount: optimisticAmount.toFixed(2),
+          currencyCode: optimisticCurrency,
+        }
+      : cart?.cost?.subtotalAmount;
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
@@ -18,8 +41,8 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
       <dl className="cart-subtotal">
         <dt>Subtotal</dt>
         <dd>
-          {cart?.cost?.subtotalAmount?.amount ? (
-            <Money data={cart?.cost?.subtotalAmount} />
+          {displaySubtotal?.amount ? (
+            <Money data={displaySubtotal} />
           ) : (
             '-'
           )}
