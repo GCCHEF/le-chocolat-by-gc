@@ -262,7 +262,7 @@ function ContactPage() {
                 void navigate('/', {
                   state: {bypassIntro: true, openMenu: true},
                 });
-              }, 720);
+              }, 700);
             }}
             type="button"
           >

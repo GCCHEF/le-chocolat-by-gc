@@ -94,6 +94,12 @@ function MenuRouteOpener() {
     if (!routeState?.openMenu) return;
 
     document.documentElement.classList.add('menu-route-return');
+    const storedMenuScrollY = Number(
+      window.sessionStorage.getItem('le-chocolat-menu-scroll-y'),
+    );
+    if (Number.isFinite(storedMenuScrollY)) {
+      window.scrollTo(0, storedMenuScrollY);
+    }
     open('mobile');
 
     const currentHistoryState = window.history.state as Record<

@@ -95,6 +95,10 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
         scrollY,
         url: `${window.location.pathname}${window.location.search}${window.location.hash}`,
       };
+      window.sessionStorage.setItem(
+        'le-chocolat-menu-scroll-y',
+        String(scrollY),
+      );
       menuBodyStylesRef.current = {
         position: document.body.style.position,
         top: document.body.style.top,
