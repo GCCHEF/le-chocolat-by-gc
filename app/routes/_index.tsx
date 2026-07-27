@@ -134,6 +134,8 @@ function RecommendedProducts({
 }: {
   products: Promise<RecommendedProductsQuery | null>;
 }) {
+  const curatedProductCodes = ['CU01', 'AS02', 'PR02', 'NU01'];
+
   return (
     <div className="recommended-products">
       <h2>You may also like</h2>
@@ -142,11 +144,19 @@ function RecommendedProducts({
           {(response) => (
             <div className="recommended-products-grid">
               {response
-                ? response.products.nodes
-                    .filter((product) =>
-                      /^(CU|AS|OR|CO|PR)\s*0*\d+$/i.test(product.title.trim()),
+                ? curatedProductCodes
+                    .map((code) =>
+                      response.products.nodes.find((product) => {
+                        const match = product.title
+                          .trim()
+                          .toUpperCase()
+                          .replace(/\s+/g, '')
+                          .match(/^([A-Z]+)0*(\d+)$/);
+                        if (!match) return false;
+                        return `${match[1]}${match[2].padStart(2, '0')}` === code;
+                      }),
                     )
-                    .slice(0, 4)
+                    .filter((product) => product != null)
                     .map((product) => (
                       <ProductItem key={product.id} product={product} />
                     ))
@@ -204,7 +214,10 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 20, sortKey: UPDATED_AT, reverse: true) {
+    products(
+      first: 50
+      query: "title:CU* OR title:AS* OR title:PR* OR title:NU*"
+    ) {
       nodes {
         ...RecommendedProduct
       }
