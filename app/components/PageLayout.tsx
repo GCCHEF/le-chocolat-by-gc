@@ -75,7 +75,10 @@ function MenuNavigationCloser() {
     previousUrlRef.current = currentUrl;
 
     if (didNavigate && type === 'mobile') {
-      if (document.documentElement.classList.contains('menu-route-return')) {
+      const isReturningToMenu =
+        window.sessionStorage.getItem('le-chocolat-menu-returning') === 'true';
+      if (isReturningToMenu) {
+        window.sessionStorage.removeItem('le-chocolat-menu-returning');
         return;
       }
       close();

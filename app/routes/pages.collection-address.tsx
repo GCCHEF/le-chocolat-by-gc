@@ -44,9 +44,11 @@ export default function CollectionAddressPage() {
                   scrollY: Number.isFinite(storedScrollY) ? storedScrollY : 0,
                   url: storedOriginUrl,
                 });
-                void navigate('/', {
-                  state: {bypassIntro: true},
-                });
+                window.sessionStorage.setItem(
+                  'le-chocolat-menu-returning',
+                  'true',
+                );
+                void navigate(-1);
                 window.requestAnimationFrame(() => {
                   window.requestAnimationFrame(() => {
                     document.documentElement.classList.remove(
