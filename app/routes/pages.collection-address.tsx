@@ -1,7 +1,6 @@
 import {useNavigate} from 'react-router';
 import {useState} from 'react';
 import type {Route} from './+types/pages.collection-address';
-import {useAside} from '~/components/Aside';
 
 export const meta: Route.MetaFunction = () => [
   {title: 'Le Chocolat | Collection Address'},
@@ -9,7 +8,6 @@ export const meta: Route.MetaFunction = () => [
 
 export default function CollectionAddressPage() {
   const navigate = useNavigate();
-  const {openAt} = useAside();
   const [isPageExiting, setIsPageExiting] = useState(false);
 
   return (
@@ -32,29 +30,8 @@ export default function CollectionAddressPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
-                const storedScrollY = Number(
-                  window.sessionStorage.getItem('le-chocolat-menu-scroll-y'),
-                );
-                const storedOriginUrl =
-                  window.sessionStorage.getItem(
-                    'le-chocolat-menu-origin-url',
-                  ) || '/';
-                document.documentElement.classList.add('menu-route-return');
-                openAt('mobile', {
-                  scrollY: Number.isFinite(storedScrollY) ? storedScrollY : 0,
-                  url: storedOriginUrl,
-                });
-                window.sessionStorage.setItem(
-                  'le-chocolat-menu-returning',
-                  'true',
-                );
-                void navigate(-1);
-                window.requestAnimationFrame(() => {
-                  window.requestAnimationFrame(() => {
-                    document.documentElement.classList.remove(
-                      'menu-route-return',
-                    );
-                  });
+                void navigate('/', {
+                  state: {bypassIntro: true, openMenu: true},
                 });
               }, 700);
             }}

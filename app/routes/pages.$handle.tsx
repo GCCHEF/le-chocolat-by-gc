@@ -8,7 +8,6 @@ import {useState} from 'react';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import homeExperienceStyles from '~/components/home/homeExperience.css?url';
-import {useAside} from '~/components/Aside';
 
 export const links: Route.LinksFunction = () => [
   {rel: 'stylesheet', href: homeExperienceStyles},
@@ -216,7 +215,6 @@ export default function Page() {
 
 function ContactPage() {
   const fetcher = useFetcher<ContactActionData>();
-  const {openAt} = useAside();
   const location = useLocation();
   const navigate = useNavigate();
   const subjects = CONTACT_SUBJECTS;
@@ -261,29 +259,8 @@ function ContactPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
-                const storedScrollY = Number(
-                  window.sessionStorage.getItem('le-chocolat-menu-scroll-y'),
-                );
-                const storedOriginUrl =
-                  window.sessionStorage.getItem(
-                    'le-chocolat-menu-origin-url',
-                  ) || '/';
-                document.documentElement.classList.add('menu-route-return');
-                openAt('mobile', {
-                  scrollY: Number.isFinite(storedScrollY) ? storedScrollY : 0,
-                  url: storedOriginUrl,
-                });
-                window.sessionStorage.setItem(
-                  'le-chocolat-menu-returning',
-                  'true',
-                );
-                void navigate(-1);
-                window.requestAnimationFrame(() => {
-                  window.requestAnimationFrame(() => {
-                    document.documentElement.classList.remove(
-                      'menu-route-return',
-                    );
-                  });
+                void navigate('/', {
+                  state: {bypassIntro: true, openMenu: true},
                 });
               }, 700);
             }}

@@ -75,12 +75,6 @@ function MenuNavigationCloser() {
     previousUrlRef.current = currentUrl;
 
     if (didNavigate && type === 'mobile') {
-      const isReturningToMenu =
-        window.sessionStorage.getItem('le-chocolat-menu-returning') === 'true';
-      if (isReturningToMenu) {
-        window.sessionStorage.removeItem('le-chocolat-menu-returning');
-        return;
-      }
       close();
     }
   }, [close, currentUrl, type]);
