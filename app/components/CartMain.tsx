@@ -92,7 +92,7 @@ function CartEmpty({
   const {close} = useAside();
   return (
     <div className="cart-empty" hidden={hidden}>
-      <p>Your cart is empty.</p>
+      <p>Your cart is currently empty.</p>
       <Link
         className="cart-checkout-button"
         to="/#creation"

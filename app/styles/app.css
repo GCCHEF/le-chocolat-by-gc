@@ -952,6 +952,12 @@ button.reset:hover:not(:has(> *)) {
   color: #050505;
 }
 
+.cart-empty .cart-checkout-button {
+  min-height: 2.7rem;
+  padding: 0 1rem;
+  width: fit-content;
+}
+
 .cart-line-quantity {
   display: flex;
 }
