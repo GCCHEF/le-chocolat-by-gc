@@ -50,6 +50,7 @@ export function HeaderMenu({
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
+  const {close} = useAside();
   const className = `header-menu-${viewport}`;
   const menuItems = [
     {title: 'E-Shop', to: '/#creation'},
@@ -66,6 +67,7 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.title}
+            onClick={isCreationLink ? close : undefined}
             prefetch={isCreationLink ? 'intent' : 'render'}
             style={isCreationLink ? creationLinkStyle : activeLinkStyle}
             to={item.to}

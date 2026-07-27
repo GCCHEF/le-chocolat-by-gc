@@ -80,6 +80,7 @@ export default function HomePage({
     didBypassIntroOnRefresh,
     isCreationDestination,
     isHomepageVisible,
+    location.key,
   ]);
 
   useLayoutEffect(() => {
