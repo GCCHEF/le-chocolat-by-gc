@@ -153,7 +153,7 @@ html.menu-route-cover::after {
 .overlay--mobile::before,
 .overlay--mobile::after {
   backface-visibility: hidden;
-  background: rgba(247, 247, 243, 0.68);
+  background: rgba(247, 247, 243, 0.5);
   backdrop-filter: blur(24px) saturate(1.08);
   -webkit-backdrop-filter: blur(24px) saturate(1.08);
   content: '';
@@ -168,14 +168,12 @@ html.menu-route-cover::after {
 
 .overlay--mobile::before {
   bottom: 50%;
-  box-shadow: 0 1.25rem 2.5rem rgba(18, 14, 11, 0.035);
   top: 0;
   transform: translate3d(0, -105%, 0);
 }
 
 .overlay--mobile::after {
   bottom: 0;
-  box-shadow: 0 -1.25rem 2.5rem rgba(18, 14, 11, 0.035);
   top: 50%;
   transform: translate3d(0, 105%, 0);
 }
@@ -1976,7 +1974,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 .contact-page--exiting .contact-form__field,
 .contact-page--exiting .contact-form__submit,
 .contact-page--exiting button.contact-page__menu-return {
-  animation: contactTextExit 400ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  animation: contactTextExit 480ms cubic-bezier(0.7, 0, 0.84, 0) both;
 }
 
 .contact-page--exiting .contact-form__field:nth-child(1) {
@@ -2000,7 +1998,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .contact-page--exiting .contact-page__droplets {
-  animation: contactDropletsExit 600ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  animation: contactDropletsExit 700ms cubic-bezier(0.7, 0, 0.84, 0) both;
 }
 
 @keyframes contactTextExit {
@@ -2294,7 +2292,7 @@ button.collection-address-page__menu-return:focus-visible {
 .collection-address-page--exiting .collection-address-page__location,
 .collection-address-page--exiting
   button.collection-address-page__menu-return {
-  animation: collectionAddressExit 480ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  animation: collectionAddressExit 520ms cubic-bezier(0.7, 0, 0.84, 0) both;
 }
 
 .collection-address-page--exiting h1 > span:nth-child(1) {
@@ -2306,7 +2304,7 @@ button.collection-address-page__menu-return:focus-visible {
 }
 
 .collection-address-page--exiting .collection-address-page__map {
-  animation: collectionMapExit 600ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  animation: collectionMapExit 700ms cubic-bezier(0.7, 0, 0.84, 0) both;
 }
 
 @keyframes collectionAddressExit {

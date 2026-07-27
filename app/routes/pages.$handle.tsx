@@ -8,6 +8,7 @@ import {useState} from 'react';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import homeExperienceStyles from '~/components/home/homeExperience.css?url';
+import {useAside} from '~/components/Aside';
 
 export const links: Route.LinksFunction = () => [
   {rel: 'stylesheet', href: homeExperienceStyles},
@@ -215,6 +216,7 @@ export default function Page() {
 
 function ContactPage() {
   const fetcher = useFetcher<ContactActionData>();
+  const {open: openAside} = useAside();
   const location = useLocation();
   const navigate = useNavigate();
   const subjects = CONTACT_SUBJECTS;
@@ -259,11 +261,19 @@ function ContactPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
-                document.documentElement.classList.add('menu-route-cover');
-                void navigate('/', {
-                  state: {bypassIntro: true, openMenu: true},
+                openAside('mobile');
+                window.requestAnimationFrame(() => {
+                  document.documentElement.classList.add('menu-route-cover');
+                  void navigate('/', {
+                    state: {bypassIntro: true},
+                  });
+                  window.setTimeout(() => {
+                    document.documentElement.classList.remove(
+                      'menu-route-cover',
+                    );
+                  }, 840);
                 });
-              }, 620);
+              }, 720);
             }}
             type="button"
           >

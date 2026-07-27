@@ -1,6 +1,7 @@
 import {useNavigate} from 'react-router';
 import {useState} from 'react';
 import type {Route} from './+types/pages.collection-address';
+import {useAside} from '~/components/Aside';
 
 export const meta: Route.MetaFunction = () => [
   {title: 'Le Chocolat | Collection Address'},
@@ -8,6 +9,7 @@ export const meta: Route.MetaFunction = () => [
 
 export default function CollectionAddressPage() {
   const navigate = useNavigate();
+  const {open: openAside} = useAside();
   const [isPageExiting, setIsPageExiting] = useState(false);
 
   return (
@@ -30,11 +32,19 @@ export default function CollectionAddressPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
-                document.documentElement.classList.add('menu-route-cover');
-                void navigate('/', {
-                  state: {bypassIntro: true, openMenu: true},
+                openAside('mobile');
+                window.requestAnimationFrame(() => {
+                  document.documentElement.classList.add('menu-route-cover');
+                  void navigate('/', {
+                    state: {bypassIntro: true},
+                  });
+                  window.setTimeout(() => {
+                    document.documentElement.classList.remove(
+                      'menu-route-cover',
+                    );
+                  }, 840);
                 });
-              }, 620);
+              }, 720);
             }}
             type="button"
           >
