@@ -952,7 +952,13 @@ button.reset:hover:not(:has(> *)) {
   color: #050505;
 }
 
+.cart-empty {
+  text-align: center;
+}
+
 .cart-empty .cart-checkout-button {
+  margin-left: auto;
+  margin-right: auto;
   min-height: 2.7rem;
   padding: 0 1rem;
   width: fit-content;
