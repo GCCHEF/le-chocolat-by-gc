@@ -221,6 +221,7 @@ function ContactPage() {
   const [selectedSubject, setSelectedSubject] =
     useState<(typeof CONTACT_SUBJECTS)[number]>(subjects[0]);
   const [isSubjectOpen, setIsSubjectOpen] = useState(false);
+  const [isSuccessClosing, setIsSuccessClosing] = useState(false);
   const availableSubjects = subjects.filter(
     (subject) => subject !== selectedSubject,
   );
@@ -347,7 +348,42 @@ function ContactPage() {
           />
         </div>
         {fetcher.data?.success ? (
-          <p role="status">Thank you. Your enquiry has been sent.</p>
+          <div
+            aria-labelledby="contact-success-title"
+            aria-modal="true"
+            className={`contact-success ${
+              isSuccessClosing ? 'contact-success--closing' : ''
+            }`}
+            role="dialog"
+          >
+            <div className="contact-success__content">
+              <h2 id="contact-success-title">
+                <span className="contact-success__line-mask">
+                  <span className="contact-success__line">Thank you,</span>
+                </span>
+                <span className="contact-success__line-mask">
+                  <span className="contact-success__line">
+                    your enquiry has been sent.
+                  </span>
+                </span>
+              </h2>
+              <button
+                aria-label="Close confirmation and return to menu"
+                className="contact-success__close reset"
+                onClick={() => {
+                  setIsSuccessClosing(true);
+                  window.setTimeout(() => {
+                    void navigate('/', {
+                      state: {bypassIntro: true, openMenu: true},
+                    });
+                  }, 520);
+                }}
+                type="button"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
         ) : null}
         {fetcher.data?.error ? (
           <p role="alert">{fetcher.data.error}</p>
