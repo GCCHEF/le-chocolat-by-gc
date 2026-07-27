@@ -117,6 +117,13 @@ function MenuRouteOpener() {
         document.documentElement.classList.remove('menu-route-return');
       });
     });
+
+    window.setTimeout(
+      () => {
+        document.documentElement.classList.remove('menu-route-cover');
+      },
+      routeState.instantMenu ? 0 : 840,
+    );
   }, [
     location.hash,
     location.pathname,

@@ -30,6 +30,7 @@ export default function CollectionAddressPage() {
             onClick={() => {
               setIsPageExiting(true);
               window.setTimeout(() => {
+                document.documentElement.classList.add('menu-route-cover');
                 void navigate('/', {
                   state: {bypassIntro: true, openMenu: true},
                 });
