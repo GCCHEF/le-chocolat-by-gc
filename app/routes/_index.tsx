@@ -1,6 +1,6 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
+import {Suspense, useEffect, useRef, useState} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
@@ -124,7 +124,6 @@ function FeaturedCollection({
           <Image data={image} sizes="100vw" />
         </div>
       )}
-      <h1>{collection.title}</h1>
     </Link>
   );
 }
@@ -138,7 +137,7 @@ function RecommendedProducts({
 
   return (
     <div className="recommended-products">
-      <h2>You may also like</h2>
+      <DiscoverHeading />
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
@@ -158,7 +157,11 @@ function RecommendedProducts({
                     )
                     .filter((product) => product != null)
                     .map((product) => (
-                      <ProductItem key={product.id} product={product} />
+                      <ProductItem
+                        key={product.id}
+                        product={product}
+                        presentation="recommendation"
+                      />
                     ))
                 : null}
             </div>
@@ -166,6 +169,42 @@ function RecommendedProducts({
         </Await>
       </Suspense>
       <br />
+    </div>
+  );
+}
+
+function DiscoverHeading() {
+  const headingRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      {rootMargin: '-6% 0px -12%', threshold: 0.16},
+    );
+
+    observer.observe(heading);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      className={`featured-work__intro recommended-products__intro ${
+        isVisible ? 'recommended-products__intro--visible' : ''
+      }`}
+      ref={headingRef}
+    >
+      <span
+        aria-label="Discover"
+        className="featured-work__label featured-work-reveal"
+      >
+        <span className="featured-work-reveal__mask">
+          <span className="featured-work-reveal__line">Discover</span>
+        </span>
+      </span>
     </div>
   );
 }
