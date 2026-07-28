@@ -20,7 +20,7 @@ export default function HomePage({
     string,
     Array<NonNullable<CategoryProductsQuery[keyof CategoryProductsQuery]>>
   >;
-  children: ReactNode;
+  children?: ReactNode;
   discovery: ReactNode;
   textureProducts: Array<
     NonNullable<

@@ -7,7 +7,6 @@ import type {
   RecommendedProductsQuery,
   CategoryProductsQuery,
 } from 'storefrontapi.generated';
-import {MockShopNotice} from '~/components/MockShopNotice';
 import HomePage from '~/components/home/HomePage';
 import DiscoverCarousel from '~/components/home/DiscoverCarousel';
 import homeExperienceStyles from '~/components/home/homeExperience.css?url';
@@ -98,9 +97,7 @@ export default function Homepage() {
       categoryProducts={data.categoryProducts}
       discovery={<RecommendedProducts products={data.recommendedProducts} />}
       textureProducts={data.textureProducts}
-    >
-      {!data.isShopLinked ? <MockShopNotice /> : null}
-    </HomePage>
+    />
   );
 }
 

@@ -1162,8 +1162,6 @@ button.reset:hover:not(:has(> *)) {
 .recommended-products {
   box-sizing: border-box;
   padding: calc(92vh - 2rem) 0 0;
-  position: relative;
-  z-index: 21;
 }
 
 .recommended-products__intro--visible
@@ -1238,14 +1236,14 @@ button.reset:hover:not(:has(> *)) {
 
 .discover-carousel {
   --discover-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --discover-top-extension: clamp(2rem, 4vw, 4rem);
   background: #24252a;
+  box-sizing: border-box;
   color: #fff;
-  height: calc(100vh + var(--discover-top-extension));
-  height: calc(100dvh + var(--discover-top-extension));
-  margin-top: calc(var(--discover-top-extension) * -1);
+  height: 100vh;
+  height: 100dvh;
   min-height: 38rem;
   overflow: hidden;
+  padding: 0;
   position: relative;
   touch-action: pan-y;
   user-select: none;
@@ -1309,7 +1307,7 @@ button.reset:hover:not(:has(> *)) {
   left: clamp(1.25rem, 4.5vw, 5.5rem);
   line-height: 1;
   position: absolute;
-  top: calc(clamp(2rem, 4vw, 4rem) - 1rem);
+  top: calc(clamp(2rem, 4vw, 4rem) + 0.5rem);
   z-index: 3;
 }
 
@@ -1346,7 +1344,7 @@ button.reset:hover:not(:has(> *)) {
   animation: discoverMarkIn 1050ms var(--discover-ease) 80ms both;
   display: block;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
-  font-size: clamp(7rem, 22vw, 23rem);
+  font-size: clamp(5.95rem, 18.7vw, 19.55rem);
   font-weight: 400;
   letter-spacing: -0.09em;
   line-height: 0.84;
