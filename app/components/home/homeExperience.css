@@ -1718,6 +1718,8 @@ body.featured-work-detail-open .header,
   .featured-work-detail__title-cubes-suffix,
 .featured-work-detail__title--nuances
   .featured-work-detail__title-cubes-suffix,
+.featured-work-detail__title--cobbles
+  .featured-work-detail__title-cubes-suffix,
 .featured-work-detail__title--praline
   .featured-work-detail__title-cubes-suffix {
   font-size: 0.55em;
@@ -1731,6 +1733,14 @@ body.featured-work-detail-open .header,
   transform: scaleX(0.72);
 }
 
+.featured-work-detail__cobbles-title {
+  margin: 1.5rem 0 0;
+}
+
+.featured-work-detail__cobbles-description {
+  margin-top: 0.7rem;
+}
+
 .featured-work-detail__description {
   animation: featuredWorkDetailDescriptionIn 1050ms cubic-bezier(0.16, 1, 0.3, 1)
     620ms both;
@@ -1739,6 +1749,11 @@ body.featured-work-detail-open .header,
   line-height: 1.45;
   max-width: 22rem;
   opacity: 0.74;
+}
+
+.featured-work-detail__description-line {
+  display: block;
+  margin-top: 0.7rem;
 }
 
 .featured-work-detail__more-information {
@@ -1807,6 +1822,11 @@ body.featured-work-detail-open .header,
   white-space: normal;
 }
 
+.featured-work-detail__availability-line {
+  display: block;
+  margin-top: 0.75rem;
+}
+
 .featured-work-detail__track {
   animation: featuredWorkDetailTrackIn 900ms cubic-bezier(0.16, 1, 0.3, 1)
     520ms both;
@@ -1826,6 +1846,10 @@ body.featured-work-detail-open .header,
   transition: none;
   width: 100vw;
   z-index: 2;
+}
+
+.featured-work-detail--bonbon-archive .featured-work-detail__track {
+  padding-left: calc(min(39vw, 31rem) + 3vw);
 }
 
 .featured-work-detail__track::-webkit-scrollbar {
@@ -2069,6 +2093,10 @@ body.featured-work-detail-open .header,
 
   .featured-work-detail__track {
     padding: 0 4rem 0 1rem;
+  }
+
+  .featured-work-detail--bonbon-archive .featured-work-detail__track {
+    padding-left: calc(1rem + 3vw);
   }
 
   .featured-work-detail__panel {

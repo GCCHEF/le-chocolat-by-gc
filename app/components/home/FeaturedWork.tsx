@@ -30,7 +30,7 @@ const WORK_ITEMS = [
     thumbnail: '/images/texture-category.jpg',
     title: 'Texture',
     description:
-      'Almond and hazelnut praliné with single-origin 64% Madagascar chocolate, toasted almonds and coated in dark chocolate.',
+      'Almond and hazelnut praliné with single-origin 64% Madagascar chocolate, toasted almonds, coated in dark chocolate.',
     palette: 'featured-work-card--origin',
   },
   {
@@ -40,16 +40,24 @@ const WORK_ITEMS = [
     detailTitle: 'Assortment',
     thumbnail: '/images/essentiel-category-portrait.jpg',
     title: 'Essentiel',
-    description: 'A quiet study of form, filling, shell, and finish.',
+    description:
+      'CU(bes) hazelnut and almond praliné, 64% Grand Cru chocolate, toasted almonds, coated in dark chocolate.',
+    secondaryDescription:
+      '70% Guanaja ganache, coated in dark chocolate.',
+    tertiaryDescription:
+      'Cassis and Poivre de Cassis half sphere, dark chocolate shell.',
+    quaternaryDescription:
+      'Almond Parmesan praliné, coated in dark chocolate.',
     palette: 'featured-work-card--bonbon',
   },
   {
     id: 'noir-72',
-    eyebrow: 'Matiere / Nuances',
+    eyebrow: 'Matiere / Nuances / Cobbles',
     detailEyebrow: 'Matiere / Origine',
     thumbnail: '/images/origine-category.jpg',
     title: 'Origine',
-    description: 'Dark chocolate as a minimal architectural object.',
+    description:
+      'Flavor initiation with nine Grand Cru and blend chocolate ganache ranging from 33 to 85% cocoa content.',
     palette: 'featured-work-card--noir',
   },
   {
@@ -58,7 +66,8 @@ const WORK_ITEMS = [
     detailEyebrow: 'Matiere / Racines',
     thumbnail: '/images/racines-category.jpg',
     title: 'Racines',
-    description: 'Manufacture details, gestures, tools, and material memory.',
+    description:
+      'Hazelnut and almond praliné, presented in four distinct flavors: buckwheat, cocoa nibs, Parmesan and feuilletine.',
     palette: 'featured-work-card--atelier',
   },
 ];
@@ -140,6 +149,26 @@ function NuancesTitle() {
           <span className="featured-work-detail__title-cubes-suffix">
             <span className="featured-work-detail__title-cubes-paren">(</span>
             ances
+            <span className="featured-work-detail__title-cubes-paren">)</span>
+          </span>
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function CobblesTitle() {
+  return (
+    <span
+      className="featured-work-detail__title featured-work-detail__title--cobbles featured-work-detail__cobbles-title featured-work-reveal"
+      aria-label="Cobbles"
+    >
+      <span className="featured-work-reveal__mask">
+        <span className="featured-work-reveal__line">
+          <span>CO</span>
+          <span className="featured-work-detail__title-cubes-suffix">
+            <span className="featured-work-detail__title-cubes-paren">(</span>
+            bbles
             <span className="featured-work-detail__title-cubes-paren">)</span>
           </span>
         </span>
@@ -578,7 +607,7 @@ export default function FeaturedWork({
           ref={detailRef}
           className={`featured-work-detail ${
             isDetailVisible ? 'featured-work-detail--visible' : ''
-          }`}
+          } featured-work-detail--${activeWork.id}`}
           aria-label={`${activeWork.title} detail`}
           style={
             {
@@ -636,7 +665,34 @@ export default function FeaturedWork({
               )}
               <span className="featured-work-detail__description">
                 {activeWork.description}
+                {'secondaryDescription' in activeWork &&
+                typeof activeWork.secondaryDescription === 'string' ? (
+                  <span className="featured-work-detail__description-line">
+                    {activeWork.secondaryDescription}
+                  </span>
+                ) : null}
+                {'tertiaryDescription' in activeWork &&
+                typeof activeWork.tertiaryDescription === 'string' ? (
+                  <span className="featured-work-detail__description-line">
+                    {activeWork.tertiaryDescription}
+                  </span>
+                ) : null}
+                {'quaternaryDescription' in activeWork &&
+                typeof activeWork.quaternaryDescription === 'string' ? (
+                  <span className="featured-work-detail__description-line">
+                    {activeWork.quaternaryDescription}
+                  </span>
+                ) : null}
               </span>
+              {activeWork.id === 'noir-72' ? (
+                <div className="featured-work-detail__cobbles-block">
+                  <CobblesTitle />
+                  <span className="featured-work-detail__description featured-work-detail__cobbles-description">
+                    66% Caribbean Grand Cru ganache, coated in dark chocolate
+                    and cocoa powder.
+                  </span>
+                </div>
+              ) : null}
               <button
                 className="featured-work-detail__more-information"
                 aria-controls={`more-information-${activeWork.id}`}
@@ -663,16 +719,34 @@ export default function FeaturedWork({
                   <>
                     <span>Available in 16 / 32 / 48 pieces</span>
                     <span className="featured-work-detail__allergens">
-                      Allergens: Contains hazelnuts, almonds and soy. May contain
-                      traces of milk and other tree nuts.
+                      <strong>Allergens:</strong> Contains hazelnuts, almonds and
+                      soy. May contain traces of milk and other tree nuts.
+                    </span>
+                  </>
+                ) : activeWork.id === 'bonbon-archive' ? (
+                  <>
+                    <span>Available in 13 / 26 / 39 pieces</span>
+                    <span className="featured-work-detail__allergens">
+                      <strong>Allergens:</strong> Milk, soya, tree nuts
+                      (hazelnuts, almonds).
+                    </span>
+                  </>
+                ) : activeWork.id === 'noir-72' ? (
+                  <>
+                    <span>NU01 is only available in 18 pieces.</span>
+                    <span className="featured-work-detail__availability-line">
+                      CO is available in 16 and 32 pieces.
+                    </span>
+                    <span className="featured-work-detail__allergens">
+                      <strong>Allergens:</strong> Milk and soy.
                     </span>
                   </>
                 ) : activeWork.id === 'atelier-cape-town' ? (
                   <>
-                    <span>Allergens</span>
+                    <span>Available in 12 / 24 / 36 pieces</span>
                     <span className="featured-work-detail__allergens">
-                      All products may contain traces of milk, eggs, gluten,
-                      nuts, peanuts, sesame and soy.
+                      <strong>Allergens:</strong> Milk, soya, tree nuts
+                      (hazelnuts, almonds), wheat (gluten).
                     </span>
                   </>
                 ) : null}
