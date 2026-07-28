@@ -119,7 +119,7 @@ export default function DiscoverCarousel({
   return (
     <section
       aria-roledescription="carousel"
-      aria-label="Discover products"
+      aria-label="Featured products"
       className={`discover-carousel discover-carousel--${direction} ${
         isVisible ? 'discover-carousel--visible' : ''
       }`}
@@ -149,11 +149,11 @@ export default function DiscoverCarousel({
 
       <div className="discover-carousel__shade" aria-hidden="true" />
       <span
-        aria-label="Discover"
+        aria-label="Featured"
         className="featured-work__label featured-work-reveal discover-carousel__eyebrow"
       >
         <span className="featured-work-reveal__mask">
-          <span className="featured-work-reveal__line">Discover</span>
+          <span className="featured-work-reveal__line">Featured</span>
         </span>
       </span>
       <div

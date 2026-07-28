@@ -29,7 +29,8 @@ body:has(.loading-intro--white) > *,
 }
 
 .home-experience__content {
-  background: #ffffff;
+  --creation-surface: #efefec;
+  background: var(--creation-surface);
   color: #000000;
   min-height: 100vh;
   opacity: 0;
@@ -581,7 +582,7 @@ body.featured-work-detail-open .header,
 
 .matiere-composition-line {
   height: min(76vh, 56rem);
-  left: 39%;
+  left: 29%;
   opacity: var(--matiere-line-opacity);
   position: absolute;
   top: 8%;
@@ -616,13 +617,13 @@ body.featured-work-detail-open .header,
 .matiere-number {
   font-family: 'Neue Haas Grotesk Display', 'ABC Diatype Thin', 'ABC Diatype',
     sans-serif;
-  font-size: clamp(4.6rem, 10.4vw, 7.85rem);
+  font-size: clamp(3.9rem, 8.85vw, 6.7rem);
   font-weight: 300;
   letter-spacing: 0.16em;
   line-height: 0.82;
   margin: 0;
   opacity: calc(var(--matiere-number-opacity) * 0.82);
-  right: calc(61% + clamp(3rem, 5vw, 5rem));
+  right: calc(71.95% + clamp(3rem, 5vw, 5rem));
   text-align: right;
   top: 42%;
   transform: translateY(calc(-92% + var(--matiere-number-shift)));
@@ -636,7 +637,7 @@ body.featured-work-detail-open .header,
   padding: 0;
   text-align: left;
   top: 47%;
-  transform: translateY(-50%);
+  transform: translate(-20%, -50%);
   width: auto;
   z-index: 2;
 }
@@ -644,7 +645,7 @@ body.featured-work-detail-open .header,
 .matiere-title h1 {
   font-family: 'Neue Haas Grotesk Display', sans-serif;
   font-kerning: normal;
-  font-size: clamp(4.05rem, 6.53vw, 5.07rem);
+  font-size: clamp(5.64rem, 9.09vw, 7.05rem);
   font-weight: 400;
   letter-spacing: 0.45em;
   line-height: 1;
@@ -652,6 +653,7 @@ body.featured-work-detail-open .header,
   opacity: var(--matiere-title-opacity);
   position: relative;
   transform: translateY(var(--matiere-title-shift));
+  white-space: nowrap;
   will-change: opacity, transform;
   z-index: 2;
 }
@@ -1300,9 +1302,8 @@ body.featured-work-detail-open .header,
 }
 
 .featured-work {
-  background: #efefec;
+  background: var(--creation-surface, #efefec);
   color: #000000;
-  margin-top: -2rem;
   min-height: 100vh;
   overflow: hidden;
   padding: clamp(2rem, 4vw, 4rem) clamp(1.25rem, 5vw, 4rem)
