@@ -15,6 +15,9 @@ import {
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   footer: Promise<FooterQuery | null>;
@@ -91,7 +94,7 @@ function MenuRouteOpener() {
     openMenu?: boolean;
   } | null;
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!routeState?.openMenu) return;
     if (handledLocationKeyRef.current === location.key) return;
     handledLocationKeyRef.current = location.key;

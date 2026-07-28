@@ -7,6 +7,8 @@ import MatiereGradientTransition from './MatiereGradientTransition';
 import './homeExperience.css';
 
 const TITLE_REVEAL_DURATION_MS = 3650;
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 export default function HomePage({
   categoryProducts,
@@ -42,7 +44,7 @@ export default function HomePage({
   );
   const [didBypassIntroOnRefresh, setDidBypassIntroOnRefresh] = useState(false);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const navigationEntry = window.performance.getEntriesByType(
       'navigation',
     )[0] as PerformanceNavigationTiming | undefined;
@@ -83,7 +85,7 @@ export default function HomePage({
     location.key,
   ]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!isTitleRevealActive) return;
 
     const lockScroll = () => window.scrollTo(0, 0);
