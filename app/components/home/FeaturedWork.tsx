@@ -331,6 +331,36 @@ export default function FeaturedWork({
   };
 
   useEffect(() => {
+    const openCategory = (event: Event) => {
+      const workId = (event as CustomEvent<{workId?: string}>).detail?.workId;
+      if (!workId || !WORK_ITEMS.some((item) => item.id === workId)) return;
+
+      const card = gridRef.current?.querySelector<HTMLElement>(
+        `[data-work-id="${workId}"] .featured-work-card__image`,
+      );
+      const rect = card?.getBoundingClientRect();
+
+      if (rect) {
+        setDetailOrigin({
+          height: rect.height,
+          scaleX: rect.width / window.innerWidth,
+          scaleY: rect.height / window.innerHeight,
+          width: rect.width,
+          x: rect.left,
+          y: rect.top,
+        });
+      }
+
+      setActiveWorkId(workId);
+      setIsDetailVisible(false);
+    };
+
+    window.addEventListener('open-creation-category', openCategory);
+    return () =>
+      window.removeEventListener('open-creation-category', openCategory);
+  }, []);
+
+  useEffect(() => {
     const intro = introRef.current;
     if (!intro) return;
 
@@ -555,6 +585,7 @@ export default function FeaturedWork({
           {WORK_ITEMS.map((item, index) => (
             <button
               className={`featured-work-card ${item.palette}`}
+              data-work-id={item.id}
               key={item.id}
               onClick={(event) => openWork(event, item.id)}
               style={{'--featured-work-index': index} as CSSProperties}

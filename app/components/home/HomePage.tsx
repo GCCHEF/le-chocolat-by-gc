@@ -13,6 +13,7 @@ const useIsomorphicLayoutEffect =
 export default function HomePage({
   categoryProducts,
   children,
+  discovery,
   textureProducts,
 }: {
   categoryProducts: Record<
@@ -20,6 +21,7 @@ export default function HomePage({
     Array<NonNullable<CategoryProductsQuery[keyof CategoryProductsQuery]>>
   >;
   children: ReactNode;
+  discovery: ReactNode;
   textureProducts: Array<
     NonNullable<
       | CategoryProductsQuery['cu1']
@@ -139,11 +141,12 @@ export default function HomePage({
             isTitleRevealActive={isTitleRevealActive}
             isTitleVisible={isTitleVisible}
           />
+          {discovery}
+          {children}
           <FeaturedWork
             categoryProducts={categoryProducts}
             textureProducts={textureProducts}
           />
-          {children}
         </div>
       ) : null}
     </main>

@@ -1304,7 +1304,7 @@ body.featured-work-detail-open .header,
   color: #000000;
   min-height: 100vh;
   overflow: hidden;
-  padding: calc(92vh + clamp(2rem, 4vw, 4rem)) clamp(1.25rem, 5vw, 4rem)
+  padding: clamp(2rem, 4vw, 4rem) clamp(1.25rem, 5vw, 4rem)
     clamp(5rem, 8vw, 7rem);
   position: relative;
 }
@@ -1476,6 +1476,10 @@ body.featured-work-detail-open .header,
     radial-gradient(circle at 35% 30%, #ded8cf 0 8%, transparent 24%),
     radial-gradient(circle at 70% 56%, #20140f 0 16%, transparent 34%),
     linear-gradient(135deg, #8a8176, #191513 64%, #c2b8aa);
+}
+
+.featured-work-card--origin.featured-work-detail__hero-image {
+  box-shadow: inset 42vw 0 34vw -22vw rgba(0, 0, 0, 0.42);
 }
 
 .featured-work-card--bonbon .featured-work-card__image-core,

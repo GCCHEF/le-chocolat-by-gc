@@ -1,15 +1,15 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense, useEffect, useRef, useState} from 'react';
+import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
   CategoryProductsQuery,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import HomePage from '~/components/home/HomePage';
+import DiscoverCarousel from '~/components/home/DiscoverCarousel';
 import homeExperienceStyles from '~/components/home/homeExperience.css?url';
 
 export const meta: Route.MetaFunction = () => {
@@ -96,13 +96,10 @@ export default function Homepage() {
   return (
     <HomePage
       categoryProducts={data.categoryProducts}
+      discovery={<RecommendedProducts products={data.recommendedProducts} />}
       textureProducts={data.textureProducts}
     >
-      <div className="home">
-        {!data.isShopLinked && <MockShopNotice />}
-        <FeaturedCollection collection={data.featuredCollection} />
-        <RecommendedProducts products={data.recommendedProducts} />
-      </div>
+      {!data.isShopLinked ? <MockShopNotice /> : null}
     </HomePage>
   );
 }
@@ -137,74 +134,31 @@ function RecommendedProducts({
 
   return (
     <div className="recommended-products">
-      <DiscoverHeading />
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? curatedProductCodes
-                    .map((code) =>
-                      response.products.nodes.find((product) => {
-                        const match = product.title
-                          .trim()
-                          .toUpperCase()
-                          .replace(/\s+/g, '')
-                          .match(/^([A-Z]+)0*(\d+)$/);
-                        if (!match) return false;
-                        return `${match[1]}${match[2].padStart(2, '0')}` === code;
-                      }),
-                    )
-                    .filter((product) => product != null)
-                    .map((product) => (
-                      <ProductItem
-                        key={product.id}
-                        product={product}
-                        presentation="recommendation"
-                      />
-                    ))
-                : null}
-            </div>
+            <DiscoverCarousel
+              products={
+                response
+                  ? curatedProductCodes
+                      .map((code) =>
+                        response.products.nodes.find((product) => {
+                          const match = product.title
+                            .trim()
+                            .toUpperCase()
+                            .replace(/\s+/g, '')
+                            .match(/^([A-Z]+)0*(\d+)$/);
+                          if (!match) return false;
+                          return `${match[1]}${match[2].padStart(2, '0')}` === code;
+                        }),
+                      )
+                      .filter((product) => product != null)
+                  : []
+              }
+            />
           )}
         </Await>
       </Suspense>
-      <br />
-    </div>
-  );
-}
-
-function DiscoverHeading() {
-  const headingRef = useRef<HTMLDivElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const heading = headingRef.current;
-    if (!heading) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      {rootMargin: '-6% 0px -12%', threshold: 0.16},
-    );
-
-    observer.observe(heading);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      className={`featured-work__intro recommended-products__intro ${
-        isVisible ? 'recommended-products__intro--visible' : ''
-      }`}
-      ref={headingRef}
-    >
-      <span
-        aria-label="Discover"
-        className="featured-work__label featured-work-reveal"
-      >
-        <span className="featured-work-reveal__mask">
-          <span className="featured-work-reveal__line">Discover</span>
-        </span>
-      </span>
     </div>
   );
 }

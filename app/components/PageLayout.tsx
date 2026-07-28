@@ -39,6 +39,7 @@ export function PageLayout({
   const isContactPage =
     location.pathname === '/pages/contact' ||
     location.pathname === '/pages/collection-address';
+  const shouldShowFooter = !isContactPage && location.pathname !== '/';
 
   return (
     <Aside.Provider>
@@ -56,7 +57,7 @@ export function PageLayout({
         />
       )}
       <main>{children}</main>
-      {!isContactPage ? (
+      {shouldShowFooter ? (
         <Footer
           footer={footer}
           header={header}

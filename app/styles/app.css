@@ -1138,7 +1138,7 @@ button.reset:hover:not(:has(> *)) {
 */
 .featured-collection {
   display: block;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   position: relative;
 }
 
@@ -1161,7 +1161,9 @@ button.reset:hover:not(:has(> *)) {
 
 .recommended-products {
   box-sizing: border-box;
-  padding-inline: clamp(1.25rem, 4.5vw, 5.5rem);
+  padding: calc(92vh - 2rem) 0 0;
+  position: relative;
+  z-index: 21;
 }
 
 .recommended-products__intro--visible
@@ -1232,6 +1234,224 @@ button.reset:hover:not(:has(> *)) {
 .recommended-products-grid .product-item--recommendation:hover h4,
 .recommended-products-grid .product-item--recommendation:focus-visible h4 {
   transform: translateX(clamp(0.45rem, 1.4vw, 1.2rem));
+}
+
+.discover-carousel {
+  --discover-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --discover-top-extension: clamp(2rem, 4vw, 4rem);
+  background: #24252a;
+  color: #fff;
+  height: calc(100vh + var(--discover-top-extension));
+  height: calc(100dvh + var(--discover-top-extension));
+  margin-top: calc(var(--discover-top-extension) * -1);
+  min-height: 38rem;
+  overflow: hidden;
+  position: relative;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.discover-carousel__stage {
+  animation: discoverImageIn 1050ms var(--discover-ease) both;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  inset: 0;
+  position: absolute;
+  padding: 0;
+  width: 100%;
+}
+
+.discover-carousel__stage img {
+  animation: discoverImageScale 1500ms var(--discover-ease) both;
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.discover-carousel__stage--as02 img {
+  animation-name: discoverImageScaleAs;
+  object-position: center 20%;
+}
+
+.discover-carousel__stage--cu01 img {
+  animation-name: discoverImageScaleCu;
+}
+
+.discover-carousel__stage--pr02 img {
+  animation-name: discoverImageScaleCentered;
+}
+
+.discover-carousel__shade {
+  background:
+    linear-gradient(180deg, rgba(8, 6, 5, 0.42), transparent 30%),
+    linear-gradient(0deg, rgba(8, 6, 5, 0.64), transparent 42%);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.discover-carousel__overlay {
+  animation: discoverCopyIn 850ms var(--discover-ease) 120ms both;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+.discover-carousel__eyebrow {
+  color: #fff;
+  left: clamp(1.25rem, 4.5vw, 5.5rem);
+  line-height: 1;
+  position: absolute;
+  top: calc(clamp(2rem, 4vw, 4rem) - 1rem);
+  z-index: 3;
+}
+
+.discover-carousel__eyebrow .featured-work-reveal__mask {
+  line-height: 1;
+  overflow: visible;
+}
+
+.discover-carousel--visible
+  .discover-carousel__eyebrow
+  .featured-work-reveal__mask {
+  clip-path: inset(0);
+  filter: blur(0);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.discover-carousel--visible
+  .discover-carousel__eyebrow
+  .featured-work-reveal__line {
+  transform: translateX(0);
+}
+
+.discover-carousel__mark-mask {
+  left: 50%;
+  overflow: visible;
+  padding: 0.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.discover-carousel__mark {
+  animation: discoverMarkIn 1050ms var(--discover-ease) 80ms both;
+  display: block;
+  font-family: 'Neue Haas Grotesk Display', sans-serif;
+  font-size: clamp(7rem, 22vw, 23rem);
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  line-height: 0.84;
+  white-space: nowrap;
+}
+
+.discover-carousel__controls {
+  bottom: clamp(1.5rem, 4vh, 3.5rem);
+  display: flex;
+  gap: 0.55rem;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.discover-carousel__controls button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  height: 2rem;
+  padding: 0;
+  position: relative;
+  width: 2.8rem;
+}
+
+.discover-carousel__controls button::before {
+  background: rgba(255, 255, 255, 0.42);
+  content: '';
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    background 420ms ease,
+    transform 520ms var(--discover-ease),
+    width 520ms var(--discover-ease);
+  width: 1.6rem;
+}
+
+.discover-carousel__controls button:hover::before,
+.discover-carousel__controls button:focus-visible::before {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translate(-50%, -50%) scaleY(2);
+}
+
+.discover-carousel__controls button[aria-current='true']::before {
+  background: #fff;
+  width: 2.8rem;
+}
+
+@keyframes discoverImageIn {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes discoverImageScale {
+  from { transform: translateX(-2vw) scale(1.18); }
+  to { transform: translateX(-2vw) scale(1.04); }
+}
+
+@keyframes discoverImageScaleCentered {
+  from { transform: translateX(2.5vw) scale(1.21); }
+  to { transform: translateX(2.5vw) scale(1.07); }
+}
+
+@keyframes discoverImageScaleAs {
+  from { transform: scale(1.18); }
+  to { transform: scale(1.04); }
+}
+
+@keyframes discoverImageScaleCu {
+  from { transform: translateX(1.7vw) scale(1.28); }
+  to { transform: translateX(1.7vw) scale(1.14); }
+}
+
+@keyframes discoverMarkIn {
+  from { filter: blur(8px); opacity: 0; transform: translateY(0.3em); }
+  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+}
+
+@keyframes discoverCopyIn {
+  from { filter: blur(7px); opacity: 0; transform: translateY(1.5rem); }
+  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 44.99em) {
+  .discover-carousel {
+    min-height: 34rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discover-carousel__stage,
+  .discover-carousel__stage img,
+  .discover-carousel__overlay,
+  .discover-carousel__mark {
+    animation-duration: 1ms;
+  }
 }
 
 /*
