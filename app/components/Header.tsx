@@ -50,11 +50,14 @@ export function HeaderMenu({
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
-  const {close} = useAside();
+  const {closeForNavigation} = useAside();
   const className = `header-menu-${viewport}`;
   const closeForCreation = () => {
     document.documentElement.classList.add('menu-eshop-navigation');
-    close();
+    closeForNavigation();
+    document
+      .getElementById('creation')
+      ?.scrollIntoView({behavior: 'auto', block: 'start'});
     window.setTimeout(() => {
       document.documentElement.classList.remove('menu-eshop-navigation');
     }, 460);

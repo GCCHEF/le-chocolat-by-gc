@@ -12,6 +12,7 @@ type AsideContextValue = {
   type: AsideType;
   open: (mode: AsideType) => void;
   close: () => void;
+  closeForNavigation: () => void;
 };
 
 /**
@@ -111,7 +112,7 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
     setType(mode);
   };
 
-  const close = () => {
+  const closeAside = (restoreScrollPosition: boolean) => {
     const origin = menuOriginRef.current;
     const previousBodyStyles = menuBodyStylesRef.current;
     const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -121,7 +122,7 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
       document.body.style.position = previousBodyStyles.position;
       document.body.style.top = previousBodyStyles.top;
       document.body.style.width = previousBodyStyles.width;
-      if (shouldRestoreMenuPosition) {
+      if (restoreScrollPosition && shouldRestoreMenuPosition) {
         window.scrollTo(0, origin.scrollY);
       }
     }
@@ -134,10 +135,13 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
       }
     };
 
-    if (type === 'mobile') {
+    if (restoreScrollPosition && type === 'mobile') {
       window.requestAnimationFrame(restoreMenuPosition);
     }
   };
+
+  const close = () => closeAside(true);
+  const closeForNavigation = () => closeAside(false);
 
   return (
     <AsideContext.Provider
@@ -145,6 +149,7 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
         type,
         open,
         close,
+        closeForNavigation,
       }}
     >
       {children}
