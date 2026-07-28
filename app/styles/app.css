@@ -1239,8 +1239,8 @@ button.reset:hover:not(:has(> *)) {
   background: #24252a;
   box-sizing: border-box;
   color: #fff;
-  height: 100vh;
-  height: 100dvh;
+  height: calc(100vh + 8rem);
+  height: calc(100dvh + 8rem);
   min-height: 38rem;
   overflow: hidden;
   padding: 0;
@@ -1352,7 +1352,7 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .discover-carousel__controls {
-  bottom: clamp(1.5rem, 4vh, 3.5rem);
+  bottom: calc(clamp(1.5rem, 4vh, 3.5rem) + 1rem);
   display: flex;
   gap: 0.55rem;
   left: 50%;
@@ -1372,7 +1372,7 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .discover-carousel__controls button::before {
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(0, 0, 0, 0.38);
   content: '';
   height: 2px;
   left: 50%;
@@ -1388,12 +1388,12 @@ button.reset:hover:not(:has(> *)) {
 
 .discover-carousel__controls button:hover::before,
 .discover-carousel__controls button:focus-visible::before {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.78);
   transform: translate(-50%, -50%) scaleY(2);
 }
 
 .discover-carousel__controls button[aria-current='true']::before {
-  background: #fff;
+  background: #000;
   width: 2.8rem;
 }
 

@@ -1302,11 +1302,13 @@ body.featured-work-detail-open .header,
 .featured-work {
   background: #efefec;
   color: #000000;
+  margin-top: -2rem;
   min-height: 100vh;
   overflow: hidden;
   padding: clamp(2rem, 4vw, 4rem) clamp(1.25rem, 5vw, 4rem)
     clamp(5rem, 8vw, 7rem);
   position: relative;
+  scroll-margin-top: 2rem;
 }
 
 .featured-work__intro {

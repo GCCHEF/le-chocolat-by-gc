@@ -577,8 +577,9 @@ export default function FeaturedWork({
       <section
         className={`featured-work ${isVisible ? 'featured-work--visible' : ''}`}
         aria-label="Featured work"
+        id="creation"
       >
-        <div className="featured-work__intro" id="creation" ref={introRef}>
+        <div className="featured-work__intro" ref={introRef}>
           <AnimatedText className="featured-work__label" text="Creation" />
         </div>
         <div className="featured-work__grid" ref={gridRef}>
