@@ -4,6 +4,7 @@ import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
+import TableMountainContours from './TableMountainContours';
 import './homeExperience.css';
 
 const TITLE_REVEAL_DURATION_MS = 3650;
@@ -147,6 +148,35 @@ export default function HomePage({
             categoryProducts={categoryProducts}
             textureProducts={textureProducts}
           />
+          <TableMountainContours />
+          <footer className="home-footer">
+            <p className="home-footer__brand">
+              <img src="/le-chocolat-wordmark.png" alt="Le Chocolat" />
+              <span className="home-footer__copyright">
+                © {new Date().getFullYear()}
+              </span>
+            </p>
+            <nav aria-label="Footer navigation">
+              <a
+                aria-label="Instagram"
+                className="home-footer__action home-footer__instagram"
+                href="https://www.instagram.com/lechocolat_by_gc/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4.25" />
+                  <circle
+                    className="home-footer__instagram-dot"
+                    cx="17.4"
+                    cy="6.7"
+                    r="1"
+                  />
+                </svg>
+              </a>
+            </nav>
+          </footer>
         </div>
       ) : null}
     </main>

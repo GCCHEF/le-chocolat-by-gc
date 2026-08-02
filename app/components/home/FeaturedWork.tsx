@@ -9,6 +9,7 @@ import {Image} from '@shopify/hydrogen';
 import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
+import AsciiImage from './AsciiImage';
 
 type CategoryProduct = NonNullable<
   CategoryProductsQuery[keyof CategoryProductsQuery]
@@ -820,6 +821,17 @@ export default function FeaturedWork({
                       </article>
                     );
                   })}
+              {activeWork.id === 'bonbon-archive' ? (
+                <article className="featured-work-detail__panel featured-work-detail__panel--ascii-image">
+                  <AsciiImage
+                    image={{
+                      src: '/images/essentiel-fourth-panel.png?v=2',
+                      alt: 'Essentiel chocolate assortment',
+                    }}
+                    revealOptions={{size: 120, softness: 16}}
+                  />
+                </article>
+              ) : null}
             </div>
           </div>
         </section>

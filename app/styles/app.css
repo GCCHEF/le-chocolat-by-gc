@@ -685,9 +685,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .header__logo img {
+  clip-path: inset(0 0 28% 0);
   display: block;
-  height: clamp(1.9rem, 2.9vw, 2.775rem);
-  max-width: min(55vw, 17.5rem);
+  height: clamp(2.09rem, 3.19vw, 3.0525rem);
+  max-width: min(60.5vw, 19.25rem);
   object-fit: contain;
   transform: translate(-3.1%, 1px);
   width: auto;

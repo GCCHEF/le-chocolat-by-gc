@@ -149,11 +149,11 @@ export default function DiscoverCarousel({
 
       <div className="discover-carousel__shade" aria-hidden="true" />
       <span
-        aria-label="Featured"
+        aria-label="Discover"
         className="featured-work__label featured-work-reveal discover-carousel__eyebrow"
       >
         <span className="featured-work-reveal__mask">
-          <span className="featured-work-reveal__line">Featured</span>
+          <span className="featured-work-reveal__line">Discover</span>
         </span>
       </span>
       <div
