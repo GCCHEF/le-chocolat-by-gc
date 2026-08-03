@@ -824,11 +824,12 @@ export default function FeaturedWork({
               {activeWork.id === 'bonbon-archive' ? (
                 <article className="featured-work-detail__panel featured-work-detail__panel--ascii-image">
                   <AsciiImage
+                    annotationOverlay
                     image={{
-                      src: '/images/essentiel-fourth-panel.png?v=2',
+                      src: '/images/essentiel-fourth-panel-clean.png',
                       alt: 'Essentiel chocolate assortment',
                     }}
-                    revealOptions={{size: 120, softness: 16}}
+                    revealOptions={{size: 105, softness: 16}}
                   />
                 </article>
               ) : null}

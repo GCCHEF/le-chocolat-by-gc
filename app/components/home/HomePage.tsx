@@ -4,7 +4,6 @@ import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import FeaturedWork from './FeaturedWork';
 import LoadingIntro from './LoadingIntro';
 import MatiereGradientTransition from './MatiereGradientTransition';
-import TableMountainContours from './TableMountainContours';
 import './homeExperience.css';
 
 const TITLE_REVEAL_DURATION_MS = 3650;
@@ -148,14 +147,29 @@ export default function HomePage({
             categoryProducts={categoryProducts}
             textureProducts={textureProducts}
           />
-          <TableMountainContours />
+          <div className="home-footer-transition" aria-hidden="true" />
           <footer className="home-footer">
             <p className="home-footer__brand">
-              <img src="/le-chocolat-wordmark.png" alt="Le Chocolat" />
+              <span className="home-footer__wordmark">
+                <img src="/le-chocolat-wordmark.png" alt="Le Chocolat" />
+              </span>
               <span className="home-footer__copyright">
                 © {new Date().getFullYear()}
               </span>
             </p>
+            <a
+              className="home-footer__maker"
+              aria-label="Gregory Czarnecki on Instagram"
+              href="https://www.instagram.com/czarneckigregory/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <span>by</span>
+              <img
+                src="/images/le-chocolat-gc-monogram-white.png"
+                alt="GC"
+              />
+            </a>
             <nav aria-label="Footer navigation">
               <a
                 aria-label="Instagram"

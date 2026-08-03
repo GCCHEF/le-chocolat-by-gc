@@ -5,6 +5,7 @@ type Fit = 'cover' | 'contain';
 type RevealOptions = {size: number; softness: number};
 
 interface AsciiImageProps {
+  annotationOverlay?: boolean;
   image: {src: string; alt?: string} | string;
   fit?: Fit;
   focusY?: number;
@@ -59,6 +60,7 @@ function placeRect(
 }
 
 export default function AsciiImage({
+  annotationOverlay = false,
   image,
   fit = DEFAULTS.fit,
   focusY = DEFAULTS.focusY,
@@ -74,6 +76,7 @@ export default function AsciiImage({
 }: AsciiImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const asciiRef = useRef<HTMLCanvasElement | null>(null);
+  const sourceRef = useRef<HTMLCanvasElement | null>(null);
   const samplerRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const photoRef = useRef<HTMLCanvasElement | null>(null);
@@ -130,13 +133,104 @@ export default function AsciiImage({
         fit,
         focusY,
       );
+      const source = sourceRef.current ?? document.createElement('canvas');
+      sourceRef.current = source;
+      source.width = canvas.width;
+      source.height = canvas.height;
+      const sourceContext = source.getContext('2d');
+      if (!sourceContext) return;
+      sourceContext.clearRect(0, 0, source.width, source.height);
+      sourceContext.drawImage(
+        loadedImage,
+        imageRect.dx,
+        imageRect.dy,
+        imageRect.dw,
+        imageRect.dh,
+      );
+      if (annotationOverlay) {
+        const description = document.querySelector<HTMLElement>(
+          '.featured-work-detail__description',
+        );
+        const typography = description
+          ? window.getComputedStyle(description)
+          : window.getComputedStyle(canvas);
+        const renderedFontSize =
+          (Number.parseFloat(typography.fontSize) || 16) * pixelRatio;
+        const sourceScale = imageRect.dw / loadedImage.width;
+        const point = (x: number, y: number) => ({
+          x: imageRect.dx + x * sourceScale,
+          y: imageRect.dy + y * sourceScale,
+        });
+        const line = (fromX: number, fromY: number, toX: number, toY: number) => {
+          const from = point(fromX, fromY);
+          const to = point(toX, toY);
+          sourceContext.beginPath();
+          sourceContext.moveTo(from.x, from.y);
+          sourceContext.lineTo(to.x, to.y);
+          sourceContext.stroke();
+        };
+        const label = (text: string, x: number, y: number) => {
+          const position = point(x, y);
+          sourceContext.fillText(text, position.x, position.y);
+        };
+
+        sourceContext.save();
+        sourceContext.fillStyle = '#ffffff';
+        sourceContext.font = `${typography.fontWeight} ${renderedFontSize}px ${typography.fontFamily}`;
+        sourceContext.globalAlpha = Number.parseFloat(typography.opacity) || 0.74;
+        sourceContext.textBaseline = 'top';
+        label('Guanaja 70%', 400, 195);
+        label('CU(bes)', 158, 470);
+        label('Cassis and', 905, 426);
+        label('Poivre de Cassis', 860, 458);
+        label('PRA(liné)', 875, 960);
+        label('Parmesan', 875, 993);
+        sourceContext.globalAlpha = 1;
+        sourceContext.lineCap = 'round';
+        sourceContext.lineWidth = Math.max(1, sourceScale * 2);
+        sourceContext.strokeStyle = '#ffffff';
+        line(470, 260, 490, 430);
+        line(255, 520, 370, 665);
+        line(910, 498, 600, 723);
+        line(830, 990, 745, 990);
+        sourceContext.restore();
+      }
+      let asciiSource = source;
+      if (annotationOverlay) {
+        const samplingSource = document.createElement('canvas');
+        samplingSource.width = source.width;
+        samplingSource.height = source.height;
+        const samplingContext = samplingSource.getContext('2d');
+        if (samplingContext) {
+          samplingContext.drawImage(source, 0, 0);
+          const sourceScale = imageRect.dw / loadedImage.width;
+          samplingContext.beginPath();
+          samplingContext.moveTo(
+            imageRect.dx + 830 * sourceScale,
+            imageRect.dy + 990 * sourceScale,
+          );
+          samplingContext.lineTo(
+            imageRect.dx + 745 * sourceScale,
+            imageRect.dy + 990 * sourceScale,
+          );
+          samplingContext.lineCap = 'round';
+          samplingContext.lineWidth = Math.max(6, sourceScale * 8);
+          samplingContext.strokeStyle = '#ffffff';
+          samplingContext.stroke();
+          asciiSource = samplingSource;
+        }
+      }
       samplerContext.clearRect(0, 0, columnCount, rowCount);
       samplerContext.drawImage(
-        loadedImage,
-        imageRect.dx / cellWidth,
-        imageRect.dy / fontSize,
-        imageRect.dw / cellWidth,
-        imageRect.dh / fontSize,
+        asciiSource,
+        0,
+        0,
+        source.width,
+        source.height,
+        0,
+        0,
+        columnCount,
+        rowCount,
       );
       const pixels = samplerContext.getImageData(
         0,
@@ -160,6 +254,8 @@ export default function AsciiImage({
           const red = pixels[index];
           const green = pixels[index + 1];
           const blue = pixels[index + 2];
+          const alpha = pixels[index + 3] / 255;
+          if (alpha < 0.42) continue;
           let luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
           luminance = Math.max(
             0,
@@ -169,6 +265,7 @@ export default function AsciiImage({
           const character =
             characters[Math.round(luminance * (characters.length - 1))];
           if (character === ' ') continue;
+          asciiContext.globalAlpha = alpha;
           asciiContext.fillStyle =
             colorMode === 'image'
               ? `rgb(${Math.min(255, red + 30)}, ${Math.min(
@@ -183,6 +280,7 @@ export default function AsciiImage({
           );
         }
       }
+      asciiContext.globalAlpha = 1;
     };
 
     const ensureLayer = (reference: {current: HTMLCanvasElement | null}) => {
@@ -225,7 +323,8 @@ export default function AsciiImage({
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(ascii, 0, 0);
       const loadedImage = imageRef.current;
-      if (!reveal || !pointerRef.current.inside || !loadedImage) return;
+      const source = sourceRef.current;
+      if (!reveal || !pointerRef.current.inside || !loadedImage || !source) return;
       const {pixelRatio} = getSize();
       const photo = ensureLayer(photoRef);
       const photoContext = photo.getContext('2d');
@@ -234,13 +333,7 @@ export default function AsciiImage({
       if (!photoContext || !maskContext) return;
       photoContext.globalCompositeOperation = 'source-over';
       photoContext.clearRect(0, 0, photo.width, photo.height);
-      photoContext.drawImage(
-        loadedImage,
-        imageRect.dx,
-        imageRect.dy,
-        imageRect.dw,
-        imageRect.dh,
-      );
+      photoContext.drawImage(source, 0, 0);
       maskContext.clearRect(0, 0, mask.width, mask.height);
       maskContext.save();
       maskContext.filter = `blur(${(revealSoftness * pixelRatio).toFixed(1)}px)`;
@@ -256,6 +349,10 @@ export default function AsciiImage({
       photoContext.globalCompositeOperation = 'destination-in';
       photoContext.drawImage(mask, 0, 0);
       photoContext.globalCompositeOperation = 'source-over';
+      context.save();
+      context.globalCompositeOperation = 'destination-out';
+      context.drawImage(mask, 0, 0);
+      context.restore();
       context.drawImage(photo, 0, 0);
     };
 
@@ -308,6 +405,7 @@ export default function AsciiImage({
     colorMode,
     columns,
     contrast,
+    annotationOverlay,
     fit,
     focusY,
     inkColor,

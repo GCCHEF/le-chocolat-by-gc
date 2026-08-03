@@ -1,6 +1,28 @@
 import {useEffect, useRef} from 'react';
 import ShaderEntry from './ShaderEntry';
 
+const SCREEN_RAIN_DROPS = [
+  ...Array.from({length: 29}, (_, index) => index + 1).filter(
+    (drop) =>
+      drop !== 1 &&
+      drop !== 5 &&
+      drop !== 8 &&
+      drop !== 9 &&
+      drop !== 12 &&
+      drop !== 15 &&
+      drop !== 16 &&
+      drop !== 20 &&
+      drop !== 22 &&
+      drop !== 23 &&
+      drop !== 26 &&
+      drop !== 27 &&
+      drop !== 29,
+  ),
+  30,
+  33,
+  34,
+];
+
 function clamp(value: number) {
   return Math.min(Math.max(value, 0), 1);
 }
@@ -144,6 +166,14 @@ export default function MatiereGradientTransition({
         <ShaderEntry />
       </div>
       <div className="matiere-droplet-overlay">
+        <div className="matiere-screen-rain" aria-hidden="true">
+          {SCREEN_RAIN_DROPS.map((drop) => (
+            <span
+              key={drop}
+              className={`matiere-screen-rain__drop matiere-screen-rain__drop--${drop}`}
+            />
+          ))}
+        </div>
         <div className="matiere-corner-matter" aria-hidden="true">
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--one" />
           <span className="matiere-corner-matter__cell matiere-corner-matter__cell--two" />

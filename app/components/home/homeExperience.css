@@ -4,6 +4,12 @@
   margin: 0 -1rem -1rem;
   min-height: 100vh;
   overflow-x: clip;
+  overscroll-behavior-y: none;
+}
+
+html:has(.home-experience),
+body:has(.home-experience) {
+  overscroll-behavior-y: none;
 }
 
 html:has(.home-experience--intro-active),
@@ -119,6 +125,99 @@ body.featured-work-detail-open .header,
   top: 0;
   width: 100%;
   z-index: 3500;
+}
+
+.matiere-screen-rain {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.matiere-screen-rain__drop {
+  animation: matiere-corner-cell-drift 14s ease-in-out infinite alternate;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 0, 0, 0.32) 0 5%,
+      rgba(0, 0, 0, 0.18) 11%,
+      rgba(0, 0, 0, 0.07) 28%,
+      rgba(255, 255, 255, 0) 57%
+    ),
+    repeating-conic-gradient(
+      from 8deg,
+      rgba(0, 0, 0, 0.04) 0deg 0.8deg,
+      rgba(255, 255, 255, 0) 0.8deg 8deg
+    );
+  border-radius: 999px;
+  filter: blur(4px);
+  height: var(--rain-drop-size);
+  left: var(--rain-drop-left);
+  mix-blend-mode: multiply;
+  opacity: calc(
+    var(--matiere-corner-matter-opacity) * var(--rain-drop-opacity) * 0.7
+  );
+  position: absolute;
+  top: var(--rain-drop-top);
+  width: var(--rain-drop-size);
+  will-change: opacity, transform;
+}
+
+.matiere-screen-rain__drop:nth-child(4n + 1) {
+  --rain-drop-opacity: var(--matiere-corner-cell-a-opacity);
+}
+
+.matiere-screen-rain__drop:nth-child(4n + 2) {
+  --rain-drop-opacity: var(--matiere-corner-cell-b-opacity);
+}
+
+.matiere-screen-rain__drop:nth-child(4n + 3) {
+  --rain-drop-opacity: var(--matiere-corner-cell-c-opacity);
+}
+
+.matiere-screen-rain__drop:nth-child(4n) {
+  --rain-drop-opacity: var(--matiere-corner-cell-d-opacity);
+}
+
+.matiere-screen-rain__drop--1 { --rain-drop-left: -3%; --rain-drop-top: 7%; --rain-drop-size: clamp(7rem, 12vw, 12rem); animation-delay: -3s; }
+.matiere-screen-rain__drop--2 { --rain-drop-left: 8%; --rain-drop-top: 19%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -8s; }
+.matiere-screen-rain__drop--3 { --rain-drop-left: 21%; --rain-drop-top: 4%; --rain-drop-size: clamp(8.1rem, 13.5vw, 13.5rem); animation-delay: -12s; }
+.matiere-screen-rain__drop--4 { --rain-drop-left: 39%; --rain-drop-top: 12%; --rain-drop-size: clamp(4.5rem, 7vw, 7rem); animation-delay: -2s; }
+.matiere-screen-rain__drop--5 { --rain-drop-left: 55%; --rain-drop-top: 3%; --rain-drop-size: clamp(7rem, 11vw, 11rem); animation-delay: -16s; }
+.matiere-screen-rain__drop--6 { --rain-drop-left: 73%; --rain-drop-top: 15%; --rain-drop-size: clamp(6rem, 9.6vw, 9.6rem); animation-delay: -6s; }
+.matiere-screen-rain__drop--7 { --rain-drop-left: 88%; --rain-drop-top: 1%; --rain-drop-size: clamp(6rem, 9vw, 9rem); animation-delay: -10s; }
+.matiere-screen-rain__drop--8 { --rain-drop-left: 2%; --rain-drop-top: 38%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -14s; }
+.matiere-screen-rain__drop--9 { --rain-drop-left: 15%; --rain-drop-top: 47%; --rain-drop-size: clamp(8.4rem, 15.6vw, 15.6rem); animation-delay: -5s; }
+.matiere-screen-rain__drop--10 { --rain-drop-left: 31%; --rain-drop-top: 34%; --rain-drop-size: clamp(4rem, 7vw, 7rem); animation-delay: -18s; }
+.matiere-screen-rain__drop--11 { --rain-drop-left: 46%; --rain-drop-top: 43%; --rain-drop-size: clamp(6.6rem, 11vw, 11rem); animation-delay: -9s; }
+.matiere-screen-rain__drop--12 { --rain-drop-left: 64%; --rain-drop-top: 32%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -1s; }
+.matiere-screen-rain__drop--13 { --rain-drop-left: 79%; --rain-drop-top: 46%; --rain-drop-size: clamp(9.45rem, 16.2vw, 16.2rem); animation-delay: -20s; }
+.matiere-screen-rain__drop--14 { --rain-drop-left: 94%; --rain-drop-top: 35%; --rain-drop-size: clamp(4.5rem, 7vw, 7rem); animation-delay: -7s; }
+.matiere-screen-rain__drop--15 { --rain-drop-left: -2%; --rain-drop-top: 69%; --rain-drop-size: clamp(6rem, 11vw, 11rem); animation-delay: -13s; }
+.matiere-screen-rain__drop--16 { --rain-drop-left: 12%; --rain-drop-top: 77%; --rain-drop-size: clamp(4.5rem, 8vw, 8rem); animation-delay: -4s; }
+.matiere-screen-rain__drop--17 { --rain-drop-left: 27%; --rain-drop-top: 62%; --rain-drop-size: clamp(8.4rem, 14.4vw, 14.4rem); animation-delay: -17s; }
+.matiere-screen-rain__drop--18 { --rain-drop-left: 43%; --rain-drop-top: 75%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -11s; }
+.matiere-screen-rain__drop--19 { --rain-drop-left: 58%; --rain-drop-top: 61%; --rain-drop-size: clamp(4rem, 7vw, 7rem); animation-delay: -21s; }
+.matiere-screen-rain__drop--20 { --rain-drop-left: 69%; --rain-drop-top: 79%; --rain-drop-size: clamp(9.45rem, 17.55vw, 17.55rem); animation-delay: -15s; }
+.matiere-screen-rain__drop--21 { --rain-drop-left: 86%; --rain-drop-top: 66%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -19s; }
+.matiere-screen-rain__drop--22 { --rain-drop-left: 4%; --rain-drop-top: 91%; --rain-drop-size: clamp(4rem, 7vw, 7rem); animation-delay: -22s; }
+.matiere-screen-rain__drop--23 { --rain-drop-left: 52%; --rain-drop-top: 92%; --rain-drop-size: clamp(6rem, 10vw, 10rem); animation-delay: -24s; }
+.matiere-screen-rain__drop--24 { --rain-drop-left: 91%; --rain-drop-top: 88%; --rain-drop-size: clamp(6rem, 11vw, 11rem); animation-delay: -26s; }
+.matiere-screen-rain__drop--25 { --rain-drop-left: 34%; --rain-drop-top: 16%; --rain-drop-size: clamp(7.2rem, 10.8vw, 10.8rem); animation-delay: -5s; }
+.matiere-screen-rain__drop--26 { --rain-drop-left: 18%; --rain-drop-top: 28%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -11s; }
+.matiere-screen-rain__drop--27 { --rain-drop-left: 15%; --rain-drop-top: 42%; --rain-drop-size: clamp(6rem, 10vw, 10rem); animation-delay: -17s; }
+.matiere-screen-rain__drop--28 { --rain-drop-left: 13%; --rain-drop-top: 69%; --rain-drop-size: clamp(7.7rem, 12.1vw, 12.1rem); animation-delay: -8s; }
+.matiere-screen-rain__drop--29 { --rain-drop-left: 27%; --rain-drop-top: 88%; --rain-drop-size: clamp(6rem, 10vw, 10rem); animation-delay: -20s; }
+.matiere-screen-rain__drop--30 { --rain-drop-left: 69%; --rain-drop-top: 72%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -23s; }
+.matiere-screen-rain__drop--31 { --rain-drop-left: 37%; --rain-drop-top: 11%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -4s; }
+.matiere-screen-rain__drop--32 { --rain-drop-left: 7.5%; --rain-drop-top: 26.5%; --rain-drop-size: clamp(4.5rem, 7vw, 7rem); animation-delay: -10s; }
+.matiere-screen-rain__drop--33 { --rain-drop-left: 28%; --rain-drop-top: 50%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -16s; }
+.matiere-screen-rain__drop--34 { --rain-drop-left: 67.5%; --rain-drop-top: 60%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -7s; }
+.matiere-screen-rain__drop--35 { --rain-drop-left: 68.5%; --rain-drop-top: 77%; --rain-drop-size: clamp(5rem, 9vw, 9rem); animation-delay: -19s; }
+.matiere-screen-rain__drop--36 { --rain-drop-left: 56.7%; --rain-drop-top: 63.7%; --rain-drop-size: clamp(5rem, 8vw, 8rem); animation-delay: -12s; }
+
+.matiere-corner-matter__cell--fifteen {
+  display: none;
 }
 
 .matiere-corner-matter {
@@ -1307,9 +1406,32 @@ body.featured-work-detail-open .header,
   min-height: 90vh;
   overflow: hidden;
   padding: clamp(2rem, 4vw, 4rem) clamp(1.25rem, 5vw, 4rem)
-    clamp(5rem, 8vw, 7rem);
+    clamp(4rem, 6vw, 5.5rem);
   position: relative;
   scroll-margin-top: 2rem;
+}
+
+.home-footer-transition {
+  background:
+    linear-gradient(
+      180deg,
+      #efefec 0%,
+      #efefec 16%,
+      rgba(239, 239, 236, 0.98) 22%,
+      rgba(210, 214, 213, 0.92) 34%,
+      rgba(143, 154, 159, 0.72) 50%,
+      rgba(68, 88, 98, 0.46) 65%,
+      rgba(15, 35, 44, 0.18) 78%,
+      rgba(0, 5, 7, 0) 90%
+    ),
+    radial-gradient(
+      ellipse at 50% 63%,
+      rgba(29, 57, 72, 0.34) 0%,
+      rgba(3, 13, 19, 0.78) 46%,
+      #000507 78%
+    ),
+    #000507;
+  height: clamp(10rem, 17vw, 15rem);
 }
 
 .featured-work__intro {
@@ -1920,9 +2042,17 @@ body.featured-work-detail-open .header,
 }
 
 .featured-work-detail__panel--ascii-image {
+  display: grid;
   flex-basis: clamp(25rem, 43vw, 44rem);
   height: 100vh;
   margin-left: 14vw;
+  place-items: center;
+}
+
+.featured-work-detail__panel--ascii-image .ascii-image {
+  height: 80%;
+  transform: translateY(-4%);
+  width: 91.52%;
 }
 
 .ascii-image {
@@ -2034,6 +2164,7 @@ body.featured-work-detail-open .header,
   letter-spacing: 0.16em;
   min-height: 3.5rem;
   padding: 0.9rem clamp(1.25rem, 3vw, 3rem);
+  position: relative;
   text-transform: uppercase;
 }
 
@@ -2152,29 +2283,72 @@ body.featured-work-detail-open .header,
 .home-footer__brand {
   align-items: flex-end;
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.9rem;
+  transform: translateY(-25%);
+  white-space: nowrap;
 }
 
-.home-footer__brand img {
-  clip-path: inset(0 0 28% 0);
+.home-footer__wordmark {
+  display: block;
+  flex: 0 0 auto;
+  height: 1.26rem;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(0.3rem);
+  width: 7.61rem;
+}
+
+.home-footer__wordmark img {
   display: block;
   filter: invert(1);
-  height: 1.25rem;
-  object-fit: contain;
-  transform: translateY(0.35rem);
+  height: 1.75rem;
+  left: 0;
+  max-width: none;
+  position: absolute;
+  top: 0;
   width: auto;
 }
 
 .home-footer__copyright {
+  display: block;
+  font-size: clamp(0.72rem, 0.92vw, 0.9rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+.home-footer__maker {
+  align-items: flex-end;
+  bottom: 1.25rem;
+  display: flex;
+  gap: 0.55rem;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.home-footer__maker span {
   font-size: clamp(0.58rem, 0.74vw, 0.72rem);
   font-weight: 300;
   letter-spacing: 0.2em;
-  line-height: 1.25;
+  line-height: 1;
+  text-transform: none;
+  transform: translate(0.95rem, -4.35rem);
+}
+
+.home-footer__maker img {
+  display: block;
+  height: 4.5rem;
+  object-fit: contain;
+  width: auto;
 }
 
 .home-footer nav {
   display: flex;
   gap: clamp(1rem, 2.5vw, 2.5rem);
+  margin-right: clamp(0.75rem, 2vw, 1.5rem);
+  transform: translateY(-0.8rem);
 }
 
 .home-footer a {
@@ -2198,10 +2372,10 @@ body.featured-work-detail-open .header,
 
 .home-footer__action svg {
   fill: none;
-  height: 1.75rem;
+  height: 2.3rem;
   stroke: currentColor;
   stroke-width: 1.45;
-  width: 1.75rem;
+  width: 2.3rem;
 }
 
 .home-footer__action:hover,
@@ -2267,6 +2441,16 @@ body.featured-work-detail-open .header,
     flex-direction: column;
     gap: 0.75rem;
     padding-block: 1rem;
+  }
+
+  .home-footer__maker {
+    bottom: auto;
+    position: static;
+    transform: none;
+  }
+
+  .home-footer__maker span {
+    transform: none;
   }
 
   .home-footer nav {
