@@ -173,6 +173,23 @@ export default function AsciiImage({
           const position = point(x, y);
           sourceContext.fillText(text, position.x, position.y);
         };
+        const compoundLabel = (
+          prefix: string,
+          suffix: string,
+          x: number,
+          y: number,
+        ) => {
+          const position = point(x, y);
+          sourceContext.font = `700 ${renderedFontSize}px ${typography.fontFamily}`;
+          sourceContext.fillText(prefix, position.x, position.y);
+          const prefixWidth = sourceContext.measureText(prefix).width;
+          sourceContext.font = `${typography.fontWeight} ${renderedFontSize}px ${typography.fontFamily}`;
+          sourceContext.fillText(
+            suffix,
+            position.x + prefixWidth,
+            position.y,
+          );
+        };
 
         sourceContext.save();
         sourceContext.fillStyle = '#ffffff';
@@ -180,10 +197,10 @@ export default function AsciiImage({
         sourceContext.globalAlpha = Number.parseFloat(typography.opacity) || 0.74;
         sourceContext.textBaseline = 'top';
         label('Guanaja 70%', 400, 195);
-        label('CU(bes)', 158, 470);
-        label('Cassis and', 905, 426);
-        label('Poivre de Cassis', 860, 458);
-        label('PRA(liné)', 875, 960);
+        compoundLabel('CU', '(bes)', 158, 470);
+        label('Cassis and', 905, 416);
+        label('Poivre de Cassis', 860, 448);
+        compoundLabel('PRA', '(liné)', 875, 960);
         label('Parmesan', 875, 993);
         sourceContext.globalAlpha = 1;
         sourceContext.lineCap = 'round';

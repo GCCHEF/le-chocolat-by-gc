@@ -219,7 +219,7 @@ export default function MatiereGradientTransition({
       </div>
       <div className="text-overlay-layer">
         <div className="matiere-composition-line" aria-hidden="true" />
-        <p className="matiere-number">01</p>
+        <p className="matiere-number">001</p>
         <div className="matiere-title">
           <h1>
             MATI<span className="matiere-title__accent">È</span>RE

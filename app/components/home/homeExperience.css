@@ -716,13 +716,13 @@ body.featured-work-detail-open .header,
 .matiere-number {
   font-family: 'Neue Haas Grotesk Display', 'ABC Diatype Thin', 'ABC Diatype',
     sans-serif;
-  font-size: clamp(3.9rem, 8.85vw, 6.7rem);
+  font-size: clamp(5.5836rem, 8.9991vw, 6.9795rem);
   font-weight: 300;
   letter-spacing: 0.16em;
   line-height: 0.82;
   margin: 0;
   opacity: calc(var(--matiere-number-opacity) * 0.82);
-  right: calc(71.95% + clamp(3rem, 5vw, 5rem));
+  right: calc(69.8% + clamp(3rem, 5vw, 5rem));
   text-align: right;
   top: 42%;
   transform: translateY(calc(-92% + var(--matiere-number-shift)));
@@ -1592,6 +1592,22 @@ body.featured-work-detail-open .header,
 
 .featured-work-card:hover .featured-work-card__image-core {
   transform: scale(1.16);
+}
+
+.featured-work-card--bonbon .featured-work-card__image-core {
+  transform: scale(1.08) rotate(-0.4deg);
+}
+
+.featured-work-card--bonbon:hover .featured-work-card__image-core {
+  transform: scale(1.16) rotate(-0.4deg);
+}
+
+.featured-work-card--atelier .featured-work-card__image-core {
+  transform: translate(-4.5%, -7.5%) scale(1.16);
+}
+
+.featured-work-card--atelier:hover .featured-work-card__image-core {
+  transform: translate(-4.5%, -7.5%) scale(1.24);
 }
 
 .featured-work-card--origin .featured-work-card__image-core,

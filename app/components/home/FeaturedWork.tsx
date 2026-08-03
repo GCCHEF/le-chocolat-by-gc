@@ -48,7 +48,7 @@ const WORK_ITEMS = [
     tertiaryDescription:
       'Cassis and Poivre de Cassis half sphere, dark chocolate shell.',
     quaternaryDescription:
-      'Almond Parmesan praliné, coated in dark chocolate.',
+      'PRA(liné) Parmesan coated in dark chocolate.',
     palette: 'featured-work-card--bonbon',
   },
   {
@@ -607,10 +607,13 @@ export default function FeaturedWork({
                     'thumbnail' in item && typeof item.thumbnail === 'string'
                       ? {
                           backgroundImage: `url(${item.thumbnail})`,
-                          backgroundPosition: 'center',
+                          backgroundPosition:
+                            item.id === 'bonbon-archive'
+                              ? 'center 48%'
+                              : 'center',
                           backgroundSize:
                             item.id === 'bonbon-archive'
-                              ? '115% auto'
+                              ? '120% auto'
                               : 'cover',
                         }
                       : undefined
@@ -697,7 +700,15 @@ export default function FeaturedWork({
                 />
               )}
               <span className="featured-work-detail__description">
-                {activeWork.description}
+                {activeWork.id === 'bonbon-archive' ? (
+                  <>
+                    <strong>CU</strong>(bes) hazelnut and almond praliné, 64%
+                    Grand Cru chocolate, toasted almonds, coated in dark
+                    chocolate.
+                  </>
+                ) : (
+                  activeWork.description
+                )}
                 {'secondaryDescription' in activeWork &&
                 typeof activeWork.secondaryDescription === 'string' ? (
                   <span className="featured-work-detail__description-line">
@@ -713,7 +724,14 @@ export default function FeaturedWork({
                 {'quaternaryDescription' in activeWork &&
                 typeof activeWork.quaternaryDescription === 'string' ? (
                   <span className="featured-work-detail__description-line">
-                    {activeWork.quaternaryDescription}
+                    {activeWork.id === 'bonbon-archive' ? (
+                      <>
+                        <strong>PRA</strong>(liné) Parmesan coated in dark
+                        chocolate.
+                      </>
+                    ) : (
+                      activeWork.quaternaryDescription
+                    )}
                   </span>
                 ) : null}
               </span>
