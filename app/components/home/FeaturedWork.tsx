@@ -26,8 +26,8 @@ type TextureProduct = NonNullable<
 const WORK_ITEMS = [
   {
     id: 'matiere-origin',
-    eyebrow: 'Matiere / Cubes',
-    detailEyebrow: 'Matiere / Texture',
+    eyebrow: 'Matière / Cubes',
+    detailEyebrow: 'Matière / Texture',
     thumbnail: '/images/texture-category.jpg',
     title: 'Texture',
     description:
@@ -36,25 +36,23 @@ const WORK_ITEMS = [
   },
   {
     id: 'bonbon-archive',
-    eyebrow: 'Matiere / Assortment',
-    detailEyebrow: 'Matiere / Essentiel',
+    eyebrow: 'Matière / Assortment',
+    detailEyebrow: 'Matière / Essentiel',
     detailTitle: 'Assortment',
     thumbnail: '/images/essentiel-category-portrait.jpg',
     title: 'Essentiel',
     description:
       'CU(bes) hazelnut and almond praliné, 64% Grand Cru chocolate, toasted almonds, coated in dark chocolate.',
-    secondaryDescription:
-      '70% Guanaja ganache, coated in dark chocolate.',
+    secondaryDescription: '70% Guanaja ganache, coated in dark chocolate.',
     tertiaryDescription:
       'Cassis and Poivre de Cassis half sphere, dark chocolate shell.',
-    quaternaryDescription:
-      'PRA(liné) Parmesan coated in dark chocolate.',
+    quaternaryDescription: 'PRA(liné) Parmesan coated in dark chocolate.',
     palette: 'featured-work-card--bonbon',
   },
   {
     id: 'noir-72',
-    eyebrow: 'Matiere / Nuances / Cobbles',
-    detailEyebrow: 'Matiere / Origine',
+    eyebrow: 'Matière / Nuances / Cobbles',
+    detailEyebrow: 'Matière / Origine',
     thumbnail: '/images/origine-category.jpg',
     title: 'Origine',
     description:
@@ -63,8 +61,8 @@ const WORK_ITEMS = [
   },
   {
     id: 'atelier-cape-town',
-    eyebrow: 'Matiere / Praliné / Truffles',
-    detailEyebrow: 'Matiere / Racines',
+    eyebrow: 'Matière / Praliné',
+    detailEyebrow: 'Matière / Racines',
     thumbnail: '/images/racines-category.jpg',
     title: 'Racines',
     description:
@@ -231,7 +229,25 @@ function ProductPanel({
         ['CU03', 'AS03', 'PR03'].includes(title)
           ? 'featured-work-detail__panel--cu003'
           : ''
-      }`}
+      } ${title === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
+        title === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
+      } ${
+        title === 'PR02' ? 'featured-work-detail__panel--pr02' : ''
+      } ${title === 'PR03' ? 'featured-work-detail__panel--pr03' : ''} ${
+        ['NU01', 'OR01'].includes(title)
+          ? 'featured-work-detail__panel--nu01'
+          : ''
+      } ${title === 'CO01' ? 'featured-work-detail__panel--co01' : ''}`}
+      style={
+        ['CO02', 'PR03'].includes(title) &&
+        product.featuredImage?.width &&
+        product.featuredImage.height
+          ? ({
+              '--product-image-aspect':
+                product.featuredImage.width / product.featuredImage.height,
+            } as CSSProperties)
+          : undefined
+      }
     >
       <div className="featured-work-detail__image featured-work-detail__product-image">
         {product.featuredImage ? (
@@ -269,7 +285,9 @@ function ProductPanel({
 }
 
 function TextureProductPanel({product}: {product: TextureProduct}) {
-  return <ProductPanel product={product} title={formatCubeTitle(product.title)} />;
+  return (
+    <ProductPanel product={product} title={formatCubeTitle(product.title)} />
+  );
 }
 
 function CategoryProductPanel({product}: {product: CategoryProduct}) {
@@ -313,7 +331,9 @@ export default function FeaturedWork({
   const activeWork = WORK_ITEMS.find((item) => item.id === activeWorkId);
 
   const openWork = (event: MouseEvent<HTMLButtonElement>, workId: string) => {
-    const image = event.currentTarget.querySelector('.featured-work-card__image');
+    const image = event.currentTarget.querySelector(
+      '.featured-work-card__image',
+    );
     const rect = image?.getBoundingClientRect();
 
     if (rect) {
@@ -479,18 +499,12 @@ export default function FeaturedWork({
       const maxScroll = getMaxScroll();
       const progress = maxScroll > 0 ? clamp(scrollLeft / maxScroll) : 0;
 
-      detail.style.setProperty(
-        '--featured-detail-progress',
-        String(progress),
-      );
+      detail.style.setProperty('--featured-detail-progress', String(progress));
       detail.style.setProperty(
         '--featured-summary-opacity',
         String(1 - Math.min(progress / 0.32, 1)),
       );
-      detail.style.setProperty(
-        '--featured-summary-x',
-        `${-progress * 64}px`,
-      );
+      detail.style.setProperty('--featured-summary-x', `${-progress * 64}px`);
     };
 
     const animateTrack = () => {
@@ -770,8 +784,8 @@ export default function FeaturedWork({
                   <>
                     <span>Available in 16 / 32 / 48 pieces</span>
                     <span className="featured-work-detail__allergens">
-                      <strong>Allergens:</strong> Contains hazelnuts, almonds and
-                      soy. May contain traces of milk and other tree nuts.
+                      <strong>Allergens:</strong> Contains hazelnuts, almonds
+                      and soy. May contain traces of milk and other tree nuts.
                     </span>
                   </>
                 ) : activeWork.id === 'bonbon-archive' ? (
@@ -809,10 +823,7 @@ export default function FeaturedWork({
                     const product = textureProducts[index];
 
                     return product ? (
-                      <TextureProductPanel
-                        key={product.id}
-                        product={product}
-                      />
+                      <TextureProductPanel key={product.id} product={product} />
                     ) : (
                       <article
                         className="featured-work-detail__panel featured-work-detail__panel--product-slot"
@@ -849,6 +860,65 @@ export default function FeaturedWork({
                     }}
                     revealOptions={{size: 105, softness: 16}}
                   />
+                </article>
+              ) : null}
+              {activeWork.id === 'noir-72' ? (
+                <article
+                  aria-label="Nuances shader viewport"
+                  className="featured-work-detail__panel featured-work-detail__panel--shader-slot"
+                >
+                  <div
+                    className="featured-work-detail__image featured-work-detail__shader-viewport"
+                    data-nuances-shader-viewport
+                  >
+                    <p className="nuances-color-title nuances-color-title--red">
+                      <span>Cœur de Guanaja</span>
+                      <strong>80%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--black">
+                      <span>Brazil</span>
+                      <strong>53%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--white">
+                      <span>Caribbean</span>
+                      <strong>66%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--yellow">
+                      <span>Africa</span>
+                      <strong>85%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--orange">
+                      <span>Madagascar</span>
+                      <strong>74%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--blue">
+                      <span>Ghana</span>
+                      <strong>68%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--dark-blue">
+                      <span>Guanaja</span>
+                      <strong>70%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--pink">
+                      <span>Madagascar</span>
+                      <strong>33%</strong>
+                    </p>
+                    <p className="nuances-color-title nuances-color-title--green">
+                      <span>Brazil</span>
+                      <strong>55%</strong>
+                    </p>
+                    <div className="nuances-lighting">
+                      <span className="nuances-light nuances-light--one">
+                        <span className="nuances-light nuances-light--two">
+                          <span className="nuances-light nuances-light--three">
+                            <span className="nuances-light nuances-light--four">
+                              <span className="nuances-light nuances-light--five" />
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
                 </article>
               ) : null}
             </div>

@@ -42,11 +42,15 @@ export default function TableMountainContours() {
             const geometryIndex = row * terrainResolution + column;
             const sourceIndex =
               (terrainResolution - 1 - row) * terrainResolution + column;
-            heightValues[geometryIndex] =
-              (encoded[sourceIndex] / 65535) * 2.27;
+            heightValues[geometryIndex] = (encoded[sourceIndex] / 65535) * 2.27;
           }
         }
         heightAttribute.needsUpdate = true;
+      })
+      .catch((error: unknown) => {
+        if (!isDisposed) {
+          console.error('Failed to load the Table Mountain heightfield', error);
+        }
       });
 
     const material = new THREE.ShaderMaterial({

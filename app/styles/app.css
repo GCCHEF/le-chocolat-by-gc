@@ -760,7 +760,6 @@ button.reset:hover:not(:has(> *)) {
   top: -0.34rem;
 }
 
-
 .visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
@@ -1341,13 +1340,20 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .discover-carousel__mark {
-  animation: discoverMarkIn 1050ms var(--discover-ease) 80ms both;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  animation: discoverMarkInAs 1050ms var(--discover-ease) 80ms both;
+  color: rgba(255, 255, 255, 0.68);
   display: block;
+  filter: drop-shadow(0 1.4rem 1.1rem rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0.3rem 0.2rem rgba(0, 0, 0, 0.36));
   font-family: 'Neue Haas Grotesk Display', sans-serif;
-  font-size: clamp(5.95rem, 18.7vw, 19.55rem);
+  font-size: clamp(4.46rem, 14.025vw, 14.66rem);
   font-weight: 400;
   letter-spacing: -0.09em;
   line-height: 0.84;
+  text-shadow:
+    0 -1px rgba(255, 255, 255, 0.42),
+    0 0.08em 0.16em rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
 
@@ -1407,40 +1413,84 @@ button.reset:hover:not(:has(> *)) {
 }
 
 @keyframes discoverImageScale {
-  from { transform: translateX(-2vw) scale(1.18); }
-  to { transform: translateX(-2vw) scale(1.04); }
+  from {
+    transform: translateX(-2vw) scale(1.18);
+  }
+  to {
+    transform: translateX(-2vw) scale(1.04);
+  }
 }
 
 @keyframes discoverImageScaleCentered {
-  from { transform: translateX(2.5vw) scale(1.21); }
-  to { transform: translateX(2.5vw) scale(1.07); }
+  from {
+    transform: translateX(2.5vw) scale(1.21);
+  }
+  to {
+    transform: translateX(2.5vw) scale(1.07);
+  }
 }
 
 @keyframes discoverImageScaleAs {
-  from { transform: scale(1.18); }
-  to { transform: scale(1.04); }
+  from {
+    transform: scale(1.18);
+  }
+  to {
+    transform: scale(1.04);
+  }
 }
 
 @keyframes discoverImageScaleCu {
-  from { transform: translateX(1.7vw) scale(1.28); }
-  to { transform: translateX(1.7vw) scale(1.14); }
+  from {
+    transform: translateX(1.7vw) scale(1.28);
+  }
+  to {
+    transform: translateX(1.7vw) scale(1.14);
+  }
 }
 
 @keyframes discoverMarkIn {
-  from { filter: blur(8px); opacity: 0; transform: translateY(0.3em); }
-  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+  from {
+    filter: blur(8px);
+    opacity: 0;
+    transform: translateY(0.3em);
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes discoverMarkInAs {
+  from {
+    opacity: 0;
+    transform: perspective(900px) translate3d(0, 0.34em, 40px) scale(0.97)
+      rotateX(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) translate3d(0, -0.06em, 90px) scale(1.035)
+      rotateX(1.5deg);
+  }
 }
 
 @keyframes discoverCopyIn {
-  from { filter: blur(7px); opacity: 0; transform: translateY(1.5rem); }
-  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+  from {
+    filter: blur(7px);
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 44.99em) {
   .discover-carousel {
     min-height: 34rem;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1770,8 +1820,7 @@ button.contact-page__menu-return:focus-visible {
 .contact-success::after {
   bottom: 0;
   top: 50%;
-  animation: contactSuccessPanelBottom 480ms cubic-bezier(0.16, 1, 0.3, 1)
-    both;
+  animation: contactSuccessPanelBottom 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .contact-success--closing::before {
@@ -1812,15 +1861,15 @@ button.contact-page__menu-return:focus-visible {
 }
 
 .contact-success__line {
-  animation: contactSuccessLineReveal 900ms cubic-bezier(0.16, 1, 0.3, 1)
-    250ms both;
+  animation: contactSuccessLineReveal 900ms cubic-bezier(0.16, 1, 0.3, 1) 250ms
+    both;
   display: block;
   will-change: filter, opacity, transform;
 }
 
 button.contact-success__close.reset:not(:has(> *)) {
-  animation: contactSuccessCloseReveal 700ms cubic-bezier(0.16, 1, 0.3, 1)
-    520ms both;
+  animation: contactSuccessCloseReveal 700ms cubic-bezier(0.16, 1, 0.3, 1) 520ms
+    both;
   background: transparent;
   border: 0;
   color: #120e0b;
@@ -2367,7 +2416,6 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
   .contact-form__field > label {
     padding-top: 0;
   }
-
 }
 
 /*
@@ -2406,8 +2454,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .collection-address-page__map {
-  animation: collectionMapReveal 1350ms cubic-bezier(0.16, 1, 0.3, 1) 280ms
-    both;
+  animation: collectionMapReveal 1350ms cubic-bezier(0.16, 1, 0.3, 1) 280ms both;
   height: 135vh;
   margin: 0;
   max-height: none;
@@ -2427,8 +2474,8 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .collection-address-page__eyebrow {
-  animation: collectionAddressReveal 1050ms cubic-bezier(0.16, 1, 0.3, 1)
-    120ms both;
+  animation: collectionAddressReveal 1050ms cubic-bezier(0.16, 1, 0.3, 1) 120ms
+    both;
   display: block;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
   font-size: clamp(0.66rem, 0.8vw, 0.78rem);
@@ -2454,8 +2501,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .collection-address-page h1 > span {
-  animation: collectionAddressReveal 1180ms cubic-bezier(0.16, 1, 0.3, 1)
-    both;
+  animation: collectionAddressReveal 1180ms cubic-bezier(0.16, 1, 0.3, 1) both;
   display: block;
 }
 
@@ -2468,8 +2514,8 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 button.collection-address-page__menu-return {
-  animation: contactMenuReturnReveal 900ms cubic-bezier(0.16, 1, 0.3, 1)
-    360ms both;
+  animation: contactMenuReturnReveal 900ms cubic-bezier(0.16, 1, 0.3, 1) 360ms
+    both;
   background: transparent;
   border: 0;
   color: #120e0b;
@@ -2498,8 +2544,8 @@ button.collection-address-page__menu-return:focus-visible {
 }
 
 .collection-address-page__location {
-  animation: collectionAddressReveal 1080ms cubic-bezier(0.16, 1, 0.3, 1)
-    420ms both;
+  animation: collectionAddressReveal 1080ms cubic-bezier(0.16, 1, 0.3, 1) 420ms
+    both;
   margin-top: clamp(2.6rem, 5vh, 4.25rem);
   max-width: 28rem;
 }
@@ -2534,8 +2580,8 @@ button.collection-address-page__menu-return:focus-visible {
 }
 
 .collection-address-page__details {
-  animation: collectionAddressReveal 1050ms cubic-bezier(0.16, 1, 0.3, 1)
-    430ms both;
+  animation: collectionAddressReveal 1050ms cubic-bezier(0.16, 1, 0.3, 1) 430ms
+    both;
   justify-self: end;
   width: min(100%, 36rem);
 }
@@ -2590,8 +2636,7 @@ button.collection-address-page__menu-return:focus-visible {
 
 .collection-address-page--exiting h1 > span,
 .collection-address-page--exiting .collection-address-page__location,
-.collection-address-page--exiting
-  button.collection-address-page__menu-return {
+.collection-address-page--exiting button.collection-address-page__menu-return {
   animation: collectionAddressExit 520ms cubic-bezier(0.7, 0, 0.84, 0) both;
 }
 

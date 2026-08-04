@@ -12,7 +12,14 @@ import DiscoverCarousel from '~/components/home/DiscoverCarousel';
 import homeExperienceStyles from '~/components/home/homeExperience.css?url';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [
+    {title: 'Le Chocolat by GC'},
+    {
+      name: 'description',
+      content:
+        'Le Chocolat by Gregory Czarnecki — handcrafted chocolate creations manufactured in Cape Town.',
+    },
+  ];
 };
 
 export const links: Route.LinksFunction = () => [
@@ -146,7 +153,9 @@ function RecommendedProducts({
                             .replace(/\s+/g, '')
                             .match(/^([A-Z]+)0*(\d+)$/);
                           if (!match) return false;
-                          return `${match[1]}${match[2].padStart(2, '0')}` === code;
+                          return (
+                            `${match[1]}${match[2].padStart(2, '0')}` === code
+                          );
                         }),
                       )
                       .filter((product) => product != null)
