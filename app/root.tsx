@@ -156,10 +156,17 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
+        <style
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html:
+              '.le-chocolat-refresh-pending .home-experience{visibility:hidden!important}',
+          }}
+        />
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `(function(){var entry=performance.getEntriesByType('navigation')[0];var legacy=performance.navigation;var reloading=Boolean((entry&&entry.type==='reload')||(legacy&&legacy.type===1));if(reloading){document.documentElement.classList.add('le-chocolat-returning-tab');history.scrollRestoration='manual';if(location.pathname==='/'&&location.hash){history.replaceState(history.state,'',location.pathname+location.search);}scrollTo(0,0);}})();`,
+            __html: `(function(){var entry=performance.getEntriesByType('navigation')[0];var legacy=performance.navigation;var reloading=Boolean((entry&&entry.type==='reload')||(legacy&&legacy.type===1));if(reloading){document.documentElement.classList.add('le-chocolat-returning-tab','le-chocolat-refresh-pending');history.scrollRestoration='manual';if(location.pathname==='/'&&location.hash){history.replaceState(history.state,'',location.pathname+location.search);}scrollTo(0,0);setTimeout(function(){document.documentElement.classList.remove('le-chocolat-refresh-pending');},1500);}})();`,
           }}
         />
       </head>
