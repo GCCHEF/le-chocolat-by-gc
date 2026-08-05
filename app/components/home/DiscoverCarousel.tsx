@@ -27,7 +27,7 @@ function getCreationCategory(title: string) {
   const prefix = getPrefix(title);
   if (prefix === 'CU') return 'matiere-origin';
   if (prefix === 'AS') return 'bonbon-archive';
-  if (prefix === 'NU') return 'noir-72';
+  if (prefix === 'NU' || prefix === 'CO') return 'noir-72';
   return 'atelier-cape-town';
 }
 
@@ -59,13 +59,28 @@ export default function DiscoverCarousel({
 
   if (!products.length) return null;
 
+  const slides = [
+    ...products.map((product) => ({
+      ...product,
+      localImage: undefined as string | undefined,
+      shopPath: undefined as string | undefined,
+    })),
+    {
+      id: 'discover-cobbles',
+      title: 'CO01',
+      featuredImage: null,
+      localImage: '/images/discover-co-dsc03314-2.jpg',
+      shopPath: undefined,
+    },
+  ];
+
   const select = (index: number, nextDirection: 'next' | 'previous') => {
     setDirection(nextDirection);
-    setActiveIndex((index + products.length) % products.length);
+    setActiveIndex((index + slides.length) % slides.length);
   };
   const previous = () => select(activeIndex - 1, 'previous');
   const next = () => select(activeIndex + 1, 'next');
-  const activeProduct = products[activeIndex];
+  const activeProduct = slides[activeIndex];
 
   const handlePointerDown = (event: PointerEvent<HTMLButtonElement>) => {
     didSwipeRef.current = false;
@@ -106,14 +121,20 @@ export default function DiscoverCarousel({
       return;
     }
 
+    if (activeProduct.shopPath) {
+      window.location.assign(activeProduct.shopPath);
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent('open-creation-category', {
+        detail: {
+          source: 'discovery',
+          workId: getCreationCategory(activeProduct.title),
+        },
+      }),
+    );
     document.getElementById('creation')?.scrollIntoView({block: 'start'});
-    window.requestAnimationFrame(() => {
-      window.dispatchEvent(
-        new CustomEvent('open-creation-category', {
-          detail: {workId: getCreationCategory(activeProduct.title)},
-        }),
-      );
-    });
   };
 
   return (
@@ -137,7 +158,19 @@ export default function DiscoverCarousel({
         onWheel={handleWheel}
         type="button"
       >
-        {activeProduct.featuredImage ? (
+        {activeProduct.localImage ? (
+          <img alt="Cobbles chocolate assortment" src={activeProduct.localImage} />
+        ) : getProductCode(activeProduct.title) === 'CU01' ? (
+          <img
+            alt="Cubes chocolate assortment"
+            src="/images/discover-cu-dsc03050.jpg"
+          />
+        ) : getProductCode(activeProduct.title) === 'AS02' ? (
+          <img
+            alt="Essentiel chocolate assortment"
+            src="/images/discover-as02-dsc03592-2.jpg"
+          />
+        ) : activeProduct.featuredImage ? (
           <Image
             alt={activeProduct.featuredImage.altText || activeProduct.title}
             data={activeProduct.featuredImage}
@@ -163,14 +196,23 @@ export default function DiscoverCarousel({
         key={activeProduct.id}
       >
         <div className="discover-carousel__mark-mask">
-          <strong className="discover-carousel__mark">
-            {getFamilyMark(activeProduct.title)}
+          <strong
+            aria-label={getFamilyMark(activeProduct.title)}
+            className="discover-carousel__mark"
+          >
+            {Array.from(getFamilyMark(activeProduct.title)).map(
+              (letter, index) => (
+                <span aria-hidden="true" key={`${letter}-${index}`}>
+                  {letter}
+                </span>
+              ),
+            )}
           </strong>
         </div>
       </div>
 
       <div className="discover-carousel__controls" aria-label="Choose product">
-        {products.map((product, index) => (
+        {slides.map((product, index) => (
           <button
             aria-current={index === activeIndex ? 'true' : undefined}
             aria-label={`Show ${product.title}`}

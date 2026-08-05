@@ -23,6 +23,22 @@ body:has(.home-experience--intro-active) > * {
   visibility: hidden;
 }
 
+/* Set synchronously in <head> on a refresh, before React hydrates. This keeps
+   the server-rendered intro from flashing its black counter for returning tabs. */
+.le-chocolat-returning-tab .loading-intro {
+  display: none;
+}
+
+.le-chocolat-returning-tab
+  .header:has(~ main .home-experience--intro-active) {
+  background-color: #ffffff;
+  visibility: visible;
+}
+
+.le-chocolat-returning-tab body {
+  background-color: #ffffff;
+}
+
 html:has(.loading-intro--white),
 body:has(.loading-intro--white),
 body:has(.loading-intro--white) > *,
@@ -1780,11 +1796,11 @@ body.featured-work-detail-open .header,
 }
 
 .featured-work-card--noir .featured-work-card__image-core {
-  transform: scale(1.08) rotate(0.5deg);
+  transform: translateY(-4%) scale(1.09) rotate(0.3deg);
 }
 
 .featured-work-card--noir:hover .featured-work-card__image-core {
-  transform: scale(1.16) rotate(0.5deg);
+  transform: translateY(-4%) scale(1.17) rotate(0.3deg);
 }
 
 .featured-work-card--atelier .featured-work-card__image-core {
@@ -2661,6 +2677,22 @@ body.featured-work-detail-open .header,
   transform: scale(1.025);
 }
 
+.featured-work-detail__panel--cu01 .featured-work-detail__product-image img {
+  transform: translateY(-4%) scale(1.25);
+}
+
+.featured-work-detail__panel--cu02 .featured-work-detail__product-image img {
+  transform: scale(1.25) rotate(-0.45deg);
+}
+
+.featured-work-detail__panel--as01 .featured-work-detail__product-image img {
+  transform: rotate(0.45deg);
+}
+
+.featured-work-detail__panel--as02 .featured-work-detail__product-image img {
+  transform: rotate(0.15deg);
+}
+
 .featured-work-detail__panel--pr03 {
   flex-basis: calc(min(70vh, 48rem) * var(--product-image-aspect, 1) * 0.7);
 }
@@ -2670,7 +2702,7 @@ body.featured-work-detail-open .header,
 }
 
 .featured-work-detail__panel--pr01 .featured-work-detail__product-image img {
-  transform: scale(1.6);
+  transform: scale(1.6) rotate(0.15deg);
 }
 
 .featured-work-detail__panel--pr02 .featured-work-detail__product-image img {

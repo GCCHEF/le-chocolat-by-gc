@@ -138,7 +138,14 @@ function RecommendedProducts({
 
   return (
     <div className="recommended-products">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div
+            aria-hidden="true"
+            className="discover-carousel discover-carousel--loading"
+          />
+        }
+      >
         <Await resolve={products}>
           {(response) => (
             <DiscoverCarousel

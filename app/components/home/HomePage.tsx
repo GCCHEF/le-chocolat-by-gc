@@ -44,44 +44,95 @@ export default function HomePage({
   const [isTitleVisible, setIsTitleVisible] = useState(
     isCreationDestination || shouldBypassIntro,
   );
-  const [didBypassIntroOnRefresh, setDidBypassIntroOnRefresh] = useState(false);
+  const [didOpenAfterRefresh, setDidOpenAfterRefresh] = useState(false);
 
   useIsomorphicLayoutEffect(() => {
     const navigationEntry = window.performance.getEntriesByType(
       'navigation',
     )[0] as PerformanceNavigationTiming | undefined;
+    const legacyNavigation = window.performance.navigation;
+    const isReload =
+      navigationEntry?.type === 'reload' || legacyNavigation?.type === 1;
+    const hasSeenIntro =
+      isReload ||
+      document.documentElement.classList.contains(
+        'le-chocolat-returning-tab',
+      );
+    if (isReload) {
+      document.documentElement.classList.add('le-chocolat-returning-tab');
+    }
 
-    if (navigationEntry?.type !== 'reload') return;
+    const isInitialDocumentEntry = location.key === 'default';
+    const shouldOpenAtHomeTop =
+      hasSeenIntro && (isInitialDocumentEntry || !isCreationDestination);
 
+    if (!shouldOpenAtHomeTop) return;
+
+    window.history.scrollRestoration = 'manual';
     setIsIntroActive(false);
     setIsHomepageVisible(true);
     setIsTitleRevealActive(false);
     setIsTitleVisible(true);
-    setDidBypassIntroOnRefresh(true);
+    setDidOpenAfterRefresh(true);
     window.history.replaceState(
       window.history.state,
       '',
       `${location.pathname}${location.search}`,
     );
+
+    const keepAtTop = () => window.scrollTo(0, 0);
+    keepAtTop();
+    const scrollFrame = window.requestAnimationFrame(keepAtTop);
+    let revealFrame = 0;
+    const readyFrame = window.requestAnimationFrame(() => {
+      revealFrame = window.requestAnimationFrame(() => {
+        document.documentElement.classList.remove(
+          'le-chocolat-refresh-pending',
+        );
+      });
+    });
+    const settleTimers = [50, 180, 420].map((delay) =>
+      window.setTimeout(keepAtTop, delay),
+    );
+
+    return () => {
+      window.cancelAnimationFrame(scrollFrame);
+      window.cancelAnimationFrame(readyFrame);
+      window.cancelAnimationFrame(revealFrame);
+      settleTimers.forEach(window.clearTimeout);
+    };
+  }, [isCreationDestination, location.key, location.pathname, location.search]);
+
+  useIsomorphicLayoutEffect(() => {
+    if (isCreationDestination || shouldBypassIntro || didOpenAfterRefresh) return;
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
-  }, [location.pathname, location.search]);
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, [didOpenAfterRefresh, isCreationDestination, shouldBypassIntro]);
 
   useEffect(() => {
-    if (
-      !isCreationDestination ||
-      !isHomepageVisible ||
-      didBypassIntroOnRefresh
-    ) {
+    if (!isCreationDestination || !isHomepageVisible || didOpenAfterRefresh) {
       return;
     }
 
-    const scrollFrame = window.requestAnimationFrame(() => {
+    const scrollToCreation = () => {
       document.getElementById('creation')?.scrollIntoView({block: 'start'});
-    });
+    };
+    const scrollFrame = window.requestAnimationFrame(scrollToCreation);
+    const settleTimers = [50, 180, 420].map((delay) =>
+      window.setTimeout(scrollToCreation, delay),
+    );
 
-    return () => window.cancelAnimationFrame(scrollFrame);
+    return () => {
+      window.cancelAnimationFrame(scrollFrame);
+      settleTimers.forEach(window.clearTimeout);
+    };
   }, [
-    didBypassIntroOnRefresh,
+    didOpenAfterRefresh,
     isCreationDestination,
     isHomepageVisible,
     location.key,

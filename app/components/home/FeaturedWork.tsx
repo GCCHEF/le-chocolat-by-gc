@@ -53,7 +53,7 @@ const WORK_ITEMS = [
     id: 'noir-72',
     eyebrow: 'Matière / Nuances / Cobbles',
     detailEyebrow: 'Matière / Origine',
-    thumbnail: '/images/origine-category.jpg',
+    thumbnail: '/images/nuances-category-final-10.jpg',
     title: 'Origine',
     description:
       'Flavor initiation with nine Grand Cru and blend chocolate ganache ranging from 33 to 85% cocoa content.',
@@ -230,6 +230,14 @@ function ProductPanel({
           ? 'featured-work-detail__panel--cu003'
           : ''
       } ${title === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
+        title === 'CU01' ? 'featured-work-detail__panel--cu01' : ''
+      } ${
+        title === 'CU02' ? 'featured-work-detail__panel--cu02' : ''
+      } ${
+        title === 'AS01' ? 'featured-work-detail__panel--as01' : ''
+      } ${
+        title === 'AS02' ? 'featured-work-detail__panel--as02' : ''
+      } ${
         title === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
       } ${
         title === 'PR02' ? 'featured-work-detail__panel--pr02' : ''
@@ -352,9 +360,38 @@ export default function FeaturedWork({
   };
 
   useEffect(() => {
+    const revealCreation = () => {
+      setIsVisible(true);
+      gridRef.current
+        ?.querySelectorAll('.featured-work-card')
+        .forEach((card) => card.classList.add('featured-work-card--revealed'));
+    };
+
+    window.addEventListener('reveal-creation', revealCreation);
+    return () => window.removeEventListener('reveal-creation', revealCreation);
+  }, []);
+
+  useEffect(() => {
     const openCategory = (event: Event) => {
-      const workId = (event as CustomEvent<{workId?: string}>).detail?.workId;
+      const detail = (
+        event as CustomEvent<{source?: string; workId?: string}>
+      ).detail;
+      const workId = detail?.workId;
       if (!workId || !WORK_ITEMS.some((item) => item.id === workId)) return;
+
+      if (detail.source === 'discovery') {
+        setDetailOrigin({
+          height: window.innerHeight,
+          scaleX: 1,
+          scaleY: 1,
+          width: window.innerWidth,
+          x: 0,
+          y: 0,
+        });
+        setActiveWorkId(workId);
+        setIsDetailVisible(false);
+        return;
+      }
 
       const card = gridRef.current?.querySelector<HTMLElement>(
         `[data-work-id="${workId}"] .featured-work-card__image`,

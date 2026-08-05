@@ -89,15 +89,25 @@ function CartEmpty({
   hidden: boolean;
   layout?: CartMainProps['layout'];
 }) {
-  const {close} = useAside();
+  const {closeForNavigation} = useAside();
+  const returnToCreation = () => {
+    window.dispatchEvent(new CustomEvent('reveal-creation'));
+    closeForNavigation();
+    const scrollToCreation = () =>
+      document.getElementById('creation')?.scrollIntoView({block: 'start'});
+    window.requestAnimationFrame(scrollToCreation);
+    window.setTimeout(scrollToCreation, 80);
+  };
   return (
     <div className="cart-empty" hidden={hidden}>
       <p>Your cart is currently empty.</p>
       <Link
         className="cart-checkout-button"
         to="/#creation"
-        onClick={close}
+        onClick={returnToCreation}
         prefetch="viewport"
+        preventScrollReset
+        state={{bypassIntro: true}}
       >
         Return to E-Shop
       </Link>

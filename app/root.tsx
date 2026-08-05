@@ -8,6 +8,7 @@ import {
   Meta,
   Scripts,
   ScrollRestoration,
+  useLocation,
   useRouteLoaderData,
 } from 'react-router';
 import type {Route} from './+types/root';
@@ -155,14 +156,30 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var entry=performance.getEntriesByType('navigation')[0];var legacy=performance.navigation;var reloading=Boolean((entry&&entry.type==='reload')||(legacy&&legacy.type===1));if(reloading){document.documentElement.classList.add('le-chocolat-returning-tab');history.scrollRestoration='manual';if(location.pathname==='/'&&location.hash){history.replaceState(history.state,'',location.pathname+location.search);}scrollTo(0,0);}})();`,
+          }}
+        />
       </head>
       <body>
         {children}
-        <ScrollRestoration nonce={nonce} />
+        <AppScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
     </html>
   );
+}
+
+function AppScrollRestoration({nonce}: {nonce?: string}) {
+  const location = useLocation();
+
+  // Homepage refreshes always reopen at the top. Its own navigation handles
+  // the deliberate E-Shop jump to #creation.
+  if (location.pathname === '/') return null;
+
+  return <ScrollRestoration nonce={nonce} />;
 }
 
 export default function App() {

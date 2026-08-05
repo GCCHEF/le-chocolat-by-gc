@@ -46,17 +46,23 @@ export default function CollectionAddressPage() {
             Cape Town, 8001
           </address>
           <nav aria-label="Directions" className="collection-address-page__links">
-            <a
-              aria-label="Directions to Makers Landing on Google Maps"
-              href="https://www.google.com/maps/dir/?api=1&destination=Makers%20Landing%2C%20Cruise%20Terminal%2C%20V%26A%20Waterfront%2C%20Cape%20Town%2C%208001&travelmode=driving"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Google Maps <span aria-hidden="true">↗</span>
-            </a>
+            <form action="/maps/google" method="get" target="_blank">
+              <button
+                aria-label="Directions to Makers Landing on Google Maps"
+                onClick={(event) => {
+                  event.currentTarget.form?.setAttribute(
+                    'action',
+                    `/maps/google?open=${Date.now()}`,
+                  );
+                }}
+                type="submit"
+              >
+                Google Maps <span aria-hidden="true">↗</span>
+              </button>
+            </form>
             <a
               aria-label="Directions to Le Chocolat at Makers Landing on Apple Maps"
-              href="https://maps.apple.com/?daddr=Makers%20Landing%2C%20Cruise%20Terminal%2C%20V%26A%20Waterfront%2C%20Cape%20Town%2C%208001&dirflg=d"
+              href="https://maps.apple.com/?q=Makers%20Landing%2C%20Cape%20Town%2C%20South%20Africa"
               rel="noreferrer"
               target="_blank"
             >

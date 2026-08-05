@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -50,17 +50,22 @@ export function HeaderMenu({
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
+  const location = useLocation();
   const {closeForNavigation} = useAside();
   const className = `header-menu-${viewport}`;
-  const closeForCreation = () => {
+  const prepareForCreation = () => {
     document.documentElement.classList.add('menu-eshop-navigation');
-    closeForNavigation();
-    document
-      .getElementById('creation')
-      ?.scrollIntoView({behavior: 'auto', block: 'start'});
+    if (location.pathname === '/') {
+      window.dispatchEvent(new CustomEvent('reveal-creation'));
+      closeForNavigation();
+      const scrollToCreation = () =>
+        document.getElementById('creation')?.scrollIntoView({block: 'start'});
+      window.requestAnimationFrame(scrollToCreation);
+      window.setTimeout(scrollToCreation, 80);
+    }
     window.setTimeout(() => {
       document.documentElement.classList.remove('menu-eshop-navigation');
-    }, 460);
+    }, 1000);
   };
   const menuItems = [
     {title: 'E-Shop', to: '/#creation'},
@@ -77,8 +82,10 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.title}
-            onClick={isCreationLink ? closeForCreation : undefined}
+            onClick={isCreationLink ? prepareForCreation : undefined}
             prefetch={isCreationLink ? 'intent' : 'render'}
+            preventScrollReset={isCreationLink}
+            state={isCreationLink ? {bypassIntro: true} : undefined}
             style={isCreationLink ? creationLinkStyle : activeLinkStyle}
             to={item.to}
           >
