@@ -6,6 +6,7 @@ import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
   CategoryProductsQuery,
+  LegalPoliciesQuery,
 } from 'storefrontapi.generated';
 import HomePage from '~/components/home/HomePage';
 import DiscoverCarousel from '~/components/home/DiscoverCarousel';
@@ -91,8 +92,16 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       return null;
     });
 
+  const legalPolicies = context.storefront
+    .query(LEGAL_POLICIES_QUERY, {cache: context.storefront.CacheLong()})
+    .catch((error: Error) => {
+      console.error(error);
+      return null;
+    });
+
   return {
     recommendedProducts,
+    legalPolicies,
   };
 }
 
@@ -103,10 +112,23 @@ export default function Homepage() {
     <HomePage
       categoryProducts={data.categoryProducts}
       discovery={<RecommendedProducts products={data.recommendedProducts} />}
+      legalPolicies={data.legalPolicies}
       textureProducts={data.textureProducts}
     />
   );
 }
+
+const LEGAL_POLICIES_QUERY = `#graphql
+  query LegalPolicies($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    shop {
+      privacyPolicy { id title body }
+      refundPolicy { id title body }
+      shippingPolicy { id title body }
+      termsOfService { id title body }
+    }
+  }
+` as const;
 
 function FeaturedCollection({
   collection,
