@@ -65,7 +65,11 @@ export default function MatiereGradientTransition({
       const numberShift = numberEase * Math.max(260, window.innerHeight * 0.36);
       const titleShift = wordEase * Math.max(255, window.innerHeight * 0.36);
       const subtitleShift = 0;
-      const titleOpacity = 1 - clamp((rawProgress - 0.24) / 0.14);
+      const isMobile = window.innerWidth <= 768;
+      const titleFadeStart = isMobile ? 0.2 : 0.24;
+      const titleFadeDuration = isMobile ? 0.11 : 0.14;
+      const titleOpacity =
+        1 - clamp((rawProgress - titleFadeStart) / titleFadeDuration);
       const definitionOpacity = 1 - clamp((rawProgress - 0.1) / 0.18);
       const numberOpacity = 1 - clamp((rawProgress - 0.1) / 0.2);
       const lineOpacity = 1 - clamp((rawProgress - 0.08) / 0.26);
@@ -222,7 +226,10 @@ export default function MatiereGradientTransition({
         <p className="matiere-number">001</p>
         <div className="matiere-title">
           <h1>
-            MATI<span className="matiere-title__accent">È</span>RE
+            <span className="matiere-title__row">MAT</span>
+            <span className="matiere-title__row">
+              I<span className="matiere-title__accent">È</span>RE
+            </span>
           </h1>
           <p className="matiere-definition">
             (<span className="matiere-definition__latin">latin materia</span>)

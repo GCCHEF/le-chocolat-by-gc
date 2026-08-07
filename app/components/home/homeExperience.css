@@ -976,6 +976,10 @@ body.featured-work-detail-open .header,
   transform: translateX(0.02em);
 }
 
+.matiere-title__row {
+  display: inline;
+}
+
 .matiere-master-scene--title-pending:not(.matiere-master-scene--title-reveal)
   .matiere-composition-line,
 .matiere-master-scene--title-pending:not(.matiere-master-scene--title-reveal)
@@ -3369,7 +3373,54 @@ button.home-legal-overlay__section-return:focus-visible {
   }
 
   .loading-intro__line-wrap {
-    width: 88.5vw;
+    width: 116vw;
+  }
+
+  .matiere-composition-line {
+    height: 60vh;
+    left: 50%;
+    top: 4%;
+  }
+
+  .matiere-number {
+    font-size: clamp(3.75rem, 18vw, 5.5rem);
+    letter-spacing: 0.08em;
+    right: calc(50% + 1.5rem);
+    top: 27%;
+  }
+
+  .matiere-title {
+    left: calc(40% + 2.25rem);
+    top: 14%;
+    transform: none;
+  }
+
+  .matiere-title h1 {
+    font-size: clamp(4rem, 20vw, 6rem);
+    letter-spacing: 0.13em;
+    line-height: 1;
+    rotate: 180deg;
+    text-orientation: sideways;
+    translate: 10vw -4vh;
+    writing-mode: vertical-rl;
+  }
+
+  .matiere-title__row {
+    display: inline;
+  }
+
+  .matiere-definition {
+    font-size: 0.62rem;
+    left: -4.5rem;
+    margin: 0;
+    max-width: none;
+    position: absolute;
+    rotate: -90deg;
+    top: 28rem;
+    transform: none;
+    transform-origin: top left;
+    translate: 0 var(--matiere-title-shift);
+    width: 15rem;
   }
 
   .line-reveal__line-wrap {
