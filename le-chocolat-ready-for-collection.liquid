@@ -1,0 +1,440 @@
+{% assign prepared_lines = prepared_package.prepared_package_line_items %}
+{% assign is_partial_collection = false %}
+{% if prepared_package.item_count != blank and item_count != blank and prepared_package.item_count < item_count and prepared_lines != blank %}
+  {% assign is_partial_collection = true %}
+{% endif %}
+{% if is_partial_collection %}
+  {% capture email_title %}Part of your Le Chocolat order is ready for collection.{% endcapture %}
+{% else %}
+  {% capture email_title %}Your order is ready for collection.{% endcapture %}
+{% endif %}
+{% if prepared_lines != blank %}
+  {% assign notification_lines = prepared_lines %}
+  {% assign notification_lines_are_prepared = true %}
+{% else %}
+  {% assign notification_lines = subtotal_line_items %}
+  {% assign notification_lines_are_prepared = false %}
+{% endif %}
+
+{% capture email_body %}Please bring your order confirmation when collecting.<br>ORDER NUMBER <strong>{{ order_name }}</strong>{% endcapture %}
+{% capture email_subject %}Your order is ready for collection, order number {{ order_name }}{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{ email_subject }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+    <style>
+      body,
+      .body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #f3f1ed !important;
+        color: #292929 !important;
+      }
+
+      body,
+      table,
+      td,
+      p,
+      a,
+      span {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+      }
+
+      .body > tbody > tr > td {
+        padding: 34px 12px 54px !important;
+      }
+
+      .container {
+        width: 100% !important;
+        max-width: 560px !important;
+      }
+
+      .email-card {
+        background: #fff !important;
+      }
+
+      .email-card__cell {
+        padding: 0 34px !important;
+      }
+
+      .brand-cell {
+        padding-top: 56px !important;
+        padding-bottom: 34px !important;
+        text-align: center !important;
+      }
+
+      .brand-logo {
+        display: block !important;
+        width: 250px !important;
+        max-width: 250px !important;
+        height: auto !important;
+      }
+
+      .brand-lockup {
+        width: 266px !important;
+      }
+
+      .brand-lockup__image-cell {
+        width: 250px !important;
+      }
+
+      .shop-name {
+        margin: 0 !important;
+        color: #120e0b !important;
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        letter-spacing: .1em !important;
+        line-height: 1 !important;
+        text-transform: uppercase !important;
+      }
+
+      .hero-cell {
+        padding-top: 40px !important;
+        padding-bottom: 34px !important;
+      }
+
+      h1 {
+        margin: 0 0 30px !important;
+        color: #292929 !important;
+        font-size: 32px !important;
+        font-weight: 400 !important;
+        letter-spacing: -.045em !important;
+        line-height: 1.04 !important;
+      }
+
+      p {
+        margin: 0 !important;
+        color: #292929 !important;
+        font-size: 14px !important;
+        line-height: 1.7 !important;
+      }
+
+      .hero-cell p {
+        color: #747474 !important;
+      }
+
+      .button-row {
+        padding-top: 0 !important;
+      }
+
+      .button-cell {
+        background: #120e0b !important;
+        border-radius: 0 !important;
+      }
+
+      .button-text {
+        display: inline-block !important;
+        padding: 16px 24px !important;
+        color: #fff !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        letter-spacing: .14em !important;
+        line-height: 12px !important;
+        text-decoration: none !important;
+        text-transform: uppercase !important;
+      }
+
+      .section-cell {
+        padding-top: 26px !important;
+        padding-bottom: 28px !important;
+      }
+
+      .eyebrow {
+        display: block !important;
+        margin-bottom: 16px !important;
+        color: #747474 !important;
+        font-size: 10px !important;
+        font-weight: 600 !important;
+        letter-spacing: .18em !important;
+        line-height: 1.2 !important;
+        text-transform: uppercase !important;
+      }
+
+      .address {
+        color: #292929 !important;
+        font-size: 14px !important;
+        font-style: normal !important;
+        line-height: 1.55 !important;
+      }
+
+      .map-links {
+        padding-top: 18px !important;
+      }
+
+      .map-link {
+        display: inline-block !important;
+        margin-right: 28px !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #120e0b !important;
+        color: #120e0b !important;
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        letter-spacing: .14em !important;
+        line-height: 1.3 !important;
+        text-decoration: none !important;
+        text-transform: uppercase !important;
+      }
+
+      .order-list {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+
+      .order-item__cell {
+        padding: 16px 0 !important;
+      }
+
+      .order-item__image-cell {
+        width: 82px !important;
+        padding-right: 20px !important;
+      }
+
+      .order-item__image {
+        display: block !important;
+        width: 82px !important;
+        height: 82px !important;
+        border-radius: 0 !important;
+        object-fit: cover !important;
+      }
+
+      .order-item__title {
+        color: #120e0b !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        line-height: 1.35 !important;
+      }
+
+      .order-item__variant {
+        display: block !important;
+        margin-top: 5px !important;
+        color: #817b75 !important;
+        font-size: 10px !important;
+        letter-spacing: .08em !important;
+        line-height: 1.4 !important;
+        text-transform: uppercase !important;
+      }
+
+      .footer-cell {
+        padding-top: 28px !important;
+        padding-bottom: 34px !important;
+      }
+
+      .footer-copy,
+      .footer-copy a {
+        color: #747474 !important;
+        font-size: 10px !important;
+        line-height: 1.65 !important;
+      }
+
+      .footer-gradient {
+        height: 156px !important;
+        background-color: #000507 !important;
+        background-image: radial-gradient(ellipse at 50% 58%, rgba(116, 145, 158, .22) 0%, rgba(55, 82, 94, .12) 34%, transparent 66%), linear-gradient(180deg, #ffffff 0%, #fafaf8 10%, #f0f0ed 24%, #d9dcda 39%, #b3bbbe 53%, #7d8c93 66%, #405661 78%, #172d37 88%, #061016 96%, #000507 100%) !important;
+      }
+
+      .footer-signature {
+        height: 92px !important;
+        background: #000000 !important;
+        text-align: center !important;
+      }
+
+      .footer-signature__by {
+        padding-top: 0 !important;
+        padding-right: 0 !important;
+        color: #c7c7c7 !important;
+        font-size: 10px !important;
+        font-weight: 300 !important;
+        letter-spacing: .2em !important;
+        text-transform: lowercase !important;
+        text-align: right !important;
+        position: relative !important;
+        left: 3px !important;
+        top: -6px !important;
+        vertical-align: top !important;
+      }
+
+      .footer-signature__logo {
+        display: inline-block !important;
+        width: 54px !important;
+        height: 58px !important;
+        vertical-align: middle !important;
+      }
+
+      @media only screen and (max-width: 620px) {
+        .body > tbody > tr > td {
+          padding: 0 !important;
+        }
+
+        .container {
+          width: 100% !important;
+        }
+
+        .email-card__cell {
+          padding-left: 22px !important;
+          padding-right: 22px !important;
+        }
+
+        .brand-lockup {
+          width: 206px !important;
+        }
+
+        .brand-lockup__image-cell {
+          width: 190px !important;
+        }
+
+        .brand-logo {
+          width: 190px !important;
+          max-width: 190px !important;
+        }
+
+        h1 {
+          font-size: 25px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="body" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table class="container email-card" role="presentation" width="560" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="email-card__cell brand-cell">
+                <table class="brand-lockup" role="presentation" width="266" cellpadding="0" cellspacing="0" border="0" align="center" style="width: 266px; table-layout: fixed;">
+                  <tr>
+                    <td class="brand-lockup__image-cell" width="250"><img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-wordmark.png" alt="Le Chocolat" width="250"></td>
+                    <td width="16">&nbsp;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-card__cell hero-cell">
+                <h1>{{ email_title }}</h1>
+
+                {% if pickup_instructions != blank %}
+                  <p>{{ pickup_instructions }}</p>
+                  <p style="margin-top: 8px !important;">ORDER NUMBER <strong>{{ order_name }}</strong></p>
+                {% else %}
+                  <p>{{ email_body }}</p>
+                {% endif %}
+
+                {% if order_status_url %}
+                  <table class="button-row" role="presentation" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td height="30" style="height: 30px; line-height: 30px; font-size: 1px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td class="button-cell">
+                        <a class="button-text" href="{{ order_status_url }}">View your order</a>
+                      </td>
+                    </tr>
+                  </table>
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-card__cell section-cell">
+                <span class="eyebrow">Collection address</span>
+                <p class="address">
+                  Le Chocolat<br>
+                  Shop G09, Makers Landing<br>
+                  The Cruise Terminal, V&amp;A Waterfront<br>
+                  Cape Town, 8001
+                </p>
+                <p class="map-links">
+                  <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Makers%20Landing%2C%20The%20Cruise%20Terminal%2C%20V%26A%20Waterfront%2C%20Cape%20Town%2C%208001" target="_blank">Google Maps &#x2197;&#xFE0E;</a>
+                  <a class="map-link" href="https://maps.apple.com/?q=Makers%20Landing%2C%20Cape%20Town%2C%20South%20Africa" target="_blank">Apple Maps &#x2197;&#xFE0E;</a>
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-card__cell section-cell">
+                {% if is_partial_collection %}
+                  <span class="eyebrow">Items ready for collection</span>
+                {% else %}
+                  <span class="eyebrow">Your order</span>
+                {% endif %}
+
+                <table class="order-list" role="presentation" cellpadding="0" cellspacing="0">
+                  {% for notification_line in notification_lines %}
+                    {% if notification_lines_are_prepared %}
+                      {% assign line = notification_line.line_item %}
+                      {% assign display_quantity = notification_line.quantity %}
+                    {% else %}
+                      {% assign line = notification_line %}
+                      {% assign display_quantity = line.quantity %}
+                    {% endif %}
+                    {% unless line.nested_line_child? %}
+                    {% if line.product.title %}
+                      {% assign line_title = line.product.title %}
+                    {% elsif line.presentment_title %}
+                      {% assign line_title = line.presentment_title %}
+                    {% else %}
+                      {% assign line_title = line.title %}
+                    {% endif %}
+                    {% if display_quantity < line.quantity %}
+                      {% capture line_display %}{{ display_quantity }} of {{ line.quantity }}{% endcapture %}
+                    {% else %}
+                      {% assign line_display = display_quantity %}
+                    {% endif %}
+                    <tr>
+                      <td class="order-item__cell order-item__image-cell" valign="middle">
+                        {% if line.image %}
+                          <img class="order-item__image" src="{{ line | img_url: 'compact_cropped' }}" alt="{{ line_title | escape }}" width="82" height="82">
+                        {% else %}
+                          <img class="order-item__image" src="{{ 'notifications/no-image.png' | shopify_asset_url }}" alt="" width="82" height="82">
+                        {% endif %}
+                      </td>
+                      <td class="order-item__cell" valign="middle">
+                        <span class="order-item__title">{{ line_title }} &times; {{ line_display }}</span>
+                        {% unless line.variant.title == 'Default Title' or line.variant.title == blank %}
+                          <span class="order-item__variant">{{ line.variant.title }}</span>
+                        {% endunless %}
+                        {% if line.sku != blank and line.sku != line_title %}
+                          <span class="order-item__variant">{{ line.sku }}</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endunless %}
+                  {% endfor %}
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-card__cell footer-cell">
+                <p class="footer-copy">
+                  If you have any questions, reply to this email or contact us at
+                  <a href="mailto:{{ shop.email }}">{{ shop.email }}</a>.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="footer-gradient" height="156">&nbsp;</td>
+            </tr>
+            <tr>
+              <td class="footer-signature" height="92" align="center" valign="middle">
+                <table role="presentation" width="114" cellpadding="0" cellspacing="0" border="0" align="center" style="width: 114px; table-layout: fixed;">
+                  <tr>
+                    <td class="footer-signature__by" width="30" valign="top">by</td>
+                    <td width="54" valign="top"><a href="https://www.instagram.com/czarneckigregory/" target="_blank" aria-label="Gregory Czarnecki on Instagram"><img class="footer-signature__logo" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-gc-monogram-white.png" alt="GC" width="54" height="58"></a></td>
+                    <td width="30">&nbsp;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Le Chocolat — Ready for collection email preview</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #f3f1ed; color: #120e0b; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+      .preview-label { margin: 20px auto 10px; width: min(560px, calc(100% - 24px)); color: #77716b; font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+      .email { margin: 0 auto 54px; width: min(560px, calc(100% - 24px)); background: #fff; box-shadow: 0 18px 55px rgba(18,14,11,.06); }
+      .pad { padding-left: 34px; padding-right: 34px; }
+      .brand { padding-top: 56px; padding-bottom: 34px; text-align: center; }
+      .logo-crop { display: inline-grid; grid-template-columns: 250px 16px; width: 266px; vertical-align: middle; }
+      .logo-crop img { display: block; width: 250px; height: auto; }
+      .hero { padding-top: 40px; padding-bottom: 34px; }
+      h1 { margin: 0 0 30px; max-width: 430px; color: #292929; font-size: 32px; font-weight: 400; letter-spacing: -.042em; line-height: 1.04; }
+      p { margin: 0; color: #292929; font-size: 14px; line-height: 1.7; }
+      .hero > p { color: #747474; }
+      .button { display: inline-block; margin-top: 30px; padding: 16px 24px; background: #120e0b; color: #fff; font-size: 11px; font-weight: 600; letter-spacing: .14em; line-height: 12px; text-decoration: none; text-transform: uppercase; }
+      .section { padding-top: 26px; padding-bottom: 28px; }
+      .eyebrow { display: block; margin-bottom: 16px; color: #747474; font-size: 10px; font-weight: 600; letter-spacing: .18em; line-height: 1.2; text-transform: uppercase; }
+      address { color: #292929; font-size: 14px; font-style: normal; line-height: 1.55; }
+      .map-links { display: flex; gap: 28px; margin-top: 18px; }
+      .map-links a { padding-bottom: 4px; border-bottom: 1px solid #120e0b; color: #120e0b; font-size: 10px; font-weight: 500; letter-spacing: .14em; line-height: 1.3; text-decoration: none; text-transform: uppercase; }
+      .item { display: grid; grid-template-columns: 82px 1fr; gap: 20px; align-items: center; padding: 14px 0; }
+      .item:last-child { border-bottom: 0; }
+      .item img { display: block; width: 82px; height: 82px; background: #f5f3ef; object-fit: cover; }
+      .item strong { display: block; font-size: 14px; font-weight: 500; letter-spacing: .01em; line-height: 1.35; }
+      .item span { display: block; margin-top: 5px; color: #817b75; font-size: 10px; letter-spacing: .08em; line-height: 1.4; text-transform: uppercase; }
+      .footer { padding-top: 28px; padding-bottom: 34px; }
+      .footer p, .footer a { color: #747474; font-size: 10px; line-height: 1.65; }
+      .footer-gradient { height: 156px; background-color: #000507; background-image: radial-gradient(ellipse at 50% 58%, rgba(116,145,158,.22) 0%, rgba(55,82,94,.12) 34%, transparent 66%), linear-gradient(180deg, #fff 0%, #fafaf8 10%, #f0f0ed 24%, #d9dcda 39%, #b3bbbe 53%, #7d8c93 66%, #405661 78%, #172d37 88%, #061016 96%, #000507 100%); }
+      .footer-signature { position: relative; min-height: 92px; padding-top: 17px; background: #000; color: rgba(255,255,255,.78); text-align: center; }
+      .footer-signature span { position: absolute; top: 13px; left: calc(50% - 38px); font-size: 10px; font-weight: 300; letter-spacing: .2em; text-transform: lowercase; }
+      .footer-signature img { position: absolute; top: 17px; left: 50%; display: block; width: auto; height: 58px; object-fit: contain; transform: translateX(-50%); }
+      @media (max-width: 620px) { .preview-label { margin-top: 10px; } .pad { padding-left: 22px; padding-right: 22px; } h1 { font-size: 29px; } }
+    </style>
+  </head>
+  <body>
+    <p class="preview-label">Email preview · Ready for collection</p>
+    <main class="email">
+      <header class="brand pad">
+        <span class="logo-crop"><img src="/le-chocolat-wordmark.png" alt="Le Chocolat"><i aria-hidden="true"></i></span>
+      </header>
+      <section class="hero pad">
+        <h1>Your order is ready for collection.</h1>
+        <p>Please bring your order confirmation when collecting.<br>ORDER NUMBER <strong>#9999</strong></p>
+        <a class="button" href="#" onclick="return false">View your order</a>
+      </section>
+      <section class="section pad">
+        <span class="eyebrow">Collection address</span>
+        <address>Le Chocolat<br>Shop G09, Makers Landing<br>The Cruise Terminal, V&amp;A Waterfront<br>Cape Town, 8001</address>
+        <nav class="map-links" aria-label="Directions">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Makers%20Landing%2C%20The%20Cruise%20Terminal%2C%20V%26A%20Waterfront%2C%20Cape%20Town%2C%208001" target="_blank" rel="noreferrer">Google Maps ↗</a>
+          <a href="https://maps.apple.com/?q=Makers%20Landing%2C%20Cape%20Town%2C%20South%20Africa" target="_blank" rel="noreferrer">Apple Maps ↗</a>
+        </nav>
+      </section>
+      <section class="section pad" id="order">
+        <span class="eyebrow">Your order</span>
+        <article class="item">
+          <img src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/DSC03272.heic?v=1785914441&amp;width=164&amp;height=164&amp;crop=center" alt="CU01">
+          <div><strong>CU01 × 1</strong></div>
+        </article>
+        <article class="item">
+          <img src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/DSC035102_a3b39351-da1a-47ad-8e4e-58df0136db8e.jpg?v=1785854021&amp;width=164&amp;height=164&amp;crop=center" alt="NU01">
+          <div><strong>NU01 × 1</strong></div>
+        </article>
+        <article class="item">
+          <img src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/DSC03161.jpg?v=1785849900&amp;width=164&amp;height=164&amp;crop=center" alt="PR01">
+          <div><strong>PR01 × 2</strong></div>
+        </article>
+      </section>
+      <footer class="footer pad">
+        <p>If you have any questions, reply to this email or contact us at <a href="mailto:info@lechocolat.co.za">info@lechocolat.co.za</a>.</p>
+      </footer>
+      <div class="footer-gradient" aria-hidden="true"></div>
+      <div class="footer-signature">
+        <span>by</span>
+        <a href="https://www.instagram.com/czarneckigregory/" target="_blank" rel="noreferrer" aria-label="Gregory Czarnecki on Instagram"><img src="/images/le-chocolat-gc-monogram-white.png" alt="GC"></a>
+      </div>
+    </main>
+    <script>window.addEventListener('load', function () { window.scrollTo(0, 0); });</script>
+  </body>
+</html>
