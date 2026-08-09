@@ -16,22 +16,24 @@
   {% assign notification_lines_are_prepared = false %}
 {% endif %}
 
-{% capture email_body %}Please bring your order confirmation when collecting.<br>ORDER NUMBER <strong>{{ order_name }}</strong>{% endcapture %}
-{% capture email_subject %}Your order is ready for collection, order number {{ order_name }}{% endcapture %}
+{% capture email_body %}Please bring your order confirmation when collecting.<br>ORDER NUMBER <strong>{{ order_number }}</strong>{% endcapture %}
+{% capture email_subject %}Your order is ready for collection, order number {{ order_number }}{% endcapture %}
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>{{ email_subject }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
     <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
     <style>
       body,
       .body {
         margin: 0 !important;
         padding: 0 !important;
-        background: #f3f1ed !important;
+        width: 100% !important;
+        background: #ffffff !important;
         color: #292929 !important;
       }
 
@@ -51,6 +53,8 @@
       .container {
         width: 100% !important;
         max-width: 560px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
 
       .email-card {
@@ -68,14 +72,17 @@
       }
 
       .brand-logo {
+        position: relative !important;
+        left: -8px !important;
         display: block !important;
         width: 250px !important;
         max-width: 250px !important;
         height: auto !important;
+        margin: 0 auto !important;
       }
 
       .brand-lockup {
-        width: 266px !important;
+        width: 250px !important;
       }
 
       .brand-lockup__image-cell {
@@ -117,13 +124,18 @@
         color: #747474 !important;
       }
 
+      .hero-cell p strong {
+        font-size: 14px !important;
+        line-height: inherit !important;
+      }
+
       .button-row {
         padding-top: 0 !important;
       }
 
       .button-cell {
         background: #120e0b !important;
-        border-radius: 0 !important;
+        border-radius: 3px !important;
       }
 
       .button-text {
@@ -145,9 +157,9 @@
 
       .eyebrow {
         display: block !important;
-        margin-bottom: 16px !important;
+        margin-bottom: 18px !important;
         color: #747474 !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         font-weight: 600 !important;
         letter-spacing: .18em !important;
         line-height: 1.2 !important;
@@ -184,6 +196,16 @@
         border-collapse: collapse !important;
       }
 
+      .order-list,
+      .order-list tr,
+      .order-list td,
+      .order-item__cell,
+      .order-item__image-cell {
+        border: 0 !important;
+        border-top: 0 !important;
+        border-bottom: 0 !important;
+      }
+
       .order-item__cell {
         padding: 16px 0 !important;
       }
@@ -197,7 +219,10 @@
         display: block !important;
         width: 82px !important;
         height: 82px !important;
-        border-radius: 0 !important;
+        border: 0 !important;
+        border-radius: 3px !important;
+        outline: 0 !important;
+        box-shadow: none !important;
         object-fit: cover !important;
       }
 
@@ -274,12 +299,12 @@
         }
 
         .email-card__cell {
-          padding-left: 22px !important;
-          padding-right: 22px !important;
+          padding-left: 28px !important;
+          padding-right: 28px !important;
         }
 
         .brand-lockup {
-          width: 206px !important;
+          width: 190px !important;
         }
 
         .brand-lockup__image-cell {
@@ -292,7 +317,30 @@
         }
 
         h1 {
-          font-size: 25px !important;
+          font-size: 27px !important;
+          line-height: 1.08 !important;
+        }
+
+        .hero-cell {
+          padding-bottom: 38px !important;
+        }
+
+        .hero-cell p {
+          line-height: 1.8 !important;
+        }
+
+        .section-cell {
+          padding-top: 32px !important;
+          padding-bottom: 32px !important;
+        }
+
+        .eyebrow {
+          margin-bottom: 20px !important;
+          font-size: 12px !important;
+        }
+
+        .address {
+          line-height: 1.7 !important;
         }
       }
     </style>
@@ -305,10 +353,9 @@
           <table class="container email-card" role="presentation" width="560" cellpadding="0" cellspacing="0">
             <tr>
               <td class="email-card__cell brand-cell">
-                <table class="brand-lockup" role="presentation" width="266" cellpadding="0" cellspacing="0" border="0" align="center" style="width: 266px; table-layout: fixed;">
+                <table class="brand-lockup" role="presentation" width="250" cellpadding="0" cellspacing="0" border="0" align="center" style="width: 250px; table-layout: fixed; margin: 0 auto;">
                   <tr>
-                    <td class="brand-lockup__image-cell" width="250"><img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-wordmark.png" alt="Le Chocolat" width="250"></td>
-                    <td width="16">&nbsp;</td>
+                    <td class="brand-lockup__image-cell" width="250" align="center"><img class="brand-logo" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-wordmark.png" alt="Le Chocolat" width="250"></td>
                   </tr>
                 </table>
               </td>
@@ -320,7 +367,7 @@
 
                 {% if pickup_instructions != blank %}
                   <p>{{ pickup_instructions }}</p>
-                  <p style="margin-top: 8px !important;">ORDER NUMBER <strong>{{ order_name }}</strong></p>
+                  <p style="margin-top: 8px !important;">ORDER NUMBER <strong>{{ order_number }}</strong></p>
                 {% else %}
                   <p>{{ email_body }}</p>
                 {% endif %}

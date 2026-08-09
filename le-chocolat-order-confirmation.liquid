@@ -89,25 +89,26 @@
   <head>
   <title>{{ email_title }}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
   <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
   <style>
     body, .body {
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
-      background-color: #f3f1ed !important;
+      background-color: #ffffff !important;
       color: #292929;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     }
     table { border-collapse: collapse; border-spacing: 0; }
     .body > tbody > tr > td { padding: 34px 12px 54px !important; }
-    .container { width: 100% !important; max-width: 560px !important; }
+    .container { width: 100% !important; max-width: 560px !important; margin-left: auto !important; margin-right: auto !important; }
     .header, .content, .section, .footer { background: transparent !important; }
     .header__cell { padding: 0 !important; }
     .brand-panel { background: #ffffff; padding: 56px 34px 34px; text-align: center; }
-    .brand-lockup { width: 266px !important; table-layout: fixed; margin: 0 auto; }
-    .brand-wordmark { display: block; width: 250px; max-width: none; height: auto; }
+    .brand-lockup { width: 250px !important; table-layout: fixed; margin: 0 auto !important; }
+    .brand-wordmark { position: relative; left: -8px; display: block; width: 250px; max-width: 250px; height: auto; margin: 0 auto !important; }
     .content__cell, .section__cell { padding: 0 !important; }
     .content .container, .section .container { background: #ffffff; }
     .content .container > tbody > tr > td { padding: 40px 34px 34px !important; }
@@ -140,13 +141,14 @@
       font-size: 14px !important;
       line-height: 1.7 !important;
     }
+    .content p strong { font-size: 14px !important; line-height: inherit !important; }
     a, a:hover, a:active, a:visited { color: #292929; }
     .actions { margin-top: 0 !important; }
     .empty-line { height: 30px !important; line-height: 30px !important; font-size: 1px !important; }
     .actions__cell { padding-top: 0 !important; }
     .button__cell, .actions-buttons .button__cell--primary, .actions-buttons .button__cell--shop-app {
       background: #120e0b !important;
-      border-radius: 0 !important;
+      border-radius: 3px !important;
     }
     .button__text, .button__text:hover, .button__text:active, .button__text:visited {
       display: block !important;
@@ -163,10 +165,27 @@
     }
     .secondary-action-cell, .actions__group { margin-top: 15px !important; }
     .link__cell { color: #747474 !important; font-size: 12px !important; }
+    .invoice-download { margin-top: 26px !important; }
+    .invoice-download__link,
+    .invoice-download__link:hover,
+    .invoice-download__link:active,
+    .invoice-download__link:visited {
+      display: inline-block !important;
+      color: #120e0b !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      letter-spacing: .14em !important;
+      line-height: 1.3 !important;
+      text-decoration: none !important;
+      text-transform: uppercase !important;
+    }
     .section { margin: 0 !important; }
     .section + .section .container { padding-top: 8px; }
-    .order-list__item__cell, .order-list__parent_item__cell,
+    .order-list, .order-list tr, .order-list td,
+    .order-list__item, .order-list__item__cell, .order-list__parent_item__cell,
     .order-list__product-description-cell, .order-list__image-cell,
+    .order-list__parent-image-cell, .order-list__nested-parent-image-cell,
+    .order-list__image-cell--nested-line-item,
     .order-list__price-cell, .order-list__parent-price-cell,
     .order-list__parent_price-cell { border: 0 !important; }
     .order-list__item-title, .order-list__item-price,
@@ -180,7 +199,21 @@
       font-size: 12px !important;
     }
     .order-list__item-variant { display: none !important; }
-    .order-list__product-image { border-radius: 0 !important; }
+    .order-list__product-image,
+    .order-list__no-product-image,
+    .order-list__no-image-cell {
+      border: 0 !important;
+      border-radius: 3px !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+      background-color: transparent !important;
+    }
+    .curved-line-cell-container__top-spacer-cell--show-border,
+    .order-list__delivery-method-type-separator {
+      border: 0 !important;
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+    }
     .subtotal-lines { margin-bottom: 6px !important; }
     .subtotal-table, .subtotal-table--total,
     .subtotal-table__line, .order-list__delivery-method-type-separator {
@@ -192,22 +225,23 @@
     .footer-copy { background: #ffffff; padding: 38px 34px 48px; }
     .footer-copy p, .footer-copy a { color: #747474 !important; }
     .footer-copy p { margin: 0 !important; font-size: 12px !important; line-height: 1.5 !important; }
-    .footer-gradient { height: 156px; background-color: #dfe4e5; background-image: linear-gradient(to bottom, #ffffff 0%, #fbfbfa 12%, #f0f2f2 28%, #dce2e3 47%, #b9c4c7 66%, #758991 82%, #18343e 94%, #00151d 100%); }
-    .signature-panel { background: #000000; height: 96px; text-align: center; }
-    .signature-table { width: 112px; margin: 0 auto; }
-    .signature-by { color: #b8b8b8 !important; font-size: 10px !important; letter-spacing: 1px; vertical-align: top; padding: 24px 3px 0 0; white-space: nowrap; }
-    .signature-mark { display: block; width: 66px; height: 66px; object-fit: contain; margin: 15px 0 0; border: 0; }
+    .footer-gradient { height: 156px; background-color: #000507; background-image: radial-gradient(ellipse at 50% 58%, rgba(116,145,158,.22) 0%, rgba(55,82,94,.12) 34%, transparent 66%), linear-gradient(180deg, #fff 0%, #fafaf8 10%, #f0f0ed 24%, #d9dcda 39%, #b3bbbe 53%, #7d8c93 66%, #405661 78%, #172d37 88%, #061016 96%, #000507 100%); }
+    .signature-panel { background: #000000; height: 92px; text-align: center; }
+    .signature-table { width: 114px; margin: 0 auto; table-layout: fixed; }
+    .signature-by { position: relative; top: -6px; left: 3px; padding: 0; color: #c7c7c7 !important; font-size: 10px !important; font-weight: 300; letter-spacing: .2em; text-align: right; text-transform: lowercase; vertical-align: top; }
+    .signature-mark { display: inline-block; width: 54px; height: 58px; object-fit: contain; margin: 0; border: 0; vertical-align: middle; }
     .spacer { display: none !important; }
     @media only screen and (max-width: 620px) {
       .body > tbody > tr > td { padding: 0 !important; }
       .container { width: 100% !important; max-width: 100% !important; }
-      .brand-panel { padding: 56px 22px 34px !important; }
-      .brand-lockup { width: 206px !important; }
+      .brand-panel { padding: 56px 28px 34px !important; }
+      .brand-lockup { width: 190px !important; }
       .brand-lockup__image-cell { width: 190px !important; }
       .brand-wordmark { width: 190px !important; }
-      .content .container > tbody > tr > td { padding: 40px 22px 34px !important; }
-      .section .container > tbody > tr > td { padding-left: 22px !important; padding-right: 22px !important; }
-      h2 { font-size: 25px !important; line-height: 1.04 !important; letter-spacing: -.045em !important; }
+      .content .container > tbody > tr > td { padding: 40px 28px 38px !important; }
+      .section .container > tbody > tr > td { padding-left: 28px !important; padding-right: 28px !important; }
+      h2 { font-size: 27px !important; line-height: 1.08 !important; letter-spacing: -.045em !important; }
+      h3 { margin-bottom: 20px !important; padding-top: 32px !important; font-size: 12px !important; line-height: 1.35 !important; }
       .actions-buttons .button__cell { display: block !important; width: 100% !important; margin-bottom: 10px !important; }
       .button__cell--separator { display: none !important; }
       .customer-info__item { display: block !important; width: 100% !important; }
@@ -226,14 +260,13 @@
                 <table class="container" role="presentation" width="560">
                   <tr>
                     <td class="brand-panel" align="center">
-                      <table class="brand-lockup" role="presentation" width="266" cellpadding="0" cellspacing="0" border="0" align="center" style="width:266px;table-layout:fixed;">
+                      <table class="brand-lockup" role="presentation" width="250" cellpadding="0" cellspacing="0" border="0" align="center" style="width:250px;table-layout:fixed;margin:0 auto;">
                         <tr>
-                          <td class="brand-lockup__image-cell" width="250">
+                          <td class="brand-lockup__image-cell" width="250" align="center">
                             <a href="{{ shop.url }}" style="display:block;text-decoration:none;">
                               <img class="brand-wordmark" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-wordmark.png" width="250" alt="Le Chocolat — Haute Manufacture">
                             </a>
                           </td>
-                          <td width="16">&nbsp;</td>
                         </tr>
                       </table>
                     </td>
@@ -252,7 +285,7 @@
             <td>
               
             <h2>{{ email_title }}</h2>
-            <p>{{ email_body }}<br>ORDER NUMBER <strong>{{ order_name }}</strong></p>
+            <p>{{ email_body }}<br>ORDER NUMBER <strong>{{ order_number }}</strong></p>
             {% assign transaction_count = transactions | size %}
   {% if transaction_count > 0 %}
     {% for transaction in transactions %}
@@ -278,6 +311,7 @@
     {% endfor%}
   {% endif %}
 
+            {% assign shop_app_tracking_url = nil %}
             {% if order_status_url %}
               {% if shop_app_tracking_url and shop_app_tracking_button_variant_key %}
                 {% if shop_app_tracking_button_variant_key == "track_with_shop" %}
@@ -363,16 +397,6 @@
               </tr>
             </table>
           </td>
-          <td valign="middle" style="padding-left: 15px; vertical-align: middle;">
-            {% if shop.url %}
-    <table class="link secondary-action-cell" style="margin-top: 0; vertical-align: middle;">
-      <tr>
-        <td class="link__cell">or <a href="{{ shop.url }}">Visit our store</a></td>
-      </tr>
-    </table>
-{% endif %}
-
-          </td>
         </tr>
       </table>
     </td>
@@ -380,22 +404,16 @@
 </table>
 
               {% endif %}
-            {% else %}
-              {% if shop.url %}
-    <table class="row actions">
-      <tr>
-        <td class="actions__cell">
-          <table class="button main-action-cell">
-            <tr>
-              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visit our store</a></td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-{% endif %}
-
             {% endif %}
+
+            {% capture invoice_pdf_url %}{{ shop.url }}/apps/download-pdf/orders/08aa2a51bc59a1db8e6b/{{ id | times: 1226 }}/{{ name | handleize }}.pdf{% endcapture %}
+            <table class="invoice-download" role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td>
+                  <a class="invoice-download__link" href="{{ invoice_pdf_url | strip }}">Download PDF invoice</a>
+                </td>
+              </tr>
+            </table>
 
             </td>
           </tr>
@@ -3857,15 +3875,16 @@
                     <td class="footer-gradient" height="156">&nbsp;</td>
                   </tr>
                   <tr>
-                    <td class="signature-panel" height="96" align="center">
-                      <table class="signature-table" role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <td class="signature-panel" height="92" align="center" valign="middle">
+                      <table class="signature-table" role="presentation" width="114" cellpadding="0" cellspacing="0" border="0" align="center" style="width:114px;table-layout:fixed;">
                         <tr>
-                          <td class="signature-by">by</td>
-                          <td>
+                          <td class="signature-by" width="30" valign="top">by</td>
+                          <td width="54" valign="top">
                             <a href="https://www.instagram.com/czarneckigregory/" style="display:block;text-decoration:none;">
-                              <img class="signature-mark" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-gc-monogram-white.png" width="66" height="66" alt="Gregory Czarnecki on Instagram">
+                              <img class="signature-mark" src="https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-gc-monogram-white.png" width="54" height="58" alt="Gregory Czarnecki on Instagram">
                             </a>
                           </td>
+                          <td width="30">&nbsp;</td>
                         </tr>
                       </table>
                     </td>
