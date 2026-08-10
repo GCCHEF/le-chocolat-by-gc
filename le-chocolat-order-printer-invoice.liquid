@@ -2,7 +2,7 @@
 
 <!-- Document Settings -->
 {% assign SETTING_shop_logo = "https://cdn.shopify.com/s/files/1/0724/8910/7498/files/le-chocolat-wordmark.png" %} <!-- Le Chocolat wordmark -->
-{% assign SETTING_shop_logo_width = 235 %} <!-- Wordmark width -->
+{% assign SETTING_shop_logo_width = 259 %} <!-- Wordmark width -->
 {% assign SETTING_shop_accent_color = "#120e0b" %} <!-- Le Chocolat black -->
 {% assign SETTING_date_format = "%d %B %Y" %} <!-- Adjusts date format used, see: https://shopify.github.io/liquid/filters/date/ -->
 {% assign SETTING_show_product_images = true %} <!-- Display product images? (true/false) -->
@@ -95,20 +95,20 @@
         <p class="subtitle-bold to-uppercase">
           {{ TEXT_shipping_address }}
         </p>
-        <p class="address-detail">
+        <div class="address-detail">
             {{ shipping_address | format_address }}
             {% if shipping_address.phone != blank %}
               <br>
               {{ TEXT_tel }} {{ shipping_address.phone }}
             {% endif %}
-        </p>
+        </div>
       </div>
     {% endif %}
     <div class="billing-address">
       <p class="subtitle-bold to-uppercase">
         {{ TEXT_customer }}
       </p>
-      <p class="address-detail">
+      <div class="address-detail">
         {% assign billing_address = billing_address | default: customer.default_address %}
         {% if billing_address != blank %}
           {{ billing_address | format_address }}
@@ -129,7 +129,7 @@
         {% else %}
            {{ TEXT_no_customer_information }}
         {% endif %}
-      </p>
+      </div>
     </div>
     <div class="order-details">
       {% if payment_method != blank or payment_terms != blank %}
@@ -817,8 +817,8 @@
 
   .template-1326887 .shop-logo {
     display: block;
-    width: 235px;
-    max-width: 235px;
+    width: 259px;
+    max-width: 259px;
     max-height: none;
     margin: 0;
   }
@@ -869,6 +869,13 @@
     color: #292929;
     font-size: 12px;
     line-height: 1.65;
+  }
+
+  .template-1326887 .address-detail *,
+  .template-1326887 .order-detail * {
+    color: #292929 !important;
+    font-size: 12px !important;
+    line-height: 1.65 !important;
   }
 
   .template-1326887 hr {
@@ -953,15 +960,29 @@
   }
 
   .template-1326887 .pricing-row {
-    margin: 10px 0;
-    font-size: 12px;
+    margin: 8px 0;
+    color: #747474 !important;
+    font-size: 14px;
+    line-height: 1.4;
   }
 
-  .template-1326887 .pricing-row .subtitle-bold {
-    color: #292929;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: .08em;
+  .template-1326887 .pricing-row .pricing-title,
+  .template-1326887 .pricing-row .pricing-details {
+    color: #747474 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  .template-1326887 .pricing-row .pricing-title.subtitle-bold,
+  .template-1326887 .pricing-row .pricing-details.subtitle-bold {
+    color: #292929 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: .02em !important;
+  }
+
+  .template-1326887 .pricing > hr {
+    display: none !important;
   }
 
   .template-1326887 .label-warning {
@@ -974,7 +995,7 @@
     padding: 22px 0 0;
     position: relative;
     top: 1mm;
-    border-top: 1px solid #e7e5e1;
+    border-top: 0;
     color: #000000;
     font-size: 10px;
     line-height: 1.3;
