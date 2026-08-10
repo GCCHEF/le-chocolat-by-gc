@@ -202,8 +202,9 @@
                 {% if SETTING_show_product_images == true %}
                   <div class="order-table-cell item-image">
                     <div class="aspect-ratio aspect-ratio-square" style="width: {{ SETTING_product_image_size }}px; height: {{ SETTING_product_image_size }}px;">
-                      {% if line_item.image != blank %}
-                        {{ line_item.image | img_url: 'compact_cropped' | img_tag: '', 'aspect-ratio__content' }}
+                      {% assign storefront_image = line_item.product.images[1] | default: line_item.image %}
+                      {% if storefront_image != blank %}
+                        {{ storefront_image | img_url: 'compact_cropped' | img_tag: '', 'aspect-ratio__content' }}
                       {% else %}
                         {{ '/product_image_placeholder.svg' | img_tag: '', 'aspect-ratio__content placeholder' }}
                       {% endif %}

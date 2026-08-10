@@ -7,11 +7,16 @@ import {
 } from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
+import {getStorefrontProductImage} from '~/lib/product-image';
 
 type DiscoverProduct = RecommendedProductsQuery['products']['nodes'][number];
 
 function getProductCode(title: string) {
   return title.trim().toUpperCase().replace(/\s+/g, '');
+}
+
+function getStylingProductCode(title: string) {
+  return getProductCode(title).replace(/^PRA/, 'PR');
 }
 
 function getPrefix(title: string) {
@@ -81,6 +86,7 @@ export default function DiscoverCarousel({
   const previous = () => select(activeIndex - 1, 'previous');
   const next = () => select(activeIndex + 1, 'next');
   const activeProduct = slides[activeIndex];
+  const activeStorefrontImage = getStorefrontProductImage(activeProduct);
 
   const handlePointerDown = (event: PointerEvent<HTMLButtonElement>) => {
     didSwipeRef.current = false;
@@ -148,7 +154,7 @@ export default function DiscoverCarousel({
     >
       <button
         aria-label={`Open the Creation category for ${activeProduct.title}`}
-        className={`discover-carousel__stage discover-carousel__stage--${getProductCode(
+        className={`discover-carousel__stage discover-carousel__stage--${getStylingProductCode(
           activeProduct.title,
         ).toLowerCase()}`}
         key={`image-${activeProduct.id}`}
@@ -170,10 +176,10 @@ export default function DiscoverCarousel({
             alt="Essentiel chocolate assortment"
             src="/images/discover-as02-dsc03592-2.jpg"
           />
-        ) : activeProduct.featuredImage ? (
+        ) : activeStorefrontImage ? (
           <Image
-            alt={activeProduct.featuredImage.altText || activeProduct.title}
-            data={activeProduct.featuredImage}
+            alt={activeStorefrontImage.altText || activeProduct.title}
+            data={activeStorefrontImage}
             loading="lazy"
             sizes="100vw"
           />

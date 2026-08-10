@@ -8,6 +8,7 @@ import {
 import {Image} from '@shopify/hydrogen';
 import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
+import {getStorefrontProductImage} from '~/lib/product-image';
 import {useAside} from '~/components/Aside';
 import AsciiImage from './AsciiImage';
 
@@ -205,10 +206,11 @@ function formatCubeTitle(title: string) {
 }
 
 function formatCategoryProductTitle(title: string) {
-  const match = title.match(/^(AS|OR|CO|PR)\s*0*(\d+)$/i);
+  const match = title.match(/^(AS|OR|CO|PRA|PR)\s*0*(\d+)$/i);
   if (!match) return title;
 
-  const prefix = match[1].toUpperCase();
+  const matchedPrefix = match[1].toUpperCase();
+  const prefix = matchedPrefix === 'PR' ? 'PRA' : matchedPrefix;
 
   return `${prefix}${match[2].padStart(2, '0')}`;
 }
@@ -222,45 +224,47 @@ function ProductPanel({
 }) {
   const {open} = useAside();
   const variant = product.selectedOrFirstAvailableVariant;
+  const storefrontImage = getStorefrontProductImage(product);
+  const stylingTitle = title.replace(/^PRA/i, 'PR');
 
   return (
     <article
       className={`featured-work-detail__panel featured-work-detail__panel--product-slot ${
-        ['CU03', 'AS03', 'PR03'].includes(title)
+        ['CU03', 'AS03', 'PR03'].includes(stylingTitle)
           ? 'featured-work-detail__panel--cu003'
           : ''
-      } ${title === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
-        title === 'CU01' ? 'featured-work-detail__panel--cu01' : ''
+      } ${stylingTitle === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
+        stylingTitle === 'CU01' ? 'featured-work-detail__panel--cu01' : ''
       } ${
-        title === 'CU02' ? 'featured-work-detail__panel--cu02' : ''
+        stylingTitle === 'CU02' ? 'featured-work-detail__panel--cu02' : ''
       } ${
-        title === 'AS01' ? 'featured-work-detail__panel--as01' : ''
+        stylingTitle === 'AS01' ? 'featured-work-detail__panel--as01' : ''
       } ${
-        title === 'AS02' ? 'featured-work-detail__panel--as02' : ''
+        stylingTitle === 'AS02' ? 'featured-work-detail__panel--as02' : ''
       } ${
-        title === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
+        stylingTitle === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
       } ${
-        title === 'PR02' ? 'featured-work-detail__panel--pr02' : ''
-      } ${title === 'PR03' ? 'featured-work-detail__panel--pr03' : ''} ${
-        ['NU01', 'OR01'].includes(title)
+        stylingTitle === 'PR02' ? 'featured-work-detail__panel--pr02' : ''
+      } ${stylingTitle === 'PR03' ? 'featured-work-detail__panel--pr03' : ''} ${
+        ['NU01', 'OR01'].includes(stylingTitle)
           ? 'featured-work-detail__panel--nu01'
           : ''
-      } ${title === 'CO01' ? 'featured-work-detail__panel--co01' : ''}`}
+      } ${stylingTitle === 'CO01' ? 'featured-work-detail__panel--co01' : ''}`}
       style={
-        ['CO02', 'PR03'].includes(title) &&
-        product.featuredImage?.width &&
-        product.featuredImage.height
+        ['CO02', 'PR03'].includes(stylingTitle) &&
+        storefrontImage?.width &&
+        storefrontImage.height
           ? ({
               '--product-image-aspect':
-                product.featuredImage.width / product.featuredImage.height,
+                storefrontImage.width / storefrontImage.height,
             } as CSSProperties)
           : undefined
       }
     >
       <div className="featured-work-detail__image featured-work-detail__product-image">
-        {product.featuredImage ? (
+        {storefrontImage ? (
           <Image
-            data={product.featuredImage}
+            data={storefrontImage}
             sizes="(max-width: 720px) 88vw, 43vw"
           />
         ) : null}
@@ -278,7 +282,15 @@ function ProductPanel({
                   {
                     merchandiseId: variant.id,
                     quantity: 1,
-                    selectedVariant: variant,
+                    selectedVariant: storefrontImage
+                      ? {
+                          ...variant,
+                          image: {
+                            ...storefrontImage,
+                            __typename: 'Image' as const,
+                          },
+                        }
+                      : variant,
                   },
                 ]
               : []

@@ -12,6 +12,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {getStorefrontProductImage} from '~/lib/product-image';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -96,10 +97,18 @@ export default function Product() {
   });
 
   const {title, descriptionHtml} = product;
+  const storefrontImage = getStorefrontProductImage(product);
+  const optimisticVariant =
+    selectedVariant && storefrontImage
+      ? {
+          ...selectedVariant,
+          image: {...storefrontImage, __typename: 'Image' as const},
+        }
+      : selectedVariant;
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      <ProductImage image={storefrontImage} />
       <div className="product-main">
         <h1>{title}</h1>
         <ProductPrice
@@ -109,7 +118,7 @@ export default function Product() {
         <br />
         <ProductForm
           productOptions={productOptions}
-          selectedVariant={selectedVariant}
+          selectedVariant={optimisticVariant}
         />
         <br />
         <br />
@@ -184,6 +193,15 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    images(first: 2) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     encodedVariantExistence
     encodedVariantAvailability
     options {

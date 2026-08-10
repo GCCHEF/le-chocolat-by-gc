@@ -156,7 +156,7 @@ function RecommendedProducts({
 }: {
   products: Promise<RecommendedProductsQuery | null>;
 }) {
-  const curatedProductCodes = ['CU01', 'AS02', 'PR02', 'NU01'];
+  const curatedProductCodes = ['CU01', 'AS02', 'PRA02', 'NU01'];
 
   return (
     <div className="recommended-products">
@@ -182,9 +182,8 @@ function RecommendedProducts({
                             .replace(/\s+/g, '')
                             .match(/^([A-Z]+)0*(\d+)$/);
                           if (!match) return false;
-                          return (
-                            `${match[1]}${match[2].padStart(2, '0')}` === code
-                          );
+                          const family = match[1] === 'PR' ? 'PRA' : match[1];
+                          return `${family}${match[2].padStart(2, '0')}` === code;
                         }),
                       )
                       .filter((product) => product != null)
@@ -239,12 +238,21 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       width
       height
     }
+    images(first: 2) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
     products(
       first: 50
-      query: "title:CU* OR title:AS* OR title:PR* OR title:NU*"
+      query: "title:CU* OR title:AS* OR title:PR* OR title:PRA* OR title:NU*"
     ) {
       nodes {
         ...RecommendedProduct
@@ -302,6 +310,15 @@ const CATEGORY_PRODUCTS_QUERY = `#graphql
       altText
       width
       height
+    }
+    images(first: 2) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
     }
     priceRange {
       minVariantPrice {

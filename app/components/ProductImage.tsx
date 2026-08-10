@@ -1,10 +1,17 @@
-import type {ProductVariantFragment} from 'storefrontapi.generated';
 import {Image} from '@shopify/hydrogen';
+
+type ProductImageData = {
+  id?: string | null;
+  url: string;
+  altText?: string | null;
+  width?: number | null;
+  height?: number | null;
+};
 
 export function ProductImage({
   image,
 }: {
-  image: ProductVariantFragment['image'];
+  image?: ProductImageData | null;
 }) {
   if (!image) {
     return <div className="product-image" />;

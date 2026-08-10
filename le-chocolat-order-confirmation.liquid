@@ -464,7 +464,7 @@
               {% if false and is_parent %}
                 <td class="order-list__parent-image-cell {{ css_order_list_parent_image_cell_nested_line_parent_class }}">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" class="order-list__no-product-image"/>
@@ -474,7 +474,7 @@
               {% else %}
                 <td class="order-list__image-cell">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="60" height="60" class="order-list__no-product-image"/>
@@ -552,7 +552,7 @@
       <table height="100%">
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -708,7 +708,7 @@
           </td>
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -792,7 +792,7 @@
             <tr>
               <td class="{{ padding_bottom_none_class }}" valign="top">
                 {% if parent_line_item and parent_line_item.image %}
-                  <img src="{{ parent_line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  <img src="{{ parent_line_item.product.images[1] | default: parent_line_item.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% elsif line_item_group.image %}
                   <img src="{{ line_item_group | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% else %}
@@ -906,7 +906,7 @@
 <tr height="100%">
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1020,7 +1020,7 @@
     </td>
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1154,7 +1154,7 @@
               {% if false and is_parent %}
                 <td class="order-list__parent-image-cell {{ css_order_list_parent_image_cell_nested_line_parent_class }}">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" class="order-list__no-product-image"/>
@@ -1164,7 +1164,7 @@
               {% else %}
                 <td class="order-list__image-cell">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="60" height="60" class="order-list__no-product-image"/>
@@ -1242,7 +1242,7 @@
       <table height="100%">
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1398,7 +1398,7 @@
           </td>
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1480,7 +1480,7 @@
             <tr>
               <td class="{{ padding_bottom_none_class }}" valign="top">
                 {% if parent_line_item and parent_line_item.image %}
-                  <img src="{{ parent_line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  <img src="{{ parent_line_item.product.images[1] | default: parent_line_item.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% elsif line_item_group.image %}
                   <img src="{{ line_item_group | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% else %}
@@ -1594,7 +1594,7 @@
 <tr height="100%">
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1708,7 +1708,7 @@
     </td>
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -1818,7 +1818,7 @@
             <tr>
               <td class="{{ padding_bottom_none_class }}" valign="top">
                 {% if parent_line_item and parent_line_item.image %}
-                  <img src="{{ parent_line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  <img src="{{ parent_line_item.product.images[1] | default: parent_line_item.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% elsif line_item_group.image %}
                   <img src="{{ line_item_group | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% else %}
@@ -1932,7 +1932,7 @@
 <tr height="100%">
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2046,7 +2046,7 @@
     </td>
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2140,7 +2140,7 @@
               {% if false and is_parent %}
                 <td class="order-list__parent-image-cell {{ css_order_list_parent_image_cell_nested_line_parent_class }}">
                   {% if component.image %}
-                    <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" class="order-list__no-product-image"/>
@@ -2150,7 +2150,7 @@
               {% else %}
                 <td class="order-list__image-cell">
                   {% if component.image %}
-                    <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="60" height="60" class="order-list__no-product-image"/>
@@ -2228,7 +2228,7 @@
       <table height="100%">
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2384,7 +2384,7 @@
           </td>
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2463,7 +2463,7 @@
               {% if false and is_parent %}
                 <td class="order-list__parent-image-cell {{ css_order_list_parent_image_cell_nested_line_parent_class }}">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" class="order-list__no-product-image"/>
@@ -2473,7 +2473,7 @@
               {% else %}
                 <td class="order-list__image-cell">
                   {% if line.image %}
-                    <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                    <img src="{{ line.product.images[1] | default: line.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                   {% else %}
                     <div class="order-list__no-image-cell">
                       <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="60" height="60" class="order-list__no-product-image"/>
@@ -2551,7 +2551,7 @@
       <table height="100%">
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2707,7 +2707,7 @@
           </td>
         <td class="{{ css_image_class }}">
           {% if child_line.image %}
-            <img src="{{ child_line | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
+            <img src="{{ child_line.product.images[1] | default: child_line.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image small"/>
           {% else %}
             <div class="order-list__no-image-cell small">
               <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -2787,7 +2787,7 @@
             <tr>
               <td class="{{ padding_bottom_none_class }}" valign="top">
                 {% if parent_line_item and parent_line_item.image %}
-                  <img src="{{ parent_line_item | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+                  <img src="{{ parent_line_item.product.images[1] | default: parent_line_item.image | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% elsif line_item_group.image %}
                   <img src="{{ line_item_group | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
                 {% else %}
@@ -2901,7 +2901,7 @@
 <tr height="100%">
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>
@@ -3015,7 +3015,7 @@
     </td>
     <td class="{{ order_list_item_class }} {{ css_image_class }}" valign="top">
         {% if component.image %}
-        <img src="{{ component | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
+        <img src="{{ component.product.images[1] | default: component.image | img_url: 'compact_cropped' }}" align="left" width="40" height="40" class="order-list__product-image"/>
         {% else %}
         <div class="order-list__no-image-cell small">
             <img src="{{ 'notifications/no-image.png' | shopify_asset_url }}" align="left" width="20" height="20" class="order-list__no-product-image small"/>

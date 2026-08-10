@@ -6,6 +6,7 @@ import type {
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
+import {getStorefrontProductImage} from '~/lib/product-image';
 
 export function ProductItem({
   product,
@@ -20,7 +21,7 @@ export function ProductItem({
   presentation?: 'default' | 'recommendation';
 }) {
   const variantUrl = useVariantUrl(product.handle);
-  const image = product.featuredImage;
+  const image = getStorefrontProductImage(product);
   return (
     <Link
       className={`product-item product-item--${presentation}`}

@@ -842,6 +842,10 @@ button.reset:hover:not(:has(> *)) {
   display: flex;
 }
 
+.cart-line-image {
+  flex: 0 0 auto;
+}
+
 .overlay--cart .cart-line-inner {
   gap: 1rem;
 }
@@ -857,6 +861,13 @@ button.reset:hover:not(:has(> *)) {
   height: 5.2rem;
   margin-right: 0;
   object-fit: cover;
+  width: 5.2rem;
+}
+
+.overlay--cart .cart-line-image {
+  background: #fff;
+  height: 5.2rem;
+  overflow: hidden;
   width: 5.2rem;
 }
 

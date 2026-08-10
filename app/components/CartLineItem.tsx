@@ -5,6 +5,7 @@ import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
 import {useAside} from './Aside';
+import {getStorefrontProductImage} from '~/lib/product-image';
 import type {
   CartApiQueryFragment,
   CartLineFragment,
@@ -29,6 +30,10 @@ export function CartLineItem({
 }) {
   const {id, merchandise} = line;
   const {product, title, image, selectedOptions} = merchandise;
+  const storefrontImage = getStorefrontProductImage({
+    ...product,
+    featuredImage: image,
+  });
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const {close} = useAside();
   const lineItemChildren = childrenMap[id];
@@ -48,16 +53,18 @@ export function CartLineItem({
   return (
     <li key={id} className="cart-line">
       <div className="cart-line-inner">
-        {image && (
-          <Image
-            alt={title}
-            aspectRatio="1/1"
-            data={image}
-            height={100}
-            loading="lazy"
-            width={100}
-          />
-        )}
+        <div className="cart-line-image">
+          {storefrontImage && (
+            <Image
+              alt={title}
+              aspectRatio="1/1"
+              data={storefrontImage}
+              height={100}
+              loading="eager"
+              width={100}
+            />
+          )}
+        </div>
 
         <div>
           <Link

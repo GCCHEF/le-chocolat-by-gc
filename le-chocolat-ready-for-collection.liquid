@@ -445,8 +445,9 @@
                     {% endif %}
                     <tr>
                       <td class="order-item__cell order-item__image-cell" valign="middle">
-                        {% if line.image %}
-                          <img class="order-item__image" src="{{ line | img_url: 'compact_cropped' }}" alt="{{ line_title | escape }}" width="82" height="82">
+                        {% assign storefront_image = line.product.images[1] | default: line.image %}
+                        {% if storefront_image %}
+                          <img class="order-item__image" src="{{ storefront_image | img_url: 'compact_cropped' }}" alt="{{ line_title | escape }}" width="82" height="82">
                         {% else %}
                           <img class="order-item__image" src="{{ 'notifications/no-image.png' | shopify_asset_url }}" alt="" width="82" height="82">
                         {% endif %}
