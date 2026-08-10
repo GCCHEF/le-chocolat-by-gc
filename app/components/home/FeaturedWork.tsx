@@ -589,7 +589,12 @@ export default function FeaturedWork({
       requestAnimation();
     };
 
+    const isInsideOpenCart = (target: EventTarget | null) =>
+      target instanceof Element &&
+      target.closest('.overlay--cart.expanded aside') !== null;
+
     const handleWheel = (event: WheelEvent) => {
+      if (isInsideOpenCart(event.target)) return;
       event.preventDefault();
       const delta =
         Math.abs(event.deltaX) > Math.abs(event.deltaY)
@@ -603,6 +608,7 @@ export default function FeaturedWork({
     };
 
     const handleTouchMove = (event: TouchEvent) => {
+      if (isInsideOpenCart(event.target)) return;
       const nextY = event.touches[0]?.clientY ?? detailTouchYRef.current;
       const delta = detailTouchYRef.current - nextY;
       detailTouchYRef.current = nextY;

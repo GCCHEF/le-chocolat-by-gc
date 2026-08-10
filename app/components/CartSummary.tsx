@@ -101,7 +101,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
         onClick={() => window.location.assign(headlessCheckoutUrl.toString())}
         type="button"
       >
-        Continue to Checkout <span aria-hidden="true">&rarr;</span>
+        Continue to Checkout
       </button>
     </div>
   );
