@@ -997,6 +997,12 @@ button.reset:hover:not(:has(> *)) {
   width: fit-content;
 }
 
+.overlay--cart .cart-empty a.cart-checkout-button,
+.overlay--cart .cart-empty a.cart-checkout-button:hover,
+.overlay--cart .cart-empty a.cart-checkout-button:focus-visible {
+  text-decoration: none !important;
+}
+
 .cart-line-quantity {
   display: flex;
 }
@@ -2619,6 +2625,7 @@ button.collection-address-page__menu-return:focus-visible {
 
 .collection-address-page__links a,
 .collection-address-page__links button {
+  align-items: center;
   background: transparent;
   border-bottom: 1px solid currentColor;
   border-left: 0;
@@ -2626,9 +2633,11 @@ button.collection-address-page__menu-return:focus-visible {
   border-top: 0;
   color: #000;
   cursor: pointer;
+  display: inline-flex;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.14em;
+  line-height: 1;
   padding: 0 0 0.3rem;
   text-decoration: none;
   text-transform: uppercase;
@@ -2636,6 +2645,7 @@ button.collection-address-page__menu-return:focus-visible {
 }
 
 .collection-address-page__links form {
+  display: flex;
   margin: 0;
 }
 
