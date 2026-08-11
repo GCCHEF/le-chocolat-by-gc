@@ -24,10 +24,14 @@ export default function CollectionAddressPage() {
             <span>Address</span>
           </h1>
           <button
-            aria-label="Return to menu"
+            aria-label="Return to previous page"
             className="collection-address-page__menu-return reset"
             disabled={isPageExiting}
             onClick={() => {
+              window.sessionStorage.setItem(
+                'le-chocolat-return-to-menu',
+                '1',
+              );
               setIsPageExiting(true);
               window.setTimeout(() => {
                 void navigate('/', {
@@ -57,7 +61,14 @@ export default function CollectionAddressPage() {
                 }}
                 type="submit"
               >
-                Google Maps <span aria-hidden="true">↗</span>
+                Google Maps
+                <svg
+                  aria-hidden="true"
+                  className="collection-address-page__link-arrow"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
+                </svg>
               </button>
             </form>
             <a
@@ -66,7 +77,14 @@ export default function CollectionAddressPage() {
               rel="noreferrer"
               target="_blank"
             >
-              Apple Maps <span aria-hidden="true">↗</span>
+              Apple Maps
+              <svg
+                aria-hidden="true"
+                className="collection-address-page__link-arrow"
+                viewBox="0 0 16 16"
+              >
+                <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
+              </svg>
             </a>
           </nav>
         </div>

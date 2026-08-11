@@ -253,10 +253,14 @@ function ContactPage() {
         <div className="contact-page__title-row">
           <h1 id="contact-title">Contact</h1>
           <button
-            aria-label="Return to menu"
+            aria-label="Return to previous page"
             className="contact-page__menu-return reset"
             disabled={isPageExiting}
             onClick={() => {
+              window.sessionStorage.setItem(
+                'le-chocolat-return-to-menu',
+                '1',
+              );
               setIsPageExiting(true);
               window.setTimeout(() => {
                 void navigate('/', {
@@ -286,15 +290,34 @@ function ContactPage() {
         />
         <div className="contact-form__field">
           <label htmlFor="contact-name">Name</label>
-          <input id="contact-name" name="name" required type="text" />
+          <input
+            autoComplete="name"
+            id="contact-name"
+            name="name"
+            required
+            type="text"
+          />
         </div>
         <div className="contact-form__field">
           <label htmlFor="contact-email">Email</label>
-          <input id="contact-email" name="email" required type="email" />
+          <input
+            autoComplete="email"
+            id="contact-email"
+            inputMode="email"
+            name="email"
+            required
+            type="email"
+          />
         </div>
         <div className="contact-form__field">
           <label htmlFor="contact-phone">Phone number</label>
-          <input id="contact-phone" name="phone" type="tel" />
+          <input
+            autoComplete="tel"
+            id="contact-phone"
+            inputMode="tel"
+            name="phone"
+            type="tel"
+          />
         </div>
         <div className="contact-form__field contact-form__field--subject">
           <label htmlFor="contact-subject-trigger" id="contact-enquiry-label">

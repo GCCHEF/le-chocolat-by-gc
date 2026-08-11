@@ -67,6 +67,20 @@ export function HeaderMenu({
       document.documentElement.classList.remove('menu-eshop-navigation');
     }, 1000);
   };
+  const prepareForMenuPage = () => {
+    const currentHistoryState = window.history.state as Record<
+      string,
+      unknown
+    > | null;
+    window.history.replaceState(
+      {
+        ...currentHistoryState,
+        usr: {bypassIntro: true, openMenu: true},
+      },
+      '',
+      `${location.pathname}${location.search}${location.hash}`,
+    );
+  };
   const menuItems = [
     {title: 'E-Shop', to: '/#creation'},
     {title: 'Collection Address', to: '/pages/collection-address'},
@@ -82,7 +96,7 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.title}
-            onClick={isCreationLink ? prepareForCreation : undefined}
+            onClick={isCreationLink ? prepareForCreation : prepareForMenuPage}
             prefetch={isCreationLink ? 'intent' : 'render'}
             preventScrollReset={isCreationLink}
             state={isCreationLink ? {bypassIntro: true} : undefined}

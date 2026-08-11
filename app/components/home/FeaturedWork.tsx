@@ -236,11 +236,15 @@ function ProductPanel({
       } ${stylingTitle === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
         stylingTitle === 'CU01' ? 'featured-work-detail__panel--cu01' : ''
       } ${
+        stylingTitle === 'CU03' ? 'featured-work-detail__panel--cu03' : ''
+      } ${
         stylingTitle === 'CU02' ? 'featured-work-detail__panel--cu02' : ''
       } ${
         stylingTitle === 'AS01' ? 'featured-work-detail__panel--as01' : ''
       } ${
         stylingTitle === 'AS02' ? 'featured-work-detail__panel--as02' : ''
+      } ${
+        stylingTitle === 'AS03' ? 'featured-work-detail__panel--as03' : ''
       } ${
         stylingTitle === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
       } ${
@@ -262,7 +266,24 @@ function ProductPanel({
       }
     >
       <div className="featured-work-detail__image featured-work-detail__product-image">
-        {storefrontImage ? (
+        {storefrontImage && ['CU03', 'AS03', 'PR03'].includes(stylingTitle) ? (
+          <picture>
+            <source
+              media="(max-width: 48rem) and (orientation: portrait)"
+              srcSet={
+                stylingTitle === 'CU03'
+                  ? '/images/discover-cu03-portrait-extended.png'
+                  : stylingTitle === 'AS03'
+                    ? '/images/discover-as03-portrait-extended.png'
+                    : '/images/discover-pra03-portrait-extended.png'
+              }
+            />
+            <Image
+              data={storefrontImage}
+              sizes="(max-width: 720px) 94vw, 54vw"
+            />
+          </picture>
+        ) : storefrontImage ? (
           <Image
             data={storefrontImage}
             sizes="(max-width: 720px) 88vw, 43vw"
@@ -334,6 +355,7 @@ export default function FeaturedWork({
   const detailProgressRef = useRef(0);
   const detailTargetScrollRef = useRef(0);
   const detailTouchYRef = useRef(0);
+  const detailTouchXRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [activeWorkId, setActiveWorkId] = useState<string | null>(null);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
@@ -547,11 +569,16 @@ export default function FeaturedWork({
     const applyScroll = (scrollLeft: number) => {
       const maxScroll = getMaxScroll();
       const progress = maxScroll > 0 ? clamp(scrollLeft / maxScroll) : 0;
+      const summaryFadeEnd = ['bonbon-archive', 'noir-72'].includes(
+        activeWorkId,
+      )
+        ? 0.23
+        : 0.32;
 
       detail.style.setProperty('--featured-detail-progress', String(progress));
       detail.style.setProperty(
         '--featured-summary-opacity',
-        String(1 - Math.min(progress / 0.32, 1)),
+        String(1 - Math.min(progress / summaryFadeEnd, 1)),
       );
       detail.style.setProperty('--featured-summary-x', `${-progress * 64}px`);
     };
@@ -593,6 +620,12 @@ export default function FeaturedWork({
       target instanceof Element &&
       target.closest('.overlay--cart.expanded aside') !== null;
 
+    const isInsideInteractiveViewport = (target: EventTarget | null) =>
+      target instanceof Element &&
+      target.closest(
+        '[data-nuances-shader-viewport], .ascii-image[data-reveal-pending="true"], .ascii-image[data-reveal-active="true"]',
+      ) !== null;
+
     const handleWheel = (event: WheelEvent) => {
       if (isInsideOpenCart(event.target)) return;
       event.preventDefault();
@@ -604,13 +637,23 @@ export default function FeaturedWork({
     };
 
     const handleTouchStart = (event: TouchEvent) => {
+      detailTouchXRef.current = event.touches[0]?.clientX ?? 0;
       detailTouchYRef.current = event.touches[0]?.clientY ?? 0;
     };
 
     const handleTouchMove = (event: TouchEvent) => {
-      if (isInsideOpenCart(event.target)) return;
+      if (
+        isInsideOpenCart(event.target) ||
+        isInsideInteractiveViewport(event.target)
+      ) {
+        return;
+      }
+      const nextX = event.touches[0]?.clientX ?? detailTouchXRef.current;
       const nextY = event.touches[0]?.clientY ?? detailTouchYRef.current;
-      const delta = detailTouchYRef.current - nextY;
+      const deltaX = detailTouchXRef.current - nextX;
+      const deltaY = detailTouchYRef.current - nextY;
+      const delta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
+      detailTouchXRef.current = nextX;
       detailTouchYRef.current = nextY;
       event.preventDefault();
       moveProgress(delta * 2.2);
@@ -913,7 +956,7 @@ export default function FeaturedWork({
                       src: '/images/essentiel-fourth-panel-clean.png',
                       alt: 'Essentiel chocolate assortment',
                     }}
-                    revealOptions={{size: 105, softness: 16}}
+                    revealOptions={{size: 120, softness: 18}}
                   />
                 </article>
               ) : null}

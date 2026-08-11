@@ -226,21 +226,25 @@ aside main {
   border: 0;
   color: #120e0b;
   cursor: pointer;
+  align-items: center;
+  display: inline-flex;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
-  font-size: clamp(2.6rem, 4.4vw, 4.8rem);
+  font-size: clamp(3.5rem, 5.9vw, 6.4rem);
   font-weight: 700;
+  height: 3.75rem;
+  justify-content: center;
   line-height: 0.72;
   opacity: 0;
   padding: 0;
   position: fixed;
-  right: clamp(4.5rem, 7.5vw, 8.5rem);
+  right: calc(clamp(4.5rem, 7.5vw, 8.5rem) - 0.85rem);
   text-decoration: none;
-  top: clamp(16rem, 38vh, 27rem);
+  top: clamp(3rem, 7vh, 5rem);
   transform: none;
   transition:
     opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
-  width: auto;
+  width: 3.75rem;
   will-change: opacity, transform;
   z-index: 3;
 }
@@ -648,6 +652,51 @@ button.reset:hover:not(:has(> *)) {
   transform: translateX(clamp(0.45rem, 1.4vw, 1.2rem));
 }
 
+@media (max-width: 48rem) {
+  .header-menu-mobile {
+    align-items: center;
+    display: grid;
+    gap: 0;
+    grid-template-rows: 1fr auto 1fr;
+    height: 100svh;
+    transform: translateY(-4.5rem);
+    width: 100vw;
+  }
+
+  .header-menu-mobile .header-menu-item {
+    align-self: center;
+    flex: 0 0 auto;
+    font-size: clamp(3.48rem, 8.88vw, 8.28rem);
+    justify-self: center;
+    line-height: 1;
+    min-height: 3.25rem;
+  }
+
+  .header-menu-mobile .header-menu-item:nth-child(2),
+  .header-menu-mobile .header-menu-item:nth-child(2) .header-menu-item__line {
+    white-space: normal;
+  }
+
+  .header-menu-mobile
+    .header-menu-item:nth-child(2)
+    .header-menu-item__line {
+    line-height: 1.08;
+    width: 18rem;
+  }
+}
+
+/* Keep Safari's long-press selection and save callouts off visual assets. */
+img,
+picture,
+canvas,
+video,
+svg {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .header-menu-desktop {
   display: none;
   grid-gap: 1rem;
@@ -699,6 +748,13 @@ button.reset:hover:not(:has(> *)) {
   object-fit: contain;
   transform: translateX(-3.1%);
   width: auto;
+}
+
+@media (max-width: 48rem) and (orientation: portrait) {
+  .header__logo img {
+    height: 2.5rem;
+    max-width: 65vw;
+  }
 }
 
 .header-ctas a {
@@ -1104,6 +1160,22 @@ button.reset:hover:not(:has(> *)) {
 .overlay--cart .cart-collection-acknowledgement {
   color: rgba(247, 243, 236, 0.78);
 }
+
+@media (max-width: 48rem) {
+  .overlay--cart aside {
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .overlay--cart .cart-main {
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /*
 * --------------------------------------------------
 * components/Search
@@ -1301,6 +1373,12 @@ button.reset:hover:not(:has(> *)) {
   width: 100%;
 }
 
+.discover-carousel__stage picture {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .discover-carousel__stage--as02 img {
   animation-name: discoverImageScaleAs;
   object-position: center 20%;
@@ -1483,6 +1561,24 @@ button.reset:hover:not(:has(> *)) {
   }
 }
 
+@keyframes discoverImageScaleAsPortrait {
+  from {
+    transform: translateY(2%) scale(1.32) rotate(0.15deg);
+  }
+  to {
+    transform: translateY(2%) scale(1.18) rotate(0.15deg);
+  }
+}
+
+@keyframes discoverImageScalePrPortrait {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 @keyframes discoverImageScaleCu {
   from {
     transform: scale(1.24) rotate(-0.4deg);
@@ -1552,6 +1648,35 @@ button.reset:hover:not(:has(> *)) {
   .discover-carousel {
     min-height: 34rem;
   }
+}
+
+@media (max-width: 48rem) and (orientation: portrait) {
+  .discover-carousel {
+    height: calc(100svh - var(--header-height));
+    min-height: 0;
+  }
+
+  .discover-carousel__eyebrow {
+    top: 4.25rem;
+  }
+
+  .discover-carousel__mark {
+    font-size: clamp(6.42rem, 20.2vw, 21.12rem);
+  }
+
+  .discover-carousel__stage--as02 img {
+    animation-name: discoverImageScaleAsPortrait;
+  }
+
+  .discover-carousel__stage--pr02 {
+    background: #f5f5f3;
+  }
+
+  .discover-carousel__stage--pr02 img {
+    animation-name: discoverImageScalePrPortrait;
+    object-fit: cover;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1929,6 +2054,7 @@ button.contact-page__menu-return:focus-visible {
 }
 
 button.contact-success__close.reset:not(:has(> *)) {
+  align-items: center;
   animation: contactSuccessCloseReveal 700ms cubic-bezier(0.16, 1, 0.3, 1) 520ms
     both;
   background: transparent;
@@ -1936,9 +2062,11 @@ button.contact-success__close.reset:not(:has(> *)) {
   color: #120e0b;
   cursor: pointer;
   font-family: 'Neue Haas Grotesk Display', sans-serif;
-  font-size: clamp(2.6rem, 4.4vw, 4.8rem);
+  display: inline-flex;
+  font-size: clamp(3.5rem, 5.9vw, 6.4rem);
   font-weight: 700;
-  height: auto;
+  height: 3.75rem;
+  justify-content: center;
   line-height: 0.72;
   margin: 0;
   padding: 0;
@@ -1947,6 +2075,7 @@ button.contact-success__close.reset:not(:has(> *)) {
   top: clamp(16rem, 38vh, 27rem);
   transform: none;
   transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  width: 3.75rem;
 }
 
 button.contact-success__close.reset:not(:has(> *)):hover,
@@ -2233,6 +2362,13 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
   width: 100%;
 }
 
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover,
+.contact-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000;
+  transition: background-color 9999s ease-out 0s;
+}
+
 .contact-form textarea {
   max-height: clamp(9rem, 20vh, 13rem);
   overflow-y: auto;
@@ -2272,7 +2408,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .contact-form__subject-options {
-  background: #fff;
+  background: transparent;
   border-top: 1px solid rgba(0, 0, 0, 0.18);
   display: grid;
   max-height: 0;
@@ -2296,7 +2432,7 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 .contact-form__subject-option {
-  background: #fff;
+  background: transparent;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   color: #000;
@@ -2451,32 +2587,71 @@ button.contact-success__close.reset:not(:has(> *)):focus-visible {
 }
 
 @media (max-width: 48rem) {
+  body:has(.contact-page) > main {
+    margin: 0;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+
   .contact-page {
+    gap: 2rem;
     grid-template-columns: 1fr;
     height: auto;
     min-height: calc(100svh - var(--header-height));
-    padding-top: 3.5rem;
+    overscroll-behavior-y: none;
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+    padding-top: 3rem;
   }
 
   .contact-page__intro {
     position: static;
   }
 
+  .contact-page button.contact-page__menu-return {
+    left: 0;
+    margin-left: 0.35rem;
+    transform: translateY(-0.42em);
+  }
+
+  .contact-page button.contact-page__menu-return:hover,
+  .contact-page button.contact-page__menu-return:focus-visible {
+    transform: translateY(-0.42em) scale(0.92);
+  }
+
   .contact-page__droplets {
-    bottom: -8rem;
-    height: 38rem;
-    left: -18rem;
-    width: 55rem;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    width: 100vw;
+  }
+
+  .contact-page__droplets .matiere-corner-matter {
+    height: 80vh;
+    left: -20vw;
+    right: auto;
+    top: 42%;
+    width: 140vw;
   }
 
   .contact-form__field {
     gap: 0.55rem;
     grid-template-columns: 1fr;
+    padding: 0.95rem 0;
+  }
+
+  .contact-form {
+    padding-inline: 0.5rem;
   }
 
   .contact-form__field > label {
     padding-top: 0;
   }
+
+  .contact-form textarea {
+    height: 8rem;
+    max-height: 8rem;
+  }
+
 }
 
 /*
@@ -2647,6 +2822,18 @@ button.collection-address-page__menu-return:focus-visible {
 .collection-address-page__links form {
   display: flex;
   margin: 0;
+}
+
+.collection-address-page__link-arrow {
+  fill: none;
+  flex: 0 0 auto;
+  height: 0.9rem;
+  margin-left: 0.3rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+  width: 0.9rem;
 }
 
 /*
@@ -2995,22 +3182,45 @@ body:has(.tasting-archive) > main {
 }
 
 @media (max-width: 48rem) {
+  body:has(.collection-address-page) {
+    overflow: hidden;
+  }
+
+  body:has(.collection-address-page) > main {
+    margin: 0;
+  }
+
   .collection-address-page {
     gap: 3rem;
     grid-template-columns: 1fr;
-    height: auto;
-    min-height: calc(100svh - var(--header-height));
-    overflow-y: auto;
+    height: calc(100svh - var(--header-height));
+    min-height: 0;
+    overflow: hidden;
     padding-top: 4rem;
   }
 
+  .collection-address-page__links {
+    gap: 2rem;
+  }
+
+  button.collection-address-page__menu-return {
+    margin-left: 0.45rem;
+    transform: translateY(-0.65em);
+  }
+
+  button.collection-address-page__menu-return:hover,
+  button.collection-address-page__menu-return:focus-visible {
+    transform: translateY(-0.65em) scale(0.92);
+  }
+
   .collection-address-page__map {
-    height: min(68rem, 130vw);
-    margin-left: -15%;
+    height: min(78.54rem, 150.15vw);
+    margin-left: -13%;
+    margin-top: -5.25rem;
     max-height: none;
     position: relative;
     right: auto;
     top: auto;
-    width: 130%;
+    width: 150.15%;
   }
 }

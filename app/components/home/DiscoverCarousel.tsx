@@ -46,6 +46,7 @@ export default function DiscoverCarousel({
   const [isVisible, setIsVisible] = useState(false);
   const carouselRef = useRef<HTMLElement | null>(null);
   const pointerStartX = useRef<number | null>(null);
+  const pointerStartY = useRef<number | null>(null);
   const didSwipeRef = useRef(false);
   const wheelLockedRef = useRef(false);
 
@@ -91,18 +92,28 @@ export default function DiscoverCarousel({
   const handlePointerDown = (event: PointerEvent<HTMLButtonElement>) => {
     didSwipeRef.current = false;
     pointerStartX.current = event.clientX;
-    event.currentTarget.setPointerCapture(event.pointerId);
+    pointerStartY.current = event.clientY;
   };
 
   const handlePointerUp = (event: PointerEvent<HTMLButtonElement>) => {
-    if (pointerStartX.current == null) return;
-    const distance = event.clientX - pointerStartX.current;
+    if (pointerStartX.current == null || pointerStartY.current == null) return;
+    const distanceX = event.clientX - pointerStartX.current;
+    const distanceY = event.clientY - pointerStartY.current;
     pointerStartX.current = null;
-    if (Math.abs(distance) < 45) return;
+    pointerStartY.current = null;
+    if (Math.abs(distanceX) < 45 || Math.abs(distanceX) <= Math.abs(distanceY)) {
+      return;
+    }
     didSwipeRef.current = true;
     event.preventDefault();
-    if (distance < 0) next();
+    if (distanceX < 0) next();
     else previous();
+  };
+
+  const handlePointerCancel = () => {
+    pointerStartX.current = null;
+    pointerStartY.current = null;
+    didSwipeRef.current = false;
   };
 
   const handleWheel = (event: WheelEvent<HTMLButtonElement>) => {
@@ -159,6 +170,7 @@ export default function DiscoverCarousel({
         ).toLowerCase()}`}
         key={`image-${activeProduct.id}`}
         onClick={openCreationCategory}
+        onPointerCancel={handlePointerCancel}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onWheel={handleWheel}
@@ -172,10 +184,30 @@ export default function DiscoverCarousel({
             src="/images/discover-cu-dsc03050.jpg"
           />
         ) : getProductCode(activeProduct.title) === 'AS02' ? (
-          <img
-            alt="Essentiel chocolate assortment"
-            src="/images/discover-as02-dsc03592-2.jpg"
-          />
+          <picture>
+            <source
+              media="(max-width: 48rem) and (orientation: portrait)"
+              srcSet="/images/discover-as02-portrait-extended.png"
+            />
+            <img
+              alt="Essentiel chocolate assortment"
+              src="/images/discover-as02-dsc03592-2.jpg"
+            />
+          </picture>
+        ) : getProductCode(activeProduct.title) === 'PRA02' &&
+          activeStorefrontImage ? (
+          <picture>
+            <source
+              media="(max-width: 48rem) and (orientation: portrait)"
+              srcSet="/images/discover-pra02-portrait-extended.png"
+            />
+            <Image
+              alt={activeStorefrontImage.altText || activeProduct.title}
+              data={activeStorefrontImage}
+              loading="lazy"
+              sizes="100vw"
+            />
+          </picture>
         ) : activeStorefrontImage ? (
           <Image
             alt={activeStorefrontImage.altText || activeProduct.title}

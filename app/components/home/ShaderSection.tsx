@@ -215,7 +215,6 @@ export default function ShaderSection() {
         touchPoints[0].active = false;
       };
       const handleTouchMove = (event: TouchEvent) => {
-        event.preventDefault();
         handleTouch(event);
       };
 
@@ -244,9 +243,10 @@ export default function ShaderSection() {
       container.addEventListener('mousedown', handleMouseDown);
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
-      container.addEventListener('touchstart', handleTouch, {passive: false});
-      container.addEventListener('touchmove', handleTouchMove, {passive: false});
+      container.addEventListener('touchstart', handleTouch, {passive: true});
+      container.addEventListener('touchmove', handleTouchMove, {passive: true});
       container.addEventListener('touchend', handleTouch);
+      container.addEventListener('touchcancel', handleTouch);
       animationFrame = window.requestAnimationFrame(animate);
 
       return () => {
@@ -258,6 +258,7 @@ export default function ShaderSection() {
         container.removeEventListener('touchstart', handleTouch);
         container.removeEventListener('touchmove', handleTouchMove);
         container.removeEventListener('touchend', handleTouch);
+        container.removeEventListener('touchcancel', handleTouch);
         geometry.dispose();
         material?.dispose();
         renderer?.dispose();

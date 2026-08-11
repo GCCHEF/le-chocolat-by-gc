@@ -73,15 +73,21 @@ function MenuNavigationCloser() {
   const {close, type} = useAside();
   const currentUrl = `${location.pathname}${location.search}${location.hash}`;
   const previousUrlRef = useRef(currentUrl);
+  const routeState = location.state as {openMenu?: boolean} | null;
 
   useEffect(() => {
     const didNavigate = previousUrlRef.current !== currentUrl;
     previousUrlRef.current = currentUrl;
 
-    if (didNavigate && type === 'mobile') {
+    const isIntentionalMenuReturn =
+      routeState?.openMenu ||
+      document.documentElement.classList.contains('menu-route-return') ||
+      window.sessionStorage.getItem('le-chocolat-return-to-menu') === '1';
+
+    if (didNavigate && type === 'mobile' && !isIntentionalMenuReturn) {
       close();
     }
-  }, [close, currentUrl, type]);
+  }, [close, currentUrl, routeState?.openMenu, type]);
 
   return null;
 }
@@ -96,7 +102,12 @@ function MenuRouteOpener() {
   } | null;
 
   useIsomorphicLayoutEffect(() => {
-    if (!routeState?.openMenu) return;
+    const hasPendingMenuReturn =
+      window.sessionStorage.getItem('le-chocolat-return-to-menu') === '1';
+    if (!routeState?.openMenu && !hasPendingMenuReturn) {
+      handledLocationKeyRef.current = null;
+      return;
+    }
     if (handledLocationKeyRef.current === location.key) return;
     handledLocationKeyRef.current = location.key;
 
@@ -108,6 +119,7 @@ function MenuRouteOpener() {
       window.scrollTo(0, storedMenuScrollY);
     }
     open('mobile');
+    window.sessionStorage.removeItem('le-chocolat-return-to-menu');
 
     const currentHistoryState = window.history.state as Record<
       string,
@@ -116,7 +128,7 @@ function MenuRouteOpener() {
     window.history.replaceState(
       {
         ...currentHistoryState,
-        usr: routeState.bypassIntro ? {bypassIntro: true} : null,
+        usr: {bypassIntro: true},
       },
       '',
       `${location.pathname}${location.search}${location.hash}`,

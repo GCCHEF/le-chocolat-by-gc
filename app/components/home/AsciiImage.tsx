@@ -97,6 +97,11 @@ export default function AsciiImage({
     const punch = contrastAt(contrast);
     let animationFrame = 0;
     let isAlive = true;
+    let isPointerPressed = false;
+    let activePointerId: number | null = null;
+    let holdTimer = 0;
+    let pressOrigin = {x: 0, y: 0};
+    const requiresPress = window.matchMedia('(pointer: coarse)').matches;
     let imageRect = {dx: 0, dy: 0, dw: 0, dh: 0};
     blobsRef.current = Array.from({length: 5}, () => ({x: 0, y: 0}));
 
@@ -379,7 +384,7 @@ export default function AsciiImage({
       paint();
       animationFrame = window.requestAnimationFrame(loop);
     };
-    const onPointerMove = (event: globalThis.PointerEvent) => {
+    const updatePointer = (event: globalThis.PointerEvent) => {
       const bounds = canvas.getBoundingClientRect();
       const x = event.clientX - bounds.left;
       const y = event.clientY - bounds.top;
@@ -389,9 +394,62 @@ export default function AsciiImage({
         inside: x >= 0 && y >= 0 && x <= bounds.width && y <= bounds.height,
       };
     };
+    const onPointerDown = (event: globalThis.PointerEvent) => {
+      activePointerId = event.pointerId;
+      canvas.setPointerCapture?.(event.pointerId);
+      pressOrigin = {x: event.clientX, y: event.clientY};
+      if (!requiresPress) {
+        isPointerPressed = true;
+        updatePointer(event);
+        return;
+      }
+      canvas.dataset.revealPending = 'true';
+      window.clearTimeout(holdTimer);
+      holdTimer = window.setTimeout(() => {
+        isPointerPressed = true;
+        delete canvas.dataset.revealPending;
+        canvas.dataset.revealActive = 'true';
+        updatePointer(event);
+      }, 320);
+    };
+    const onPointerMove = (event: globalThis.PointerEvent) => {
+      if (requiresPress && !isPointerPressed) {
+        if (
+          Math.hypot(
+            event.clientX - pressOrigin.x,
+            event.clientY - pressOrigin.y,
+          ) > 22
+        ) {
+          window.clearTimeout(holdTimer);
+          delete canvas.dataset.revealPending;
+        }
+        pointerRef.current.inside = false;
+        return;
+      }
+      updatePointer(event);
+    };
+    const endPointerPress = () => {
+      window.clearTimeout(holdTimer);
+      isPointerPressed = false;
+      delete canvas.dataset.revealPending;
+      delete canvas.dataset.revealActive;
+      if (
+        activePointerId !== null &&
+        canvas.hasPointerCapture?.(activePointerId)
+      ) {
+        canvas.releasePointerCapture(activePointerId);
+      }
+      activePointerId = null;
+      if (!requiresPress) return;
+      pointerRef.current.inside = false;
+      seededRef.current = false;
+    };
     const onPointerLeave = () => {
       pointerRef.current.inside = false;
       seededRef.current = false;
+    };
+    const onContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
     };
 
     const loadedImage = new Image();
@@ -408,15 +466,26 @@ export default function AsciiImage({
       paint();
     });
     resizeObserver.observe(canvas);
+    canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
     canvas.addEventListener('pointerleave', onPointerLeave);
+    canvas.addEventListener('contextmenu', onContextMenu);
+    window.addEventListener('pointerup', endPointerPress);
+    window.addEventListener('pointercancel', endPointerPress);
 
     return () => {
       isAlive = false;
       window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(holdTimer);
+      delete canvas.dataset.revealPending;
+      delete canvas.dataset.revealActive;
       resizeObserver.disconnect();
+      canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerleave', onPointerLeave);
+      canvas.removeEventListener('contextmenu', onContextMenu);
+      window.removeEventListener('pointerup', endPointerPress);
+      window.removeEventListener('pointercancel', endPointerPress);
     };
   }, [
     colorMode,
