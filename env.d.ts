@@ -9,5 +9,6 @@ import '@total-typescript/ts-reset';
 declare global {
   interface Env {
     RESEND_API_KEY?: string;
+    SITE_MAINTENANCE?: string;
   }
 }
