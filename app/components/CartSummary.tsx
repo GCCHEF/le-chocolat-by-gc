@@ -1,7 +1,7 @@
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import type {CartLayout} from '~/components/CartMain';
 import {Money, type OptimisticCart} from '@shopify/hydrogen';
-import {useId, useState} from 'react';
+import {useEffect, useId, useState} from 'react';
 
 type CartSummaryProps = {
   cart: OptimisticCart<CartApiQueryFragment | null>;
@@ -59,6 +59,23 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
     useState(false);
   const headlessCheckoutUrl = checkoutUrl ? new URL(checkoutUrl) : null;
   headlessCheckoutUrl?.searchParams.set('channel', 'headless-storefronts');
+  const checkoutOrigin = headlessCheckoutUrl?.origin;
+
+  useEffect(() => {
+    if (!checkoutOrigin) return;
+
+    const existingPreconnect = document.head.querySelector<HTMLLinkElement>(
+      `link[rel="preconnect"][href="${checkoutOrigin}"]`,
+    );
+    if (existingPreconnect) return;
+
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = checkoutOrigin;
+    document.head.appendChild(preconnect);
+
+    return () => preconnect.remove();
+  }, [checkoutOrigin]);
 
   return (
     <div className="cart-checkout-actions">
@@ -98,6 +115,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
         disabled={!hasAcknowledgedCollection || !headlessCheckoutUrl}
         onClick={() => {
           if (headlessCheckoutUrl) {
+            window.sessionStorage.setItem('le-chocolat-return-to-cart', '1');
             window.location.assign(headlessCheckoutUrl.toString());
           }
         }}

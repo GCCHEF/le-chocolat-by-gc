@@ -1,12 +1,14 @@
 import {useNavigate} from 'react-router';
 import {useState} from 'react';
 import type {Route} from './+types/pages.collection-address';
+import {useAndroidDevice} from '~/lib/use-android-device';
 
 export const meta: Route.MetaFunction = () => [
   {title: 'Le Chocolat | Collection Address'},
 ];
 
 export default function CollectionAddressPage() {
+  const isAndroid = useAndroidDevice();
   const navigate = useNavigate();
   const [isPageExiting, setIsPageExiting] = useState(false);
 
@@ -93,7 +95,11 @@ export default function CollectionAddressPage() {
       <figure className="collection-address-page__map">
         <img
           alt="Map showing the Le Chocolat collection location in Cape Town"
-          src="/images/collection-address-map-v3.png"
+          src={
+            isAndroid
+              ? '/images/collection-address-map-v3-android.webp'
+              : '/images/collection-address-map-v3.png'
+          }
         />
       </figure>
     </section>

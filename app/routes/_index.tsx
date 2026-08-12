@@ -333,6 +333,7 @@ const CATEGORY_PRODUCTS_QUERY = `#graphql
     ) {
       id
       availableForSale
+      quantityAvailable
       image {
         id
         url

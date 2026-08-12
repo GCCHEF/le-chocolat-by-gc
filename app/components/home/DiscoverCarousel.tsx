@@ -8,6 +8,7 @@ import {
 import {Image} from '@shopify/hydrogen';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {getStorefrontProductImage} from '~/lib/product-image';
+import {useAndroidDevice} from '~/lib/use-android-device';
 
 type DiscoverProduct = RecommendedProductsQuery['products']['nodes'][number];
 
@@ -41,6 +42,7 @@ export default function DiscoverCarousel({
 }: {
   products: DiscoverProduct[];
 }) {
+  const isAndroid = useAndroidDevice();
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<'next' | 'previous'>('next');
   const [isVisible, setIsVisible] = useState(false);
@@ -177,17 +179,32 @@ export default function DiscoverCarousel({
         type="button"
       >
         {activeProduct.localImage ? (
-          <img alt="Cobbles chocolate assortment" src={activeProduct.localImage} />
+          <img
+            alt="Cobbles chocolate assortment"
+            src={
+              isAndroid
+                ? '/images/discover-co-android.webp'
+                : activeProduct.localImage
+            }
+          />
         ) : getProductCode(activeProduct.title) === 'CU01' ? (
           <img
             alt="Cubes chocolate assortment"
-            src="/images/discover-cu-dsc03050.jpg"
+            src={
+              isAndroid
+                ? '/images/discover-cu-android.webp'
+                : '/images/discover-cu-dsc03050.jpg'
+            }
           />
         ) : getProductCode(activeProduct.title) === 'AS02' ? (
           <picture>
             <source
               media="(max-width: 48rem) and (orientation: portrait)"
-              srcSet="/images/discover-as02-portrait-extended.png"
+              srcSet={
+                isAndroid
+                  ? '/images/discover-as02-portrait-android.webp'
+                  : '/images/discover-as02-portrait-extended.png'
+              }
             />
             <img
               alt="Essentiel chocolate assortment"
@@ -199,7 +216,11 @@ export default function DiscoverCarousel({
           <picture>
             <source
               media="(max-width: 48rem) and (orientation: portrait)"
-              srcSet="/images/discover-pra02-portrait-extended.png"
+              srcSet={
+                isAndroid
+                  ? '/images/discover-pra02-portrait-android.webp'
+                  : '/images/discover-pra02-portrait-extended.png'
+              }
             />
             <Image
               alt={activeStorefrontImage.altText || activeProduct.title}

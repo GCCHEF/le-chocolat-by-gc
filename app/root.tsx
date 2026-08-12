@@ -79,6 +79,7 @@ export async function loader(args: Route.LoaderArgs) {
   return {
     ...deferredData,
     ...criticalData,
+    isAndroid: /Android/i.test(args.request.headers.get('user-agent') || ''),
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,
@@ -145,9 +146,10 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const data = useRouteLoaderData<RootLoader>('root');
 
   return (
-    <html lang="en">
+    <html className={data?.isAndroid ? 'le-chocolat-android' : undefined} lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -160,13 +162,13 @@ export function Layout({children}: {children?: React.ReactNode}) {
           nonce={nonce}
           dangerouslySetInnerHTML={{
             __html:
-              '.le-chocolat-refresh-pending .home-experience{visibility:hidden!important}',
+              '.le-chocolat-refresh-pending .home-experience{visibility:hidden!important}.le-chocolat-checkout-return-pending .overlay--cart{opacity:1!important;pointer-events:auto!important;visibility:visible!important}.le-chocolat-checkout-return-pending .overlay--cart aside{transform:translateY(0)!important;transition:none!important}',
           }}
         />
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `(function(){var entry=performance.getEntriesByType('navigation')[0];var legacy=performance.navigation;var reloading=Boolean((entry&&entry.type==='reload')||(legacy&&legacy.type===1));if(reloading){document.documentElement.classList.add('le-chocolat-returning-tab','le-chocolat-refresh-pending');history.scrollRestoration='manual';if(location.pathname==='/'&&location.hash){history.replaceState(history.state,'',location.pathname+location.search);}scrollTo(0,0);setTimeout(function(){document.documentElement.classList.remove('le-chocolat-refresh-pending');},1500);}})();`,
+            __html: `(function(){try{if(/Android/i.test(navigator.userAgent)){document.documentElement.classList.add('le-chocolat-android');}if(sessionStorage.getItem('le-chocolat-return-to-cart')==='1'){document.documentElement.classList.add('le-chocolat-checkout-return-pending');}}catch(e){}var entry=performance.getEntriesByType('navigation')[0];var legacy=performance.navigation;var reloading=Boolean((entry&&entry.type==='reload')||(legacy&&legacy.type===1));if(reloading){document.documentElement.classList.add('le-chocolat-returning-tab','le-chocolat-refresh-pending');history.scrollRestoration='manual';if(location.pathname==='/'&&location.hash){history.replaceState(history.state,'',location.pathname+location.search);}scrollTo(0,0);setTimeout(function(){document.documentElement.classList.remove('le-chocolat-refresh-pending');},1500);}})();`,
           }}
         />
       </head>

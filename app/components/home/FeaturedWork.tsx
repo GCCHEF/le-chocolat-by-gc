@@ -11,6 +11,7 @@ import {AddToCartButton} from '~/components/AddToCartButton';
 import {getStorefrontProductImage} from '~/lib/product-image';
 import {useAside} from '~/components/Aside';
 import AsciiImage from './AsciiImage';
+import {useAndroidDevice} from '~/lib/use-android-device';
 
 type CategoryProduct = NonNullable<
   CategoryProductsQuery[keyof CategoryProductsQuery]
@@ -30,6 +31,7 @@ const WORK_ITEMS = [
     eyebrow: 'Matière / Cubes',
     detailEyebrow: 'Matière / Texture',
     thumbnail: '/images/texture-category.jpg',
+    androidThumbnail: '/images/texture-category-android.webp',
     title: 'Texture',
     description:
       'Almond and hazelnut praliné with single-origin 64% Madagascar chocolate, toasted almonds, coated in dark chocolate.',
@@ -41,6 +43,7 @@ const WORK_ITEMS = [
     detailEyebrow: 'Matière / Essentiel',
     detailTitle: 'Assortment',
     thumbnail: '/images/essentiel-category-portrait.jpg',
+    androidThumbnail: '/images/essentiel-category-android.webp',
     title: 'Essentiel',
     description:
       'CU(bes) hazelnut and almond praliné, 64% Grand Cru chocolate, toasted almonds, coated in dark chocolate.',
@@ -55,6 +58,7 @@ const WORK_ITEMS = [
     eyebrow: 'Matière / Nuances / Cobbles',
     detailEyebrow: 'Matière / Origine',
     thumbnail: '/images/nuances-category-final-10.jpg',
+    androidThumbnail: '/images/nuances-category-android.webp',
     title: 'Origine',
     description:
       'Flavor initiation with nine Grand Cru and blend chocolate ganache ranging from 33 to 85% cocoa content.',
@@ -65,6 +69,7 @@ const WORK_ITEMS = [
     eyebrow: 'Matière / Praliné',
     detailEyebrow: 'Matière / Racines',
     thumbnail: '/images/racines-category.jpg',
+    androidThumbnail: '/images/racines-category-android.webp',
     title: 'Racines',
     description:
       'Hazelnut and almond praliné, presented in four distinct flavors: buckwheat, cocoa nibs, Parmesan and feuilletine.',
@@ -223,6 +228,7 @@ function ProductPanel({
   title: string;
 }) {
   const {open} = useAside();
+  const isAndroid = useAndroidDevice();
   const variant = product.selectedOrFirstAvailableVariant;
   const storefrontImage = getStorefrontProductImage(product);
   const stylingTitle = title.replace(/^PRA/i, 'PR');
@@ -271,11 +277,17 @@ function ProductPanel({
             <source
               media="(max-width: 48rem) and (orientation: portrait)"
               srcSet={
-                stylingTitle === 'CU03'
-                  ? '/images/discover-cu03-portrait-extended.png'
-                  : stylingTitle === 'AS03'
-                    ? '/images/discover-as03-portrait-extended.png'
-                    : '/images/discover-pra03-portrait-extended.png'
+                isAndroid && stylingTitle === 'CU03'
+                  ? '/images/discover-cu03-portrait-android.webp'
+                  : isAndroid && stylingTitle === 'AS03'
+                    ? '/images/discover-as03-portrait-android.webp'
+                    : isAndroid && stylingTitle === 'PR03'
+                      ? '/images/discover-pra03-portrait-android.webp'
+                      : stylingTitle === 'CU03'
+                        ? '/images/discover-cu03-portrait-extended.png'
+                        : stylingTitle === 'AS03'
+                          ? '/images/discover-as03-portrait-extended.png'
+                          : '/images/discover-pra03-portrait-extended.png'
               }
             />
             <Image
@@ -297,6 +309,8 @@ function ProductPanel({
         </span>
         <AddToCartButton
           disabled={!variant?.availableForSale}
+          maxQuantity={variant?.quantityAvailable ?? undefined}
+          merchandiseId={variant?.id}
           lines={
             variant
               ? [
@@ -718,7 +732,9 @@ export default function FeaturedWork({
                   style={
                     'thumbnail' in item && typeof item.thumbnail === 'string'
                       ? {
-                          backgroundImage: `url(${item.thumbnail})`,
+                          '--featured-thumbnail': `url(${item.thumbnail})`,
+                          '--featured-thumbnail-android': `url(${item.androidThumbnail})`,
+                          backgroundImage: 'var(--featured-thumbnail)',
                           backgroundPosition:
                             item.id === 'bonbon-archive'
                               ? 'center 48%'
@@ -727,7 +743,7 @@ export default function FeaturedWork({
                             item.id === 'bonbon-archive'
                               ? '120% auto'
                               : 'cover',
-                        }
+                        } as CSSProperties
                       : undefined
                   }
                 />
@@ -954,6 +970,8 @@ export default function FeaturedWork({
                     annotationOverlay
                     image={{
                       src: '/images/essentiel-fourth-panel-clean.png',
+                      androidSrc:
+                        '/images/essentiel-fourth-panel-android.webp',
                       alt: 'Essentiel chocolate assortment',
                     }}
                     revealOptions={{size: 120, softness: 18}}

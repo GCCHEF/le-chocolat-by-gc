@@ -103,6 +103,8 @@ export function ProductForm({
       })}
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
+        maxQuantity={selectedVariant?.quantityAvailable ?? undefined}
+        merchandiseId={selectedVariant?.id}
         onClick={() => {
           open('cart');
         }}

@@ -133,6 +133,43 @@ export default function HomePage({
     }
   }, [asideType, isLegalOpen]);
 
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 48rem)');
+    let touchStartY = 0;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartY = event.touches[0]?.clientY ?? 0;
+    };
+
+    const preventBottomOverscroll = (event: TouchEvent) => {
+      if (!mobileQuery.matches || event.touches.length !== 1) return;
+
+      const touchY = event.touches[0]?.clientY ?? touchStartY;
+      const isSwipingFurtherDown = touchY < touchStartY;
+      const maximumScrollY = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      const isAtDocumentBottom = window.scrollY >= maximumScrollY - 2;
+
+      if (isAtDocumentBottom && isSwipingFurtherDown) {
+        event.preventDefault();
+      }
+
+      touchStartY = touchY;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, {passive: true});
+    window.addEventListener('touchmove', preventBottomOverscroll, {
+      passive: false,
+    });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', preventBottomOverscroll);
+    };
+  }, []);
+
   useIsomorphicLayoutEffect(() => {
     const navigationEntry = window.performance.getEntriesByType(
       'navigation',
@@ -148,8 +185,12 @@ export default function HomePage({
     }
 
     const isInitialDocumentEntry = location.key === 'default';
+    const isReturningFromCheckout =
+      window.sessionStorage.getItem('le-chocolat-return-to-cart') === '1';
     const shouldOpenAtHomeTop =
-      hasSeenIntro && (isInitialDocumentEntry || !isCreationDestination);
+      !isReturningFromCheckout &&
+      hasSeenIntro &&
+      (isInitialDocumentEntry || !isCreationDestination);
 
     if (!shouldOpenAtHomeTop) return;
 

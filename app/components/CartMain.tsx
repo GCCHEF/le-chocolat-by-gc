@@ -1,9 +1,11 @@
+import {useEffect} from 'react';
 import {useOptimisticCart, type OptimisticCartLine} from '@shopify/hydrogen';
 import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {CartLineItem, type CartLine} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
+import {publishCartQuantities} from '~/lib/cart-quantities';
 
 export type CartLayout = 'page' | 'aside';
 
@@ -13,6 +15,16 @@ export type CartMainProps = {
 };
 
 export type LineItemChildrenMap = {[parentId: string]: CartLine[]};
+function publishLineQuantities(lines: CartLine[]) {
+  const quantities: Record<string, number> = {};
+  for (const line of lines) {
+    const merchandiseId = line.merchandise?.id;
+    if (!merchandiseId) continue;
+    quantities[merchandiseId] =
+      (quantities[merchandiseId] || 0) + line.quantity;
+  }
+  publishCartQuantities(quantities);
+}
 /** Returns a map of all line items and their children. */
 function getLineItemChildrenMap(lines: CartLine[]): LineItemChildrenMap {
   const children: LineItemChildrenMap = {};
@@ -48,6 +60,10 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
   const className = `cart-main ${withDiscount ? 'with-discount' : ''}`;
   const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
   const childrenMap = getLineItemChildrenMap(cart?.lines?.nodes ?? []);
+
+  useEffect(() => {
+    publishLineQuantities(cart?.lines?.nodes ?? []);
+  }, [cart?.lines?.nodes]);
 
   return (
     <div className={className}>

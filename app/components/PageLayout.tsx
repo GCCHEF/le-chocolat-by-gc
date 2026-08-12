@@ -45,6 +45,7 @@ export function PageLayout({
     <Aside.Provider>
       <MenuRouteOpener />
       <MenuNavigationCloser />
+      <CheckoutReturnOpener />
       <CartAside cart={cart} />
       <SearchAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
@@ -66,6 +67,49 @@ export function PageLayout({
       ) : null}
     </Aside.Provider>
   );
+}
+
+function CheckoutReturnOpener() {
+  const {open} = useAside();
+
+  useIsomorphicLayoutEffect(() => {
+    let reopenFrame = 0;
+    let settleTimer = 0;
+    let clearTimer = 0;
+
+    const reopenCartAfterCheckout = () => {
+      if (
+        window.sessionStorage.getItem('le-chocolat-return-to-cart') !== '1'
+      ) {
+        return;
+      }
+
+      open('cart');
+      window.cancelAnimationFrame(reopenFrame);
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(clearTimer);
+      reopenFrame = window.requestAnimationFrame(() => open('cart'));
+      settleTimer = window.setTimeout(() => open('cart'), 350);
+      clearTimer = window.setTimeout(() => {
+        window.sessionStorage.removeItem('le-chocolat-return-to-cart');
+        document.documentElement.classList.remove(
+          'le-chocolat-checkout-return-pending',
+        );
+      }, 1200);
+    };
+
+    reopenCartAfterCheckout();
+    window.addEventListener('pageshow', reopenCartAfterCheckout);
+
+    return () => {
+      window.cancelAnimationFrame(reopenFrame);
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(clearTimer);
+      window.removeEventListener('pageshow', reopenCartAfterCheckout);
+    };
+  }, [open]);
+
+  return null;
 }
 
 function MenuNavigationCloser() {

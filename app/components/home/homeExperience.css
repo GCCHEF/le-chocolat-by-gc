@@ -1591,6 +1591,13 @@ body.featured-work-detail-open .header,
   z-index: 0;
 }
 
+.shader-section--android-static {
+  background:
+    url('/images/shader-static-android.webp') center center / cover no-repeat,
+    #000;
+  cursor: default;
+}
+
 .shader-section__canvas-wrap,
 .shader-section__canvas {
   display: block;
@@ -3417,6 +3424,7 @@ button.home-legal-overlay__section-return:focus-visible {
   .featured-work {
     min-height: 0;
     padding: 2.25rem 1rem 2.75rem;
+    scroll-margin-top: var(--header-height, 64px);
   }
 
   .featured-work__intro {
@@ -3431,6 +3439,10 @@ button.home-legal-overlay__section-return:focus-visible {
 
   .featured-work-card {
     gap: 0.65rem;
+  }
+
+  .le-chocolat-android .featured-work-card__image-core {
+    background-image: var(--featured-thumbnail-android) !important;
   }
 
   .featured-work-card__copy {

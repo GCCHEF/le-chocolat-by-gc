@@ -1,4 +1,5 @@
 import {useEffect, useRef, type CSSProperties} from 'react';
+import {useAndroidDevice} from '~/lib/use-android-device';
 
 type ColorMode = 'mono' | 'image';
 type Fit = 'cover' | 'contain';
@@ -6,7 +7,7 @@ type RevealOptions = {size: number; softness: number};
 
 interface AsciiImageProps {
   annotationOverlay?: boolean;
-  image: {src: string; alt?: string} | string;
+  image: {src: string; androidSrc?: string; alt?: string} | string;
   fit?: Fit;
   focusY?: number;
   columns?: number;
@@ -84,7 +85,13 @@ export default function AsciiImage({
   const blobsRef = useRef<Array<{x: number; y: number}>>([]);
   const seededRef = useRef(false);
   const pointerRef = useRef({x: -9999, y: -9999, inside: false});
-  const source = typeof image === 'string' ? image : image.src;
+  const isAndroid = useAndroidDevice();
+  const source =
+    typeof image === 'string'
+      ? image
+      : isAndroid && image.androidSrc
+        ? image.androidSrc
+        : image.src;
   const revealSize = revealOptions.size;
   const revealSoftness = revealOptions.softness;
 
@@ -410,7 +417,7 @@ export default function AsciiImage({
         delete canvas.dataset.revealPending;
         canvas.dataset.revealActive = 'true';
         updatePointer(event);
-      }, 320);
+      }, 140);
     };
     const onPointerMove = (event: globalThis.PointerEvent) => {
       if (requiresPress && !isPointerPressed) {
@@ -418,7 +425,7 @@ export default function AsciiImage({
           Math.hypot(
             event.clientX - pressOrigin.x,
             event.clientY - pressOrigin.y,
-          ) > 22
+          ) > 14
         ) {
           window.clearTimeout(holdTimer);
           delete canvas.dataset.revealPending;

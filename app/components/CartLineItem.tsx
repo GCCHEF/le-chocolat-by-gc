@@ -122,9 +122,13 @@ export function CartLineItem({
  */
 function CartLineQuantity({line}: {line: CartLine}) {
   if (!line || typeof line?.quantity === 'undefined') return null;
-  const {id: lineId, quantity, isOptimistic} = line;
+  const {id: lineId, quantity, isOptimistic, merchandise} = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
+  const quantityAvailable = merchandise.quantityAvailable;
+  const canIncrease =
+    merchandise.availableForSale &&
+    (typeof quantityAvailable !== 'number' || quantity < quantityAvailable);
 
   return (
     <div className="cart-line-quantity">
@@ -140,17 +144,21 @@ function CartLineQuantity({line}: {line: CartLine}) {
         </button>
       </CartLineUpdateButton>
       &nbsp;
-      <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
-        <button
-          aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
-          disabled={!!isOptimistic}
-        >
-          <span>&#43;</span>
-        </button>
-      </CartLineUpdateButton>
-      &nbsp;
+      {canIncrease ? (
+        <>
+          <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
+            <button
+              aria-label="Increase quantity"
+              name="increase-quantity"
+              value={nextQuantity}
+              disabled={!!isOptimistic}
+            >
+              <span>&#43;</span>
+            </button>
+          </CartLineUpdateButton>
+          &nbsp;
+        </>
+      ) : null}
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
     </div>
   );
