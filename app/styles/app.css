@@ -608,7 +608,7 @@ button.reset:hover:not(:has(> *)) {
   filter: blur(8px);
   margin-right: -0.18em;
   opacity: 0;
-  overflow: hidden;
+  overflow: visible;
   padding-right: 0.18em;
   transform: translate3d(-0.32em, 0, 0);
   transition:
@@ -3100,14 +3100,14 @@ body:has(.tasting-archive) > main {
 
 @keyframes collectionAddressReveal {
   from {
-    clip-path: inset(0 100% 0 0);
+    clip-path: inset(-0.14em 100% -0.14em 0);
     filter: blur(8px);
     opacity: 0;
     transform: translateX(-0.32em);
   }
 
   to {
-    clip-path: inset(0);
+    clip-path: inset(-0.14em -0.08em -0.14em 0);
     filter: blur(0);
     opacity: 1;
     transform: translateX(0);
@@ -3154,7 +3154,7 @@ body:has(.tasting-archive) > main {
 
 @keyframes collectionAddressExit {
   to {
-    clip-path: inset(0 0 0 100%);
+    clip-path: inset(-0.14em 0 -0.14em 100%);
     filter: blur(8px);
     opacity: 0;
     transform: translateX(0.32em);

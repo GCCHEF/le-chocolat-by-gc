@@ -24,11 +24,14 @@ export function AddToCartButton({
             value={JSON.stringify(analytics)}
           />
           <button
+            aria-busy={fetcher.state !== 'idle'}
             type="submit"
             onClick={onClick}
-            disabled={disabled ?? fetcher.state !== 'idle'}
+            disabled={Boolean(disabled) || fetcher.state !== 'idle'}
           >
-            {children}
+            <span aria-live="polite">
+              {fetcher.state === 'idle' ? children : 'Adding…'}
+            </span>
           </button>
         </>
       )}

@@ -57,11 +57,8 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
   const acknowledgementId = useId();
   const [hasAcknowledgedCollection, setHasAcknowledgedCollection] =
     useState(false);
-
-  if (!checkoutUrl) return null;
-
-  const headlessCheckoutUrl = new URL(checkoutUrl);
-  headlessCheckoutUrl.searchParams.set('channel', 'headless-storefronts');
+  const headlessCheckoutUrl = checkoutUrl ? new URL(checkoutUrl) : null;
+  headlessCheckoutUrl?.searchParams.set('channel', 'headless-storefronts');
 
   return (
     <div className="cart-checkout-actions">
@@ -96,12 +93,17 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
         </span>
       </label>
       <button
+        aria-busy={!headlessCheckoutUrl}
         className="cart-checkout-button"
-        disabled={!hasAcknowledgedCollection}
-        onClick={() => window.location.assign(headlessCheckoutUrl.toString())}
+        disabled={!hasAcknowledgedCollection || !headlessCheckoutUrl}
+        onClick={() => {
+          if (headlessCheckoutUrl) {
+            window.location.assign(headlessCheckoutUrl.toString());
+          }
+        }}
         type="button"
       >
-        Continue to Checkout
+        {headlessCheckoutUrl ? 'Continue to Checkout' : 'Preparing checkout…'}
       </button>
     </div>
   );

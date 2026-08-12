@@ -218,7 +218,11 @@ export default function ShaderSection() {
         handleTouch(event);
       };
 
+      let isInView = true;
+      const shouldAnimate = () => isInView && !document.hidden;
+
       const animate = (time: number) => {
+        animationFrame = 0;
         if (!renderer || !material) return;
 
         material.uniforms.iTime.value = time * 0.001;
@@ -235,11 +239,37 @@ export default function ShaderSection() {
         }
 
         renderer.render(scene, camera);
-        animationFrame = window.requestAnimationFrame(animate);
+        if (shouldAnimate()) {
+          animationFrame = window.requestAnimationFrame(animate);
+        }
       };
+
+      const startAnimation = () => {
+        if (!animationFrame && shouldAnimate()) {
+          animationFrame = window.requestAnimationFrame(animate);
+        }
+      };
+      const stopAnimation = () => {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      };
+      const handleVisibilityChange = () => {
+        if (document.hidden) stopAnimation();
+        else startAnimation();
+      };
+      const visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isInView = entry.isIntersecting;
+          if (isInView) startAnimation();
+          else stopAnimation();
+        },
+        {rootMargin: '25% 0px'},
+      );
 
       resize();
       window.addEventListener('resize', resize);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      visibilityObserver.observe(container);
       container.addEventListener('mousedown', handleMouseDown);
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
@@ -247,11 +277,16 @@ export default function ShaderSection() {
       container.addEventListener('touchmove', handleTouchMove, {passive: true});
       container.addEventListener('touchend', handleTouch);
       container.addEventListener('touchcancel', handleTouch);
-      animationFrame = window.requestAnimationFrame(animate);
+      startAnimation();
 
       return () => {
-        window.cancelAnimationFrame(animationFrame);
+        stopAnimation();
         window.removeEventListener('resize', resize);
+        document.removeEventListener(
+          'visibilitychange',
+          handleVisibilityChange,
+        );
+        visibilityObserver.disconnect();
         container.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);

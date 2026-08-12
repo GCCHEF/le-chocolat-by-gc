@@ -73,6 +73,7 @@ export default function HomePage({
   const [didOpenAfterRefresh, setDidOpenAfterRefresh] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const legalContentRef = useRef<HTMLDivElement>(null);
+  const legalScrollYRef = useRef(0);
 
   const handleLegalNavigation = (event: MouseEvent<HTMLAnchorElement>) => {
     if (
@@ -86,19 +87,42 @@ export default function HomePage({
     }
 
     event.preventDefault();
+    legalScrollYRef.current = Math.max(
+      window.scrollY,
+      document.documentElement.scrollTop,
+      document.body.scrollTop,
+    );
     setIsLegalOpen(true);
   };
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!isLegalOpen) return;
-    const previousOverflow = document.body.style.overflow;
+    const scrollY = legalScrollYRef.current || window.scrollY;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyStyles = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+    };
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsLegalOpen(false);
     };
+
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
     document.addEventListener('keydown', closeOnEscape);
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyStyles.overflow;
+      document.body.style.position = previousBodyStyles.position;
+      document.body.style.top = previousBodyStyles.top;
+      document.body.style.width = previousBodyStyles.width;
+      window.scrollTo(0, scrollY);
       document.removeEventListener('keydown', closeOnEscape);
     };
   }, [isLegalOpen]);
