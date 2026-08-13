@@ -14,11 +14,11 @@ import homeExperienceStyles from '~/components/home/homeExperience.css?url';
 
 export const meta: Route.MetaFunction = () => {
   return [
-    {title: 'Le Chocolat by GC'},
+    {title: 'Le Chocolat'},
     {
       name: 'description',
       content:
-        'Le Chocolat by Gregory Czarnecki — handcrafted chocolate creations manufactured in Cape Town.',
+        'Le Chocolat — handcrafted chocolate creations manufactured in Cape Town.',
     },
   ];
 };

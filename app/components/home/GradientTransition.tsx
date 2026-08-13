@@ -4,7 +4,7 @@ export default function GradientTransition() {
       <div className="gradient-transition__sticky">
         <div className="gradient-transition__ghost">
           <h2>MATIÈRE</h2>
-          <p>LE CHOCOLAT BY GC</p>
+          <p>LE CHOCOLAT</p>
         </div>
         <div className="gradient-transition__veil" />
       </div>

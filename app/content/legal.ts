@@ -75,7 +75,7 @@ export const TERMS_AND_CONDITIONS_HTML = `
   <h4>14. Intellectual Property</h4>
   <p>All content published on the Le Chocolat website remains the property of Le Chocolat (Pty) Ltd or its licensors unless otherwise stated.</p>
   <p>This includes, without limitation:</p>
-  <ul><li>The Le Chocolat name</li><li>The Le Chocolat by GC name</li><li>Logos and trademarks</li><li>Product names</li><li>Collection names</li><li>Packaging design</li><li>Photography</li><li>Illustrations</li><li>Website design</li><li>Source code</li><li>Animations</li><li>Graphic elements</li><li>Typography</li><li>Written content</li><li>Marketing material</li></ul>
+  <ul><li>The Le Chocolat name</li><li>Logos and trademarks</li><li>Product names</li><li>Collection names</li><li>Packaging design</li><li>Photography</li><li>Illustrations</li><li>Website design</li><li>Source code</li><li>Animations</li><li>Graphic elements</li><li>Typography</li><li>Written content</li><li>Marketing material</li></ul>
   <p>No material may be copied, reproduced, published, distributed, modified or used for commercial purposes without the prior written consent of Le Chocolat.</p>
 
   <h4>15. Electronic Communications</h4>
@@ -484,7 +484,7 @@ export const INTELLECTUAL_PROPERTY_HTML = `
 
   <h4>3. Protected Material</h4>
   <p>The intellectual property of Le Chocolat includes, without limitation:</p>
-  <ul><li>The Le Chocolat name.</li><li>Le Chocolat by GC.</li><li>Logos and trademarks.</li><li>Product names.</li><li>Collection names.</li><li>Product concepts.</li><li>Recipes, where legally protectable.</li><li>Packaging design.</li><li>Box design.</li><li>Product presentation.</li><li>Photography.</li><li>Videos.</li><li>Illustrations.</li><li>Graphic elements.</li><li>Website design.</li><li>User interface design.</li><li>Website layout.</li><li>Animations.</li><li>Interactive elements.</li><li>Source code developed specifically for Le Chocolat.</li><li>Typography.</li><li>Written content.</li><li>Marketing material.</li><li>Promotional campaigns.</li><li>Brand identity.</li><li>Visual assets.</li><li>Original artwork.</li><li>Any other original content created for Le Chocolat.</li></ul>
+  <ul><li>The Le Chocolat name.</li><li>Logos and trademarks.</li><li>Product names.</li><li>Collection names.</li><li>Product concepts.</li><li>Recipes, where legally protectable.</li><li>Packaging design.</li><li>Box design.</li><li>Product presentation.</li><li>Photography.</li><li>Videos.</li><li>Illustrations.</li><li>Graphic elements.</li><li>Website design.</li><li>User interface design.</li><li>Website layout.</li><li>Animations.</li><li>Interactive elements.</li><li>Source code developed specifically for Le Chocolat.</li><li>Typography.</li><li>Written content.</li><li>Marketing material.</li><li>Promotional campaigns.</li><li>Brand identity.</li><li>Visual assets.</li><li>Original artwork.</li><li>Any other original content created for Le Chocolat.</li></ul>
 
   <h4>4. Permitted Use</h4>
   <p>Customers may access and use the Le Chocolat website for personal, non-commercial purposes only.</p>

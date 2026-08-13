@@ -909,6 +909,18 @@ svg {
   gap: 1rem;
 }
 
+.overlay--cart .cart-line-details {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 5.2rem;
+}
+
+.overlay--cart .cart-line-details .cart-line-quantity {
+  margin-bottom: 0.4rem;
+  margin-top: auto;
+}
+
 .cart-line img {
   height: 100%;
   display: block;
@@ -1064,6 +1076,24 @@ svg {
 .cart-line-quantity {
   align-items: center;
   display: flex;
+}
+
+.cart-line-quantity__value {
+  flex: 0 0 12ch;
+  white-space: nowrap;
+}
+
+.overlay--cart .cart-line .cart-line-quantity__value,
+.overlay--cart .cart-line .cart-line-quantity__number {
+  color: #f7f3ec;
+}
+
+.cart-line-quantity > form + form {
+  margin-left: 0.7rem;
+}
+
+.cart-line-quantity .cart-line-increase--at-limit {
+  visibility: hidden;
 }
 
 @media (max-width: 48rem), (pointer: coarse) {

@@ -86,7 +86,7 @@ function maintenanceResponse(request: Request) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>Le Chocolat by GC — Opening Soon</title>
+    <title>Le Chocolat — Opening Soon</title>
     <style>
       :root { color-scheme: light; }
       * { box-sizing: border-box; }
@@ -127,7 +127,7 @@ function maintenanceResponse(request: Request) {
   <body>
     <main>
       <img class="monogram" src="/images/le-chocolat-gc-monogram.png" alt="">
-      <img class="wordmark" src="/le-chocolat-wordmark.png" alt="Le Chocolat by GC">
+      <img class="wordmark" src="/le-chocolat-wordmark.png" alt="Le Chocolat">
       <p class="message">Our new online experience is being prepared with care. We look forward to welcoming you soon.</p>
     </main>
   </body>

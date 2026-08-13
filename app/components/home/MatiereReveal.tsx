@@ -29,7 +29,7 @@ export default function MatiereReveal() {
     >
       <div className="matiere-reveal__inner">
         <h1 id="matiere-title">MATIÈRE</h1>
-        <p>LE CHOCOLAT BY GC</p>
+        <p>LE CHOCOLAT</p>
       </div>
     </section>
   );
