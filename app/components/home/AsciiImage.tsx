@@ -458,6 +458,12 @@ export default function AsciiImage({
     const onContextMenu = (event: MouseEvent) => {
       event.preventDefault();
     };
+    const preventNativeTouchGesture = (event: TouchEvent) => {
+      event.preventDefault();
+    };
+    const preventSelection = (event: Event) => {
+      event.preventDefault();
+    };
 
     const loadedImage = new Image();
     loadedImage.onload = () => {
@@ -477,6 +483,14 @@ export default function AsciiImage({
     canvas.addEventListener('pointermove', onPointerMove);
     canvas.addEventListener('pointerleave', onPointerLeave);
     canvas.addEventListener('contextmenu', onContextMenu);
+    canvas.addEventListener('touchstart', preventNativeTouchGesture, {
+      passive: false,
+    });
+    canvas.addEventListener('touchmove', preventNativeTouchGesture, {
+      passive: false,
+    });
+    canvas.addEventListener('selectstart', preventSelection);
+    canvas.addEventListener('dragstart', preventSelection);
     window.addEventListener('pointerup', endPointerPress);
     window.addEventListener('pointercancel', endPointerPress);
 
@@ -491,6 +505,10 @@ export default function AsciiImage({
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('contextmenu', onContextMenu);
+      canvas.removeEventListener('touchstart', preventNativeTouchGesture);
+      canvas.removeEventListener('touchmove', preventNativeTouchGesture);
+      canvas.removeEventListener('selectstart', preventSelection);
+      canvas.removeEventListener('dragstart', preventSelection);
       window.removeEventListener('pointerup', endPointerPress);
       window.removeEventListener('pointercancel', endPointerPress);
     };
