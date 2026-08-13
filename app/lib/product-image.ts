@@ -12,6 +12,19 @@ type ProductWithImages = {
   featuredImage?: StorefrontImage | null;
 };
 
+const cartProductImageCache = new Map<string, string>();
+
+export function rememberCartProductImage(
+  merchandiseId: string,
+  imageUrl: string,
+) {
+  cartProductImageCache.set(merchandiseId, imageUrl);
+}
+
+export function getRememberedCartProductImage(merchandiseId: string) {
+  return cartProductImageCache.get(merchandiseId);
+}
+
 /**
  * Shopify Checkout owns media position 1. The Hydrogen storefront deliberately
  * uses position 2, falling back safely while products are being migrated.

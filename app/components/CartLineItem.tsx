@@ -1,17 +1,40 @@
 import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
 import type {CartLayout, LineItemChildrenMap} from '~/components/CartMain';
 import {CartForm, Image, type OptimisticCartLine} from '@shopify/hydrogen';
-import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
 import {useAside} from './Aside';
-import {getStorefrontProductImage} from '~/lib/product-image';
+import {
+  getRememberedCartProductImage,
+  getStorefrontProductImage,
+} from '~/lib/product-image';
 import type {
   CartApiQueryFragment,
   CartLineFragment,
 } from 'storefrontapi.generated';
 
 export type CartLine = OptimisticCartLine<CartApiQueryFragment>;
+
+function getCreationDestination(title: string) {
+  const match = title
+    .trim()
+    .toUpperCase()
+    .match(/^(CU|AS|NU|OR|CO|PRA|PR)\s*0*(\d+)$/);
+  if (!match) return '/#creation';
+
+  const prefix = match[1] === 'PR' ? 'PRA' : match[1];
+  const productCode = `${prefix}${match[2].padStart(2, '0')}`;
+  const workId =
+    prefix === 'CU'
+      ? 'matiere-origin'
+      : prefix === 'AS'
+        ? 'bonbon-archive'
+        : prefix === 'NU' || prefix === 'OR' || prefix === 'CO'
+          ? 'noir-72'
+          : 'atelier-cape-town';
+
+  return `/?creation=${workId}&product=${productCode}#creation`;
+}
 
 /**
  * A single line item in the cart. It displays the product image, title, price.
@@ -34,7 +57,8 @@ export function CartLineItem({
     ...product,
     featuredImage: image,
   });
-  const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
+  const rememberedImageUrl = getRememberedCartProductImage(merchandise.id);
+  const lineItemUrl = getCreationDestination(product.title);
   const {close} = useAside();
   const lineItemChildren = childrenMap[id];
   const childrenLabelId = `cart-line-children-${id}`;
@@ -54,21 +78,30 @@ export function CartLineItem({
     <li key={id} className="cart-line">
       <div className="cart-line-inner">
         <div className="cart-line-image">
-          {storefrontImage && (
+          {rememberedImageUrl ? (
+            <img
+              alt={title}
+              height={100}
+              src={rememberedImageUrl}
+              width={100}
+            />
+          ) : storefrontImage ? (
             <Image
               alt={title}
               aspectRatio="1/1"
               data={storefrontImage}
+              fetchPriority="high"
               height={100}
               loading="eager"
               width={100}
             />
-          )}
+          ) : null}
         </div>
 
         <div className="cart-line-details">
           <Link
             prefetch="intent"
+            state={{bypassIntro: true}}
             to={lineItemUrl}
             onClick={() => {
               if (layout === 'aside') {
@@ -135,8 +168,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
   return (
     <div className="cart-line-quantity">
       <small className="cart-line-quantity__value">
-        Quantity:{' '}
-        <span className="cart-line-quantity__number">{quantity}</span>
+        Quantity: <span className="cart-line-quantity__number">{quantity}</span>
       </small>
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button

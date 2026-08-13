@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -8,10 +9,14 @@ import {
 import {Image} from '@shopify/hydrogen';
 import type {CategoryProductsQuery} from 'storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
-import {getStorefrontProductImage} from '~/lib/product-image';
+import {
+  getStorefrontProductImage,
+  rememberCartProductImage,
+} from '~/lib/product-image';
 import {useAside} from '~/components/Aside';
 import AsciiImage from './AsciiImage';
 import {useAndroidDevice} from '~/lib/use-android-device';
+import {useLocation} from 'react-router';
 
 type CategoryProduct = NonNullable<
   CategoryProductsQuery[keyof CategoryProductsQuery]
@@ -228,6 +233,7 @@ function ProductPanel({
   title: string;
 }) {
   const {open} = useAside();
+  const panelRef = useRef<HTMLElement | null>(null);
   const isAndroid = useAndroidDevice();
   const variant = product.selectedOrFirstAvailableVariant;
   const storefrontImage = getStorefrontProductImage(product);
@@ -235,23 +241,19 @@ function ProductPanel({
 
   return (
     <article
+      data-product-code={title}
+      ref={panelRef}
       className={`featured-work-detail__panel featured-work-detail__panel--product-slot ${
         ['CU03', 'AS03', 'PR03'].includes(stylingTitle)
           ? 'featured-work-detail__panel--cu003'
           : ''
       } ${stylingTitle === 'CO02' ? 'featured-work-detail__panel--co02' : ''} ${
         stylingTitle === 'CU01' ? 'featured-work-detail__panel--cu01' : ''
-      } ${
-        stylingTitle === 'CU03' ? 'featured-work-detail__panel--cu03' : ''
-      } ${
+      } ${stylingTitle === 'CU03' ? 'featured-work-detail__panel--cu03' : ''} ${
         stylingTitle === 'CU02' ? 'featured-work-detail__panel--cu02' : ''
-      } ${
-        stylingTitle === 'AS01' ? 'featured-work-detail__panel--as01' : ''
-      } ${
+      } ${stylingTitle === 'AS01' ? 'featured-work-detail__panel--as01' : ''} ${
         stylingTitle === 'AS02' ? 'featured-work-detail__panel--as02' : ''
-      } ${
-        stylingTitle === 'AS03' ? 'featured-work-detail__panel--as03' : ''
-      } ${
+      } ${stylingTitle === 'AS03' ? 'featured-work-detail__panel--as03' : ''} ${
         stylingTitle === 'PR01' ? 'featured-work-detail__panel--pr01' : ''
       } ${
         stylingTitle === 'PR02' ? 'featured-work-detail__panel--pr02' : ''
@@ -296,10 +298,7 @@ function ProductPanel({
             />
           </picture>
         ) : storefrontImage ? (
-          <Image
-            data={storefrontImage}
-            sizes="(max-width: 720px) 88vw, 43vw"
-          />
+          <Image data={storefrontImage} sizes="(max-width: 720px) 88vw, 43vw" />
         ) : null}
       </div>
       <div className="featured-work-detail__product-copy">
@@ -330,7 +329,18 @@ function ProductPanel({
                 ]
               : []
           }
-          onClick={() => open('cart')}
+          onClick={() => {
+            const renderedImage =
+              panelRef.current?.querySelector<HTMLImageElement>(
+                '.featured-work-detail__product-image img',
+              );
+            const renderedImageUrl =
+              renderedImage?.currentSrc || renderedImage?.src;
+            if (variant?.id && renderedImageUrl) {
+              rememberCartProductImage(variant.id, renderedImageUrl);
+            }
+            open('cart');
+          }}
         >
           {variant?.availableForSale ? 'Add to basket' : 'Sold out'}
         </AddToCartButton>
@@ -361,6 +371,7 @@ export default function FeaturedWork({
   categoryProducts: CategoryProducts;
   textureProducts: TextureProduct[];
 }) {
+  const location = useLocation();
   const productsByCategory = categoryProducts ?? {};
   const introRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
@@ -375,6 +386,20 @@ export default function FeaturedWork({
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [isMoreInformationVisible, setIsMoreInformationVisible] =
     useState(false);
+  const creationDestination = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    const workId = params.get('creation');
+    const requestedProductCode = params.get('product');
+    const productCode = /^(CU|AS|NU|OR|CO|PRA)\d{2}$/.test(
+      requestedProductCode ?? '',
+    )
+      ? requestedProductCode
+      : null;
+
+    return workId && WORK_ITEMS.some((item) => item.id === workId)
+      ? {productCode, workId}
+      : null;
+  }, [location.search]);
   const [detailOrigin, setDetailOrigin] = useState({
     height: 1,
     scaleX: 1,
@@ -385,6 +410,22 @@ export default function FeaturedWork({
   });
 
   const activeWork = WORK_ITEMS.find((item) => item.id === activeWorkId);
+
+  useEffect(() => {
+    if (!creationDestination) return;
+
+    setDetailOrigin({
+      height: window.innerHeight,
+      scaleX: 1,
+      scaleY: 1,
+      width: window.innerWidth,
+      x: 0,
+      y: 0,
+    });
+    setIsVisible(true);
+    setActiveWorkId(creationDestination.workId);
+    setIsDetailVisible(false);
+  }, [creationDestination]);
 
   const openWork = (event: MouseEvent<HTMLButtonElement>, workId: string) => {
     const image = event.currentTarget.querySelector(
@@ -421,9 +462,8 @@ export default function FeaturedWork({
 
   useEffect(() => {
     const openCategory = (event: Event) => {
-      const detail = (
-        event as CustomEvent<{source?: string; workId?: string}>
-      ).detail;
+      const detail = (event as CustomEvent<{source?: string; workId?: string}>)
+        .detail;
       const workId = detail?.workId;
       if (!workId || !WORK_ITEMS.some((item) => item.id === workId)) return;
 
@@ -681,10 +721,18 @@ export default function FeaturedWork({
       applyScroll(track.scrollLeft);
     };
 
-    track.scrollLeft = 0;
-    detailProgressRef.current = 0;
-    detailTargetScrollRef.current = 0;
-    applyScroll(0);
+    const requestedPanel = creationDestination?.productCode
+      ? track.querySelector<HTMLElement>(
+          `[data-product-code="${creationDestination.productCode}"]`,
+        )
+      : null;
+    const initialScroll = requestedPanel
+      ? Math.min(requestedPanel.offsetLeft, getMaxScroll())
+      : 0;
+    track.scrollLeft = initialScroll;
+    detailProgressRef.current = initialScroll;
+    detailTargetScrollRef.current = initialScroll;
+    applyScroll(initialScroll);
     window.addEventListener('wheel', handleWheel, {passive: false});
     window.addEventListener('touchstart', handleTouchStart, {passive: false});
     window.addEventListener('touchmove', handleTouchMove, {passive: false});
@@ -697,7 +745,7 @@ export default function FeaturedWork({
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', handleResize);
     };
-  }, [activeWorkId]);
+  }, [activeWorkId, creationDestination]);
 
   return (
     <>
@@ -731,7 +779,7 @@ export default function FeaturedWork({
                   className="featured-work-card__image-core"
                   style={
                     'thumbnail' in item && typeof item.thumbnail === 'string'
-                      ? {
+                      ? ({
                           '--featured-thumbnail': `url(${item.thumbnail})`,
                           '--featured-thumbnail-android': `url(${item.androidThumbnail})`,
                           backgroundImage: 'var(--featured-thumbnail)',
@@ -743,7 +791,7 @@ export default function FeaturedWork({
                             item.id === 'bonbon-archive'
                               ? '120% auto'
                               : 'cover',
-                        } as CSSProperties
+                        } as CSSProperties)
                       : undefined
                   }
                 />
@@ -970,8 +1018,7 @@ export default function FeaturedWork({
                     annotationOverlay
                     image={{
                       src: '/images/essentiel-fourth-panel-clean.png',
-                      androidSrc:
-                        '/images/essentiel-fourth-panel-android.webp',
+                      androidSrc: '/images/essentiel-fourth-panel-android.webp',
                       alt: 'Essentiel chocolate assortment',
                     }}
                     revealOptions={{size: 120, softness: 18}}
