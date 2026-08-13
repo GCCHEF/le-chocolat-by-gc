@@ -2662,12 +2662,21 @@ body.featured-work-detail-open .header,
 }
 
 .ascii-image {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   cursor: crosshair;
   display: block;
   height: 100%;
   pointer-events: auto;
   touch-action: pan-x;
+  user-select: none;
   width: 100%;
+}
+
+.featured-work-detail__panel--ascii-image {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .featured-work-detail__product-image img {
