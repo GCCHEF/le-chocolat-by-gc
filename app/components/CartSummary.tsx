@@ -58,7 +58,6 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
   const [hasAcknowledgedCollection, setHasAcknowledgedCollection] =
     useState(false);
   const headlessCheckoutUrl = checkoutUrl ? new URL(checkoutUrl) : null;
-  headlessCheckoutUrl?.searchParams.set('channel', 'headless-storefronts');
   const checkoutOrigin = headlessCheckoutUrl?.origin;
 
   useEffect(() => {
